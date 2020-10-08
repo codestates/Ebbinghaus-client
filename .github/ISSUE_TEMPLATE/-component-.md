@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 ### ISSUE
-- Group:   `server`
+- Group:   `client`
 - Type: `bug`, `feature`, `delete`
 - Detail:  
 
