@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import RegisterWords from './RegisterWords';
 
 export default function App() {
-  return <Main />;
+  return <RegisterWords />;
 }
 
 const styles = StyleSheet.create({
