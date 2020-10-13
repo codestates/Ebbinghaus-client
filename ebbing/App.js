@@ -1,10 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import RegisterWords from './RegisterWords';
+import PriorityWords from './PriorityWords/PriorityWords'
+
 
 export default function App() {
-  return <RegisterWords />;
+  return (
+  <PriorityWords />
+  );
 }
 
 const styles = StyleSheet.create({
