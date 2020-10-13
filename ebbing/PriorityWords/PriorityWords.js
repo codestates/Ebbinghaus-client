@@ -1,21 +1,9 @@
 import React, { Component } from 'react';
-import {
-  Alert,
-  Button,
-  Text,
-  TextInput,
-  View,
-  StyleSheet,
-  TouchableHighlight,
-} from 'react-native';
+import { Button, FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 export default class PriorityWords extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      word: ''
-    };
   }
 
   onClickListener = (viewId) => {
@@ -25,41 +13,37 @@ export default class PriorityWords extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View>
-          <Text>Username</Text>
-          <TextInput
-            value={this.state.username}
-            onChangeText={(username) => this.setState({ username })}
-            placeholder={'Username'}
-            style={styles.input}
-          />
+        <View style={styles.title}>
+        <Text style={styles.white}>우선영어단어장</Text>
+        <TouchableOpacity style={styles.box}><Text>등록 단어</Text></TouchableOpacity>
         </View>
-        <View>
-          <Text>Password</Text>
-          <TextInput
-            value={this.state.password}
-            onChangeText={(password) => this.setState({ password })}
-            placeholder={'Password'}
-            secureTextEntry={true}
-            style={styles.input}
-          />
-        </View>
-
-        <View>
-          <Text>Password Check</Text>
-          <TextInput
-            placeholder={'Password Check'}
-            secureTextEntry={true}
-            style={styles.input}
-          />
-        </View>
-
-        <TouchableHighlight
-          style={styles.buttonContainer}
-          onPress={() => this.onClickListener('register')}
-        >
-          <Text>회원가입</Text>
-        </TouchableHighlight>
+        <FlatList
+          style={styles.Words}
+          data={[
+            { key: 'Devin' },
+            { key: 'Dan' },
+            { key: 'Dominic' },
+            { key: 'Jackson' },
+            { key: 'James' },
+            { key: 'Joel' },
+            { key: 'John' },
+            { key: 'Jillian' },
+            { key: 'Jimmy' },
+            { key: 'Julie' },
+            { key: 'Devin1' },
+            { key: 'Dan1' },
+            { key: 'Dominic1' },
+            { key: 'Jackson1' },
+            { key: 'James1' },
+            { key: 'Joel1' },
+            { key: 'John1' },
+            { key: 'Jillian1' },
+            { key: 'Jimmy1' },
+            { key: 'Julie1' },
+          ]}
+          renderItem={({ item }) => <Text style={styles.item}>{item.key}</Text>}
+        />
+        <View style={styles.right}><TouchableOpacity style={styles.box}><Text>Test 등록</Text></TouchableOpacity></View>
       </View>
     );
   }
@@ -68,8 +52,39 @@ export default class PriorityWords extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 100,
+    paddingBottom: 100,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#C0D2F1',
+    backgroundColor: '#000000',
+  },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    height: 44,
+  },
+  Words: {
+    backgroundColor: '#ffffff',
+    width: 300,
+  },
+  title: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 280,
+    paddingBottom: 7,
+  },
+  white: {
+    color: '#fff'
+  },
+  box: {
+    width: 80,
+    height: 30,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  right: {
+    marginTop: 10,
+    marginLeft: 200
   }
 });
