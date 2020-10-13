@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Button, FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  Button,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 
 export default class MineWords extends Component {
   constructor(props) {
@@ -14,8 +21,10 @@ export default class MineWords extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.title}>
-        <Text style={styles.white}>우선영어단어장</Text>
-        <TouchableOpacity style={styles.box}><Text>등록 단어</Text></TouchableOpacity>
+          <Text style={styles.white}>우선영어단어장</Text>
+          <TouchableOpacity style={styles.box}>
+            <Text>등록 단어</Text>
+          </TouchableOpacity>
         </View>
         <FlatList
           style={styles.Words}
@@ -44,8 +53,19 @@ export default class MineWords extends Component {
           renderItem={({ item }) => <Text style={styles.item}>{item.key}</Text>}
         />
         <View style={styles.title}>
-        <View><TouchableOpacity style={styles.box}><Text>단어 등록</Text></TouchableOpacity></View>     
-        <View><TouchableOpacity style={styles.box}><Text>Test 등록</Text></TouchableOpacity></View>
+          <View>
+            <TouchableOpacity
+              style={styles.box}
+              onPress={() => this.props.navigation.navigate('RegisterWords')}
+            >
+              <Text>단어 등록</Text>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity style={styles.box}>
+              <Text>Test 등록</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -77,7 +97,7 @@ const styles = StyleSheet.create({
     paddingBottom: 7,
   },
   white: {
-    color: '#fff'
+    color: '#fff',
   },
   box: {
     width: 80,
@@ -88,6 +108,6 @@ const styles = StyleSheet.create({
   },
   right: {
     marginTop: 10,
-    marginLeft: 200
-  }
+    marginLeft: 200,
+  },
 });
