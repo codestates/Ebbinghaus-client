@@ -57,7 +57,7 @@ export default class Signup extends Component {
 
         <TouchableHighlight
           style={styles.buttonContainer}
-          onPress={() => this.onClickListener('register')}
+          onPress={() => this.props.navigation.navigate('Login')}
         >
           <Text>회원가입</Text>
         </TouchableHighlight>

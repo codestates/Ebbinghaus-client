@@ -1,11 +1,22 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import { max } from 'react-native-reanimated';
 
 const { height, width } = Dimensions.get('window');
 
 export default class Test extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
+    const { navigation } = this.props;
     return (
       <View style={styles.test}>
         <View style={styles.examQuestions}>
@@ -42,9 +53,11 @@ export default class Test extends React.Component {
           <View style={styles.selectDo}>
             <Text>건너뛰기</Text>
           </View>
-          <View style={styles.selectDo}>
-            <Text>그만하기</Text>
-          </View>
+          <TouchableOpacity onPress={() => navigation.navigate('Main')}>
+            <View style={styles.selectDo}>
+              <Text>그만하기</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );

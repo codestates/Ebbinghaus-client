@@ -54,12 +54,12 @@ export default class Login extends Component {
         <Button
           title={'Login'}
           style={styles.input}
-          onPress={this.onLogin.bind(this)}
+          onPress={() => this.props.navigation.navigate('Main')}
         />
 
         <TouchableHighlight
           style={styles.buttonContainer}
-          onPress={() => this.onClickListener('register')}
+          onPress={() => this.props.navigation.navigate('Signup')}
         >
           <Text>회원가입</Text>
         </TouchableHighlight>

@@ -1,18 +1,42 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import PriorityWords from './PriorityWords/PriorityWords';
+import MineWords from './MineWords/MineWords';
+
+const Stack = createStackNavigator();
 
 export default class Main extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
+    const { navigation } = this.props;
     return (
       <ScrollView style={styles.main}>
         <View style={styles.wordColumn}>
-          <View style={styles.categoryView}>
-            <Text style={styles.categoryText}>우선순위 영단어</Text>
-          </View>
-          <View style={styles.categoryView}>
-            <Text style={styles.categoryText}>나만의 영단어</Text>
-          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('PriorityWords')}
+          >
+            <View style={styles.categoryView}>
+              <Text style={styles.categoryText}>우선순위 영단어</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('MineWords')}>
+            <View style={styles.categoryView}>
+              <Text style={styles.categoryText}>나만의 영단어</Text>
+            </View>
+          </TouchableOpacity>
         </View>
+
         <View style={styles.wordColumn}>
           <View style={styles.categoryView}>
             <Text style={styles.categoryText}>토익</Text>
