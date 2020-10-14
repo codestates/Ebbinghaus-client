@@ -22,24 +22,26 @@ export default class MyPage extends React.Component {
     return (
       <View style={styles.myPage}>
         <View style={styles.myPageBox}>
-          <View style={styles.idColumn}>
-            <View>
-              <Text>ID</Text>
+          <View style={styles.myPageBoxInner}>
+            <View style={[styles.idColumn, styles.myPageColumn]}>
+              <View>
+                <Text>ID</Text>
+              </View>
+              <View>
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                  <Text>Logout</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View>
-              <TouchableOpacity>
-                <Text>Logout</Text>
-              </TouchableOpacity>
+            <View style={styles.myPageColumn}>
+              <Text>Today</Text>
             </View>
-          </View>
-          <View>
-            <Text>Today</Text>
-          </View>
-          <View>
-            <Text>Doing</Text>
-          </View>
-          <View>
-            <Text>Finish</Text>
+            <View style={styles.myPageColumn}>
+              <Text>Doing</Text>
+            </View>
+            <View style={styles.myPageColumn}>
+              <Text>Finish</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -64,10 +66,21 @@ const styles = StyleSheet.create({
     width: myPageBoxWith,
     height: height - 500,
   },
+  myPageBoxInner: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    width: myPageBoxWith - 40,
+    height: height - 500,
+  },
   idColumn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: myPageBoxWith - 40,
+  },
+  myPageColumn: {
+    marginBottom: 20,
   },
 });

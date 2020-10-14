@@ -5,28 +5,74 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  Modal,
+  Button,
 } from 'react-native';
-import { max } from 'react-native-reanimated';
+import { color } from 'react-native-reanimated';
+import Feather from 'react-native-vector-icons/Feather';
+import CheckModal from './Modal/CheckModal';
 
 const { height, width } = Dimensions.get('window');
 
 export default class Test extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      modalVisible: false,
+    };
   }
+
+  _handleButtonPress = () => {
+    this.setModalVisible(true);
+  };
+
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
+  };
 
   render() {
     const { navigation } = this.props;
     return (
       <View style={styles.test}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => this.setModalVisible(false)}
+        >
+          <TouchableOpacity
+            style={[styles.container, styles.modalBackgroundStyle]}
+            onPress={this.setModalVisible.bind(this, false)}
+          >
+            <View style={styles.innerContainerTransparentStyle}>
+              <Feather
+                name="check"
+                style={{
+                  color: '#00cc73',
+                }}
+              />
+              <Text>한글</Text>
+              <Text>English</Text>
+              {/* <Button
+                title="close"
+                onPress={this.setModalVisible.bind(this, false)}
+              /> */}
+            </View>
+          </TouchableOpacity>
+        </Modal>
+
         <View style={styles.examQuestions}>
           <Text>사과</Text>
         </View>
         <View style={styles.multipleChoiceView}>
           <View style={styles.multipleChoiceColumn}>
-            <View style={styles.selectAnswer}>
+            <TouchableOpacity
+              style={styles.selectAnswer}
+              onPress={this._handleButtonPress}
+            >
               <Text>mango</Text>
-            </View>
+            </TouchableOpacity>
             <View style={styles.selectAnswer}>
               <Text>cat</Text>
             </View>
@@ -117,5 +163,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: width / 2,
     height: selectDoHeight,
+  },
+
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ecf0f1',
+  },
+  modalBackgroundStyle: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  innerContainerTransparentStyle: {
+    backgroundColor: '#fff',
+    padding: 20,
   },
 });
