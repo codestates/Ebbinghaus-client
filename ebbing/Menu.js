@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 import {
   MainStackScreen,
   TestStackScreen,
-  LoginStackScreen,
   MyPageStackScreen,
 } from './StackScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -14,8 +13,6 @@ export default class Menu extends React.Component {
   render() {
     return (
       <Tab.Navigator>
-        <Tab.Screen name="내정보" component={MyPageStackScreen} />
-        <Tab.Screen name="Login" component={LoginStackScreen} />
         <Tab.Screen
           name="Home"
           component={MainStackScreen}
@@ -38,7 +35,7 @@ export default class Menu extends React.Component {
         />
         <Tab.Screen
           name="내정보"
-          component={TestStackScreen}
+          component={MyPageStackScreen}
           options={{
             tabBarLabel: 'Profile',
             tabBarIcon: ({ color, size }) => (
