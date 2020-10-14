@@ -4,6 +4,7 @@ import {
   MainStackScreen,
   TestStackScreen,
   LoginStackScreen,
+  MyPageStackScreen,
 } from './StackScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,6 +14,7 @@ export default class Menu extends React.Component {
   render() {
     return (
       <Tab.Navigator>
+        <Tab.Screen name="내정보" component={MyPageStackScreen} />
         <Tab.Screen name="Login" component={LoginStackScreen} />
         <Tab.Screen
           name="Home"

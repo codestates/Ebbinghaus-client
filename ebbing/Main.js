@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
   StyleSheet,
@@ -8,8 +7,6 @@ import {
   ScrollView,
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import PriorityWords from './PriorityWords/PriorityWords';
-import MineWords from './MineWords/MineWords';
 
 const Stack = createStackNavigator();
 

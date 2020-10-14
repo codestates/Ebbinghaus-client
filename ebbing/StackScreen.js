@@ -8,10 +8,12 @@ import PriorityWords from './PriorityWords/PriorityWords';
 import MineWords from './MineWords/MineWords';
 import RegisterWords from './RegisterWords';
 import Test from './Test';
+import Mypage from './MyPage';
 
 const MainStack = createStackNavigator();
 const TestStack = createStackNavigator();
 const LoginStack = createStackNavigator();
+const MyPageStack = createStackNavigator();
 
 export function MainStackScreen() {
   return (
@@ -40,5 +42,15 @@ export function LoginStackScreen() {
       <LoginStack.Screen name="Signup" component={Signup} />
       <LoginStack.Screen name="Main" component={Main} />
     </LoginStack.Navigator>
+  );
+}
+
+export function MyPageStackScreen() {
+  return (
+    <MyPageStack.Navigator>
+      <MyPageStack.Screen name="Mypage" component={Mypage} />
+      <MyPageStack.Screen name="Signup" component={Signup} />
+      <MyPageStack.Screen name="Main" component={Main} />
+    </MyPageStack.Navigator>
   );
 }
