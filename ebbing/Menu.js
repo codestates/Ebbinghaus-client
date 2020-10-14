@@ -14,7 +14,6 @@ export default class Menu extends React.Component {
   render() {
     return (
       <Tab.Navigator>
-        <Tab.Screen name="내정보" component={MyPageStackScreen} />
         <Tab.Screen name="Login" component={LoginStackScreen} />
         <Tab.Screen
           name="Home"
