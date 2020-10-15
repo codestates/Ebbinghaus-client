@@ -8,11 +8,13 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/google-signin": "^4.0.3",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "^5.9.2",
     "@react-navigation/native": "^5.7.6",
     "@react-navigation/stack": "^5.9.3",
+    "dotenv": "^8.2.0",
     "expo": "~39.0.2",
     "expo-cli": "^3.27.14",
     "expo-status-bar": "~1.0.2",

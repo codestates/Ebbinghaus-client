@@ -9,63 +9,54 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-export default class Login extends Component {
-  constructor(props) {
-    super(props);
+import { AuthContext } from './AppContext';
 
-    this.state = {
-      username: '',
-      password: '',
-    };
-  }
+export default function Login({ navigation }) {
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
-  onLogin() {
-    const { username, password } = this.state;
-    Alert.alert('로그인 정보', `${username} + ${password}`);
-  }
-
-  onClickListener = (viewId) => {
-    Alert.alert('Alert', 'Button pressed ' + viewId);
-  };
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <View>
-          <Text>Username</Text>
-          <TextInput
-            value={this.state.username}
-            onChangeText={(username) => this.setState({ username })}
-            placeholder={'Username'}
-            style={styles.input}
-          />
-        </View>
-        <View>
-          <Text>Password</Text>
-          <TextInput
-            value={this.state.password}
-            onChangeText={(password) => this.setState({ password })}
-            placeholder={'Password'}
-            secureTextEntry={true}
-            style={styles.input}
-          />
-        </View>
-
-        <Button
-          title={'Login'}
+  const { signIn } = React.useContext(AuthContext);
+  return (
+    <View style={styles.container}>
+      <View>
+        <Text>Username</Text>
+        <TextInput
+          value={username}
+          onChangeText={setUsername}
+          placeholder={'Username'}
           style={styles.input}
-          onPress={() => this.props.navigation.navigate('Main')}
         />
-
-        <TouchableHighlight
-          style={styles.buttonContainer}
-          onPress={() => this.props.navigation.navigate('Signup')}
-        >
-          <Text>회원가입</Text>
-        </TouchableHighlight>
       </View>
-    );
-  }
+      <View>
+        <Text>Password</Text>
+        <TextInput
+          value={password}
+          onChangeText={setPassword}
+          placeholder={'Password'}
+          secureTextEntry={true}
+          style={styles.input}
+        />
+      </View>
+
+      <Button
+        title={'Login'}
+        style={styles.input}
+        onPress={() =>
+          signIn({
+            username,
+            password,
+          })
+        }
+      />
+
+      <TouchableHighlight
+        style={styles.buttonContainer}
+        onPress={() => navigation.navigate('Signup')}
+      >
+        <Text>회원가입</Text>
+      </TouchableHighlight>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

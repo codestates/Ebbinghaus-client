@@ -8,45 +8,41 @@ import {
 } from 'react-native';
 
 import { createStackNavigator } from '@react-navigation/stack';
+import { AuthContext } from './AppContext';
 
 const Stack = createStackNavigator();
 const { height, width } = Dimensions.get('window');
 
-export default class MyPage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+export default function MyPage() {
+  const { signOut } = React.useContext(AuthContext);
 
-  render() {
-    const { navigation } = this.props;
-    return (
-      <View style={styles.myPage}>
-        <View style={styles.myPageBox}>
-          <View style={styles.myPageBoxInner}>
-            <View style={[styles.idColumn, styles.myPageColumn]}>
-              <View>
-                <Text>ID</Text>
-              </View>
-              <View>
-                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                  <Text>Logout</Text>
-                </TouchableOpacity>
-              </View>
+  return (
+    <View style={styles.myPage}>
+      <View style={styles.myPageBox}>
+        <View style={styles.myPageBoxInner}>
+          <View style={[styles.idColumn, styles.myPageColumn]}>
+            <View>
+              <Text>ID</Text>
             </View>
-            <View style={styles.myPageColumn}>
-              <Text>Today</Text>
+            <View>
+              <TouchableOpacity onPress={() => signOut()}>
+                <Text>Logout</Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.myPageColumn}>
-              <Text>Doing</Text>
-            </View>
-            <View style={styles.myPageColumn}>
-              <Text>Finish</Text>
-            </View>
+          </View>
+          <View style={styles.myPageColumn}>
+            <Text>Today</Text>
+          </View>
+          <View style={styles.myPageColumn}>
+            <Text>Doing</Text>
+          </View>
+          <View style={styles.myPageColumn}>
+            <Text>Finish</Text>
           </View>
         </View>
       </View>
-    );
-  }
+    </View>
+  );
 }
 
 const myPageBoxWith = width - 100;
