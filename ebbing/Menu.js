@@ -4,6 +4,7 @@ import {
   MainStackScreen,
   TestStackScreen,
   MyPageStackScreen,
+  LoginStackScreen,
 } from './StackScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';

@@ -40,7 +40,6 @@ export function LoginStackScreen() {
     <LoginStack.Navigator>
       <LoginStack.Screen name="Login" component={Login} />
       <LoginStack.Screen name="Signup" component={Signup} />
-      <LoginStack.Screen name="Main" component={Main} />
     </LoginStack.Navigator>
   );
 }
@@ -49,8 +48,8 @@ export function MyPageStackScreen() {
   return (
     <MyPageStack.Navigator>
       <MyPageStack.Screen name="Mypage" component={Mypage} />
-      <MyPageStack.Screen name="Login" component={Login} />
       <MyPageStack.Screen name="Main" component={Main} />
+      <MyPageStack.Screen name="Login" component={Login} />
     </MyPageStack.Navigator>
   );
 }
