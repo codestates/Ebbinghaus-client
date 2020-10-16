@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Button, FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  Button,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 
 export default class PriorityWords extends Component {
   constructor(props) {
@@ -11,39 +18,51 @@ export default class PriorityWords extends Component {
   };
 
   render() {
+    const DATA = [
+      {
+        id: '1',
+        word_eng: 'apple',
+        word_kor: '사과',
+      },
+      {
+        id: '2',
+        word_eng: 'banana',
+        word_kor: '바나나',
+      },
+      {
+        id: '3',
+        word_eng: 'book',
+        word_kor: '책',
+      },
+    ];
+
+    const Item = ({ eng, kor }) => (
+      <View style={styles.item}>
+        <Text style={styles.title}>{eng}     {kor}</Text>
+      </View>
+    );
+
+    const renderItem = ({ item }) => <Item eng={item.word_eng} kor={item.word_kor} />;
+
     return (
       <View style={styles.container}>
-        <View style={styles.title}>
-        <Text style={styles.white}>우선영어단어장</Text>
-        <TouchableOpacity style={styles.box}><Text>등록 단어</Text></TouchableOpacity>
+        <View style={styles.header}>
+          <Text style={styles.white}>우선영어단어장</Text>
+          <TouchableOpacity style={styles.box}>
+            <Text>등록 단어</Text>
+          </TouchableOpacity>
         </View>
         <FlatList
           style={styles.Words}
-          data={[
-            { key: 'Devin' },
-            { key: 'Dan' },
-            { key: 'Dominic' },
-            { key: 'Jackson' },
-            { key: 'James' },
-            { key: 'Joel' },
-            { key: 'John' },
-            { key: 'Jillian' },
-            { key: 'Jimmy' },
-            { key: 'Julie' },
-            { key: 'Devin1' },
-            { key: 'Dan1' },
-            { key: 'Dominic1' },
-            { key: 'Jackson1' },
-            { key: 'James1' },
-            { key: 'Joel1' },
-            { key: 'John1' },
-            { key: 'Jillian1' },
-            { key: 'Jimmy1' },
-            { key: 'Julie1' },
-          ]}
-          renderItem={({ item }) => <Text style={styles.item}>{item.key}</Text>}
+          data={DATA}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
         />
-        <View style={styles.right}><TouchableOpacity style={styles.box}><Text>Test 등록</Text></TouchableOpacity></View>
+        <View style={styles.right}>
+          <TouchableOpacity style={styles.box}>
+            <Text>Test 등록</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -67,14 +86,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     width: 300,
   },
-  title: {
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: 280,
     paddingBottom: 7,
   },
   white: {
-    color: '#fff'
+    color: '#fff',
   },
   box: {
     width: 80,
@@ -85,6 +104,9 @@ const styles = StyleSheet.create({
   },
   right: {
     marginTop: 10,
-    marginLeft: 200
-  }
+    marginLeft: 200,
+  },
+  title: {
+    fontSize: 20,
+  },
 });

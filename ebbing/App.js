@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Menu from './Menu';
 import { LoginStackScreen } from './StackScreen';
@@ -41,6 +41,11 @@ export default function App({ navigation }) {
             isSignout: true,
             userToken: null,
           };
+        case 'SIGN_UP':
+          return {
+            ...prevState,
+            userToken: action.token,
+          };
       }
     },
     {
@@ -58,12 +63,11 @@ export default function App({ navigation }) {
 
       try {
         userToken = await AsyncStorage.getItem('userToken');
-        console.log('유저토큰이 있다! 토큰 값은 : ', userToken);
+        console.log('유저 토큰 값은 : ', userToken);
       } catch (e) {
         // Restoring token failed
         // 토큰 복원 실패
       }
-
       // After restoring token, we may need to validate it in production apps
       // 토큰을 복원 한 후 프로덕션 앱에서 유효성을 검사해야 할 수 있습니다.
 
@@ -80,68 +84,79 @@ export default function App({ navigation }) {
   const authContext = React.useMemo(
     () => ({
       signIn: async (data) => {
-        // In a production app, we need to send some data (usually username, password) to server and get a token
-        // We will also need to handle errors if sign in failed
-        // After getting token, we need to persist the token using `AsyncStorage`
-        // In the example, we'll use a dummy token
         // 프로덕션 앱에서 일부 데이터 (일반적으로 사용자 이름, 비밀번호)를 서버로 보내고 토큰을 가져와야합니다.
         // 로그인이 실패한 경우에도 오류를 처리해야합니다.
         // 토큰을 얻은 후 ʻAsyncStorage`를 사용하여 토큰을 유지해야합니다.
         //이 예에서는 더미 토큰을 사용합니다.
 
-        // handleLogin() {
-        // //   axios
-        // //     .post("https://devyeon.com/users/login", this.state)
-        // //     .then((res) => {
-        // //       if (res.status === 200) {
-        // //         if (res.data.token) {
-        // //           this.props.getUserData(res.data);
-        // //           this.props.handleLoginClick();
-        // //         }
-        // //       }
-        // //     })
-        // //     .catch(() => alert("정보를 다시 확인해주세요"));
-        // // }
-        // // console.log(process.env.REQUEST_ADDRESS);
-        // let options = {
-        //   method: 'POST',
-        //   mode: 'cors',
-        //   headers: {
-        //     Accept: 'application/json',
-        //     'Content-Type': 'application/json;charset=UTF-8',
-        //   },
-        //   body: JSON.stringify({
-        //     name: data.username,
-        //     password: data.password,
-        //   }),
-        // };
-        // let response = await fetch(
-        //   `http://localhost:4000/user/signin`,
-        //   options
-        // );
-        // let responseOK = response && response.ok;
-        // if (responseOK) {
-        //   let result = response.json();
-        //   console.log('서버에서 보내온 name ', result.name);
-        //   dispatch({ type: 'SIGN_IN', token: result.name + '토큰' });
-        // } else {
-        //   console.log('망했다');
-        // }
+        let options = {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            name: data.username,
+            password: data.password,
+          }),
+        };
 
-         dispatch({ type: 'SIGN_IN', token: data.username + '토큰' });
+        try {
+          let response = await fetch(
+            `http://localhost:4000/user/signin`,
+            options
+          );
+          let responseOK = response && response.ok;
+          if (responseOK) {
+            let result = await response.json();
+            console.log('서버에서 보내온 result ', result);
+            dispatch({ type: 'SIGN_IN', token: result.name + '토큰' });
+          } else {
+            console.log('요청 실패');
+          }
+        } catch (e) {
+          console.error(e);
+        }
       },
       signOut: () => dispatch({ type: 'SIGN_OUT' }),
       signUp: async (data) => {
-        // In a production app, we need to send user data to server and get a token
-        // We will also need to handle errors if sign up failed
-        // After getting token, we need to persist the token using `AsyncStorage`
-        // In the example, we'll use a dummy token
         // 프로덕션 앱에서는 사용자 데이터를 서버로 보내고 토큰을 가져와야합니다.
         // 가입이 실패한 경우에도 오류를 처리해야합니다.
         // 토큰을 얻은 후 ʻAsyncStorage`를 사용하여 토큰을 유지해야합니다.
         //이 예에서는 더미 토큰을 사용합니다.
+        let options = {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            name: data.username,
+            password: data.password,
+          }),
+        };
 
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        try {
+          let response = await fetch(
+            `http://localhost:4000/user/signup`,
+            options
+          );
+          let responseOK = response && response.ok;
+          if (responseOK) {
+            let result = await response.json();
+            console.log('서버에서 보내온 result ', result);
+            Alert.alert('회원가입 성공');
+            dispatch({ type: 'SIGN_UP', token: result.name + '토큰' });
+          } else {
+            console.log('요청 실패');
+          }
+        } catch (e) {
+          console.error(e);
+        }
       },
     }),
     []
