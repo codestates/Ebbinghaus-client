@@ -90,45 +90,45 @@ export default function App({ navigation }) {
         //이 예에서는 더미 토큰을 사용합니다.
 
         // handleLogin() {
-        //   axios
-        //     .post("https://devyeon.com/users/login", this.state)
-        //     .then((res) => {
-        //       if (res.status === 200) {
-        //         if (res.data.token) {
-        //           this.props.getUserData(res.data);
-        //           this.props.handleLoginClick();
-        //         }
-        //       }
-        //     })
-        //     .catch(() => alert("정보를 다시 확인해주세요"));
+        // //   axios
+        // //     .post("https://devyeon.com/users/login", this.state)
+        // //     .then((res) => {
+        // //       if (res.status === 200) {
+        // //         if (res.data.token) {
+        // //           this.props.getUserData(res.data);
+        // //           this.props.handleLoginClick();
+        // //         }
+        // //       }
+        // //     })
+        // //     .catch(() => alert("정보를 다시 확인해주세요"));
+        // // }
+        // // console.log(process.env.REQUEST_ADDRESS);
+        // let options = {
+        //   method: 'POST',
+        //   mode: 'cors',
+        //   headers: {
+        //     Accept: 'application/json',
+        //     'Content-Type': 'application/json;charset=UTF-8',
+        //   },
+        //   body: JSON.stringify({
+        //     name: data.username,
+        //     password: data.password,
+        //   }),
+        // };
+        // let response = await fetch(
+        //   `http://localhost:4000/user/signin`,
+        //   options
+        // );
+        // let responseOK = response && response.ok;
+        // if (responseOK) {
+        //   let result = response.json();
+        //   console.log('서버에서 보내온 name ', result.name);
+        //   dispatch({ type: 'SIGN_IN', token: result.name + '토큰' });
+        // } else {
+        //   console.log('망했다');
         // }
-        // console.log(process.env.REQUEST_ADDRESS);
-        let options = {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8',
-          },
-          body: JSON.stringify({
-            name: data.username,
-            password: data.password,
-          }),
-        };
-        let response = await fetch(
-          `http://localhost:4000/user/signin`,
-          options
-        );
-        let responseOK = response && response.ok;
-        if (responseOK) {
-          let result = response.json();
-          console.log('서버에서 보내온 name ', result.name);
-          dispatch({ type: 'SIGN_IN', token: result.name + '토큰' });
-        } else {
-          console.log('망했다');
-        }
 
-        // dispatch({ type: 'SIGN_IN', token: data.username + '토큰' });
+         dispatch({ type: 'SIGN_IN', token: data.username + '토큰' });
       },
       signOut: () => dispatch({ type: 'SIGN_OUT' }),
       signUp: async (data) => {
