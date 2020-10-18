@@ -29,6 +29,7 @@ export default function App() {
           return {
             ...prevState,
             userToken: action.token,
+            // userToken: null,
             isLoading: false,
           };
         case 'SIGN_IN':
@@ -65,7 +66,6 @@ export default function App() {
         // Restoring token failed
         // 토큰 복원 실패
       }
-
       // After restoring token, we may need to validate it in production apps
       // 토큰을 복원 한 후 프로덕션 앱에서 유효성을 검사해야 할 수 있습니다.
 
@@ -86,6 +86,7 @@ export default function App() {
         // 로그인이 실패한 경우에도 오류를 처리해야합니다.
         // 토큰을 얻은 후 ʻAsyncStorage`를 사용하여 토큰을 유지해야합니다.
         //이 예에서는 더미 토큰을 사용합니다.
+
         let options = {
           method: 'POST',
           mode: 'cors',

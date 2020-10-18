@@ -8,8 +8,6 @@ import {
   TextInput,
   FlatList,
 } from 'react-native';
-import MineWordList from './MineWords/WordList';
-const dummyData = require('./DummyData/MineWordList');
 
 const { height, width } = Dimensions.get('window');
 const Address = 'http://localhost:4000';
@@ -53,11 +51,14 @@ export default class RegisterWords extends React.Component {
       await fetch(`${Address}/word/mine`, options)
         .then((res) => res.json())
         .then((result) => {
-          this.setState({
-            wordList: [...result],
+          result = result.map((item) => {
+            item.isSelect = false;
+            item.selectedClass = styles.list;
+            return item;
           });
-          console.log('서버에서 보내온 resultList ', result);
-          console.log('지금 wordList: ', this.state.wordList);
+          this.setState({
+            wordList: result,
+          });
         })
         .catch((e) => {
           console.error(e);
@@ -66,6 +67,68 @@ export default class RegisterWords extends React.Component {
       console.error(e);
     }
   }
+
+  //item의 선택에 대한 함수
+  //선택에 따른 스타일 변경 및
+  selectItem = (data) => {
+    data.item.isSelect = !data.item.isSelect;
+    data.item.selectedClass = data.item.isSelect
+      ? styles.selected
+      : styles.list;
+
+    const index = this.state.wordList.findIndex(
+      (item) => data.item.id === item.id
+    );
+
+    this.state.wordList[index] = data.item;
+
+    this.setState({
+      wordList: this.state.wordList,
+    });
+  };
+
+  /* Server에 delete 구현 시 그에 맞춰 작성 */
+  // deleteBtn = (data) => {
+  //   let result = [];
+  //   data.forEach((element) => {
+  //     if (element.isSelect === true) {
+  //       result.push(element);
+  //     }
+  //   });
+
+  //   let options = {
+  //     method: 'POST',
+  //     mode: 'cors',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json;charset=UTF-8',
+  //     },
+  //     credentials: 'include',
+  //     body: JSON.stringify({
+  //       array: [...result],
+  //     }),
+  //   };
+  //   fetch('http://localhost:4000/word/mine/', options).then(
+  //     this.fetchData()
+  //   );
+  // };
+
+  //List의 사이사이 빈 공간
+  FlatListItemSeparator = () => <View style={styles.line} />;
+
+  mineWordList = (data) => (
+    <TouchableOpacity
+      style={[styles.list, data.item.selectedClass, styles.mineWordList]}
+      onPress={() => this.selectItem(data)}
+    >
+      <View style={styles.mineWordRow}>
+        <Text style={styles.text}>{data.item.word_eng}</Text>
+      </View>
+      <View style={styles.mineWordRow}>
+        <Text style={styles.text}>{data.item.word_kor}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   async reqRegistWord() {
     const options = {
@@ -125,14 +188,16 @@ export default class RegisterWords extends React.Component {
           </TouchableOpacity>
         </View>
 
-        {dummyData.length !== 0 ? (
+        {wordList.length !== 0 ? (
           <View style={styles.wordListView}>
             <FlatList
               style={styles.wordListFlat}
-              data={dummyData}
+              data={wordList}
               keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => <MineWordList word={item} />}
+              renderItem={(item) => this.mineWordList(item)}
               windowSize={2}
+              extraData={this.state}
+              ItemSeparatorComponent={this.FlatListItemSeparator}
             />
             <View style={styles.wordListBtnView}>
               <TouchableOpacity style={styles.wordListBtn}>
@@ -228,5 +293,37 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  mineWordList: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  mineWordRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '50%',
+    padding: 10,
+  },
+  text: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 30,
+    color: '#fff',
+  },
+  selected: { backgroundColor: '#FA7B5F' },
+  list: {
+    paddingVertical: 5,
+    margin: 2,
+    flexDirection: 'row',
+    backgroundColor: '#192338',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    zIndex: -1,
+  },
+  line: {
+    height: 0.5,
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
 });
