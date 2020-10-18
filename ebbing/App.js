@@ -10,6 +10,8 @@ import { AuthContext } from './AppContext';
 // require('dotenv').config();
 
 const Stack = createStackNavigator();
+// const Address = 'http://15.164.250.104:4000';
+const Address = 'http://localhost:4000';
 
 function SplashScreen() {
   return (
@@ -19,7 +21,7 @@ function SplashScreen() {
   );
 }
 
-export default function App({ navigation }) {
+export default function App() {
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -36,12 +38,6 @@ export default function App({ navigation }) {
             userToken: action.token,
           };
         case 'SIGN_OUT':
-          return {
-            ...prevState,
-            isSignout: true,
-            userToken: null,
-          };
-        case 'SIGN_UP':
           return {
             ...prevState,
             isSignout: true,
@@ -95,7 +91,7 @@ export default function App({ navigation }) {
           mode: 'cors',
           headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8',
+            'Content-Type': 'application/json',
           },
           credentials: 'include',
           body: JSON.stringify({
@@ -105,10 +101,8 @@ export default function App({ navigation }) {
         };
 
         try {
-          let response = await fetch(
-            `http://localhost:4000/user/signin`,
-            options
-          );
+          let response = await fetch(`${Address}/user/signin`, options);
+          console.log('response==: ', response);
           let responseOK = response && response.ok;
           if (responseOK) {
             let result = await response.json();
@@ -132,7 +126,7 @@ export default function App({ navigation }) {
           mode: 'cors',
           headers: {
             Accept: 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8',
+            'Content-Type': 'application/json',
           },
           credentials: 'include',
           body: JSON.stringify({
@@ -142,17 +136,13 @@ export default function App({ navigation }) {
         };
 
         try {
-          let response = await fetch(
-            `http://localhost:4000/user/signup`,
-            options
-          );
+          let response = await fetch(`${Address}/user/signup`, options);
           let responseOK = response && response.ok;
           if (responseOK) {
             let result = await response.json();
             console.log('서버에서 보내온 result ', result);
-            Alert.alert('회원가입 성공');
-            // dispatch({ type: 'SIGN_IN', token: result.name + '토큰' });
-            navigation.navigate('Login');
+            Alert.alert(`${result.name}님 회원가입이 완료되었습니다.`);
+            dispatch({ type: 'SIGN_IN', token: result.name + '토큰' });
           } else {
             console.log('요청 실패');
           }
