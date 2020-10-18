@@ -44,8 +44,7 @@ export default function App({ navigation }) {
         case 'SIGN_UP':
           return {
             ...prevState,
-            isSignout: true,
-            userToken: null,
+            userToken: action.token,
           };
       }
     },
@@ -69,7 +68,6 @@ export default function App({ navigation }) {
         // Restoring token failed
         // 토큰 복원 실패
       }
-
       // After restoring token, we may need to validate it in production apps
       // 토큰을 복원 한 후 프로덕션 앱에서 유효성을 검사해야 할 수 있습니다.
 
@@ -90,6 +88,7 @@ export default function App({ navigation }) {
         // 로그인이 실패한 경우에도 오류를 처리해야합니다.
         // 토큰을 얻은 후 ʻAsyncStorage`를 사용하여 토큰을 유지해야합니다.
         //이 예에서는 더미 토큰을 사용합니다.
+
         let options = {
           method: 'POST',
           mode: 'cors',
@@ -151,8 +150,7 @@ export default function App({ navigation }) {
             let result = await response.json();
             console.log('서버에서 보내온 result ', result);
             Alert.alert('회원가입 성공');
-            // dispatch({ type: 'SIGN_IN', token: result.name + '토큰' });
-            navigation.navigate('Login');
+            dispatch({ type: 'SIGN_UP', token: result.name + '토큰' });
           } else {
             console.log('요청 실패');
           }
