@@ -15,7 +15,6 @@ export default class PriorityWords extends Component {
     this.state = {
       loading: false,
       dataSource: [],
-      selectData: []
     };
   }
 
@@ -82,13 +81,11 @@ export default class PriorityWords extends Component {
 
   goToTest = (data) => {
     let result = [];
-    console.log("data1",data)
     data.forEach(element => {
       if (element.isSelect === true) {
         result.push(element)
       }
     });
-    console.log("data2",data)
 
     let options = {
       method: 'POST',
