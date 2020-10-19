@@ -17,7 +17,7 @@ export default class MineWords extends Component {
     super(props);
 
     this.state = {
-      loading: false,
+      //loading: false,
       dataSource: [],
     };
 
@@ -30,10 +30,14 @@ export default class MineWords extends Component {
     this.fetchData();
   }
 
+  componentWillUnmount() {
+    this.fetchData();
+  }
+
   // Data를 받아오기 위해 서버에 요청하는 곳
   //데이터를 받아올 때 상태값으로 isSelect과 selectedClass 를 넣어줌
   //isSelect 은 item의 선택여부, selectedClass는 그에 따른 스타일 변경
-  fetchData = async () => {
+  async fetchData() {
     this.setState({ loading: true });
     let userId = await AsyncStorage.getItem('userId');
 
@@ -42,7 +46,7 @@ export default class MineWords extends Component {
       mode: 'cors',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8',
+        'Content-Type': 'application/json',
       },
       credentials: 'include',
     };
@@ -67,7 +71,7 @@ export default class MineWords extends Component {
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
   //List의 사이사이 빈 공간
   FlatListItemSeparator = () => <View style={styles.line} />;
@@ -91,7 +95,7 @@ export default class MineWords extends Component {
     });
   };
 
-  goToTest = async (data) => {
+  async goToTest(data) {
     let result = [];
     let userId = await AsyncStorage.getItem('userId');
 
@@ -122,7 +126,7 @@ export default class MineWords extends Component {
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
   renderItem = (data) => (
     <TouchableOpacity
@@ -154,14 +158,20 @@ export default class MineWords extends Component {
             <Text>등록 단어</Text>
           </TouchableOpacity>
         </View>
-        <FlatList
-          style={styles.Words}
-          data={this.state.dataSource}
-          ItemSeparatorComponent={this.FlatListItemSeparator}
-          renderItem={(item) => this.renderItem(item)}
-          keyExtractor={(item) => item.id.toString()}
-          extraData={this.state}
-        />
+
+        {this.state.dataSource.length !== 0 ? (
+          <FlatList
+            style={styles.Words}
+            data={this.state.dataSource}
+            ItemSeparatorComponent={this.FlatListItemSeparator}
+            renderItem={(item) => this.renderItem(item)}
+            keyExtractor={(item) => item.id}
+            extraData={this.state}
+          />
+        ) : (
+          <Text style={styles.Words}>현재 등록된 단어가 없습니다.</Text>
+        )}
+
         <View style={styles.between}>
           <View>
             <TouchableOpacity

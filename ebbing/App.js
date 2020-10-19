@@ -5,7 +5,6 @@ import Menu from './Menu';
 import { LoginStackScreen } from './StackScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-community/async-storage';
-import axios from 'axios';
 import { AuthContext } from './AppContext';
 // require('dotenv').config();
 
@@ -61,19 +60,7 @@ export default function App() {
 
       try {
         accessToken = await AsyncStorage.getItem('accessToken');
-        console.log('accessToken 값은 : ', accessToken);
-        AsyncStorage.getAllKeys((err, keys) => {
-          AsyncStorage.multiGet(keys, (err, stores) => {
-            stores.map((result, i, store) => {
-              // get at each store's key/value so you can work with it
-              let key = store[i][0];
-              let value = store[i][1];
-              console.log('key : ', key);
-              console.log('value : ', value);
-            });
-            console.log('stores : ', stores);
-          });
-        });
+        console.log('유저 토큰 값은 : ', accessToken);
       } catch (e) {
         // Restoring token failed
         // 토큰 복원 실패
@@ -130,9 +117,33 @@ export default function App() {
           console.error(e);
         }
       },
-      signOut: () => {
-        dispatch({ type: 'SIGN_OUT' });
-        AsyncStorage.clear();
+      signOut: async (data) => {
+        let options = {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${state.accessToken}`,
+          },
+          credentials: 'include',
+        };
+
+        try {
+          let response = await fetch(`${Address}/user/signin`, options);
+          console.log('response==: ', response);
+          let responseOK = response && response.ok;
+          if (responseOK) {
+            let result = await response.json();
+            console.log('서버에서 보내온 result ', result);
+            AsyncStorage.removeItem('accessToken', result.accessToken);
+            dispatch({ type: 'SIGN_OUT' });
+          } else {
+            console.log('요청 실패');
+          }
+        } catch (e) {
+          console.error(e);
+        }
       },
       signUp: async (data) => {
         // 프로덕션 앱에서는 사용자 데이터를 서버로 보내고 토큰을 가져와야합니다.
@@ -161,8 +172,9 @@ export default function App() {
             let result = await response.json();
             console.log('서버에서 보내온 result ', result);
             Alert.alert(`${result.name}님 회원가입이 완료되었습니다.`);
-            // AsyncStorage.setItem('accessToken', result.accessToken);
-            // dispatch({ type: 'SIGN_IN', token: result.accessToken });
+            AsyncStorage.setItem('accessToken', result.accessToken);
+            AsyncStorage.setItem('userId', result.id);
+            dispatch({ type: 'SIGN_IN', token: result.name + '토큰' });
           } else {
             console.log('요청 실패');
           }

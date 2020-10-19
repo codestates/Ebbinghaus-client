@@ -26,8 +26,9 @@ export default class PriorityWords extends Component {
   // Data를 받아오기 위해 서버에 요청하는 곳
   //데이터를 받아올 때 상태값으로 isSelect과 selectedClass 를 넣어줌
   //isSelect 은 item의 선택여부, selectedClass는 그에 따른 스타일 변경
-  fetchData = () => {
+  async fetchData() {
     this.setState({ loading: true });
+    let userId = await AsyncStorage.getItem('userId');
 
     let options = {
       method: 'GET',
@@ -39,7 +40,7 @@ export default class PriorityWords extends Component {
       credentials: 'include',
     };
 
-    fetch('http://localhost:4000/word/mine', options)
+    fetch(`http://localhost:4000/word/mine/${userId}`, options)
       .then((response) => response.json())
       .then((responseJson) => {
         responseJson = responseJson.map((item) => {
@@ -55,7 +56,7 @@ export default class PriorityWords extends Component {
       .catch((error) => {
         this.setState({ loading: false });
       });
-  };
+  }
 
   //List의 사이사이 빈 공간
   FlatListItemSeparator = () => <View style={styles.line} />;
@@ -96,7 +97,7 @@ export default class PriorityWords extends Component {
       },
       credentials: 'include',
       body: JSON.stringify({
-        array: [...result],
+        selectedWords: [...result],
       }),
     };
     fetch('http://localhost:4000/word/mine/test-register', options).then(
