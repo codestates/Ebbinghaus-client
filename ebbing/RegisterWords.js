@@ -8,9 +8,11 @@ import {
   TextInput,
   FlatList,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const { height, width } = Dimensions.get('window');
 const Address = 'http://localhost:4000';
+// const Address = 'http://15.164.250.104:4000';
 
 export default class RegisterWords extends React.Component {
   constructor(props) {
@@ -27,7 +29,6 @@ export default class RegisterWords extends React.Component {
     this.focusTextInput = this.focusTextInput.bind(this);
     this.getMineWordList = this.getMineWordList.bind(this);
     this.reqRegistWord = this.reqRegistWord.bind(this);
-    console.log('width and height', width, height);
   }
 
   focusTextInput() {
@@ -36,7 +37,12 @@ export default class RegisterWords extends React.Component {
     this.textInput.current.focus();
   }
 
+  clearTextInput() {
+    this.setState({ word_eng: '', word_kor: '' });
+  }
+
   async getMineWordList() {
+    let userId = await AsyncStorage.getItem('userId');
     const options = {
       method: 'GET',
       mode: 'cors',
@@ -48,7 +54,7 @@ export default class RegisterWords extends React.Component {
     };
 
     try {
-      await fetch(`${Address}/word/mine`, options)
+      await fetch(`${Address}/word/mine/${userId}`, options)
         .then((res) => res.json())
         .then((result) => {
           result = result.map((item) => {
@@ -131,6 +137,8 @@ export default class RegisterWords extends React.Component {
   );
 
   async reqRegistWord() {
+    let userId = await AsyncStorage.getItem('userId');
+
     const options = {
       method: 'POST',
       mode: 'cors',
@@ -142,15 +150,16 @@ export default class RegisterWords extends React.Component {
       body: JSON.stringify({
         word_eng: this.state.word_eng,
         word_kor: this.state.word_kor,
+        id: userId,
       }),
     };
 
     try {
-      await fetch(`${Address}/word/mine/register`, options)
-        .then((res) => res.json())
-        .then((result) => {
-          this.getMineWordList();
-        });
+      await fetch(`${Address}/word/mine/register`, options).then(() => {
+        this.clearTextInput();
+        this.getMineWordList();
+        this.focusTextInput();
+      });
     } catch (e) {
       console.error(e);
     }
@@ -162,7 +171,7 @@ export default class RegisterWords extends React.Component {
   }
   render() {
     const { navigation } = this.props;
-    const { wordList } = this.state;
+    const { wordList, word_eng, word_kor } = this.state;
     return (
       <View style={styles.registerWords}>
         <Text style={styles.headerTitleText}>나만의 단어장</Text>
@@ -171,12 +180,14 @@ export default class RegisterWords extends React.Component {
             style={styles.inputWord}
             placeholder="Input English"
             onChangeText={(word_eng) => this.setState({ word_eng })}
+            value={word_eng}
             ref={this.textInput}
           ></TextInput>
           <TextInput
             style={styles.inputWord}
             placeholder="Input Korean"
             onChangeText={(word_kor) => this.setState({ word_kor })}
+            value={word_kor}
           ></TextInput>
         </View>
         <View style={styles.registButtonView}>

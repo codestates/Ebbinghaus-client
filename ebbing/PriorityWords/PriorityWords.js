@@ -139,7 +139,7 @@ export default class PriorityWords extends Component {
           data={this.state.dataSource}
           ItemSeparatorComponent={this.FlatListItemSeparator}
           renderItem={(item) => this.renderItem(item)}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           extraData={this.state}
         />
         <View style={styles.right}>

@@ -7,6 +7,10 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+
+const Address = 'http://localhost:4000';
+// const Address = 'http://15.164.250.104:4000';
 
 export default class MineWords extends Component {
   constructor(props) {
@@ -16,6 +20,9 @@ export default class MineWords extends Component {
       loading: false,
       dataSource: [],
     };
+
+    this.fetchData = this.fetchData.bind(this);
+    this.goToTest = this.goToTest.bind(this);
   }
 
   // 랜더링시 데이터를 받아옴
@@ -26,8 +33,9 @@ export default class MineWords extends Component {
   // Data를 받아오기 위해 서버에 요청하는 곳
   //데이터를 받아올 때 상태값으로 isSelect과 selectedClass 를 넣어줌
   //isSelect 은 item의 선택여부, selectedClass는 그에 따른 스타일 변경
-  fetchData = () => {
+  fetchData = async () => {
     this.setState({ loading: true });
+    let userId = await AsyncStorage.getItem('userId');
 
     let options = {
       method: 'GET',
@@ -39,22 +47,26 @@ export default class MineWords extends Component {
       credentials: 'include',
     };
 
-    fetch('http://localhost:4000/word/mine', options)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        responseJson = responseJson.map((item) => {
-          item.isSelect = false;
-          item.selectedClass = styles.list;
-          return item;
+    try {
+      await fetch(`${Address}/word/mine/${userId}`, options)
+        .then((response) => response.json())
+        .then((responseJson) => {
+          responseJson = responseJson.map((item) => {
+            item.isSelect = false;
+            item.selectedClass = styles.list;
+            return item;
+          });
+          this.setState({
+            loading: false,
+            dataSource: responseJson,
+          });
+        })
+        .catch((error) => {
+          this.setState({ loading: false });
         });
-        this.setState({
-          loading: false,
-          dataSource: responseJson,
-        });
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-      });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   //List의 사이사이 빈 공간
@@ -79,8 +91,10 @@ export default class MineWords extends Component {
     });
   };
 
-  goToTest = (data) => {
+  goToTest = async (data) => {
     let result = [];
+    let userId = await AsyncStorage.getItem('userId');
+
     data.forEach((element) => {
       if (element.isSelect === true) {
         result.push(element);
@@ -97,11 +111,17 @@ export default class MineWords extends Component {
       credentials: 'include',
       body: JSON.stringify({
         array: [...result],
+        id: userId,
       }),
     };
-    fetch('http://localhost:4000/word/mine/test-register', options).then(
-      this.fetchData()
-    );
+
+    try {
+      await fetch(`${Address}/word/mine/test-register`, options).then(() =>
+        this.fetchData()
+      );
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   renderItem = (data) => (
@@ -118,13 +138,13 @@ export default class MineWords extends Component {
   render() {
     const itemNumber = this.state.dataSource.filter((item) => item.isSelect)
       .length;
-    if (this.state.loading) {
-      return (
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" color="purple" />
-        </View>
-      );
-    }
+    // if (this.state.loading) {
+    //   return (
+    //     <View style={styles.loader}>
+    //       <ActivityIndicator size="large" color="purple" />
+    //     </View>
+    //   );
+    // }
 
     return (
       <View style={styles.container}>
@@ -139,7 +159,7 @@ export default class MineWords extends Component {
           data={this.state.dataSource}
           ItemSeparatorComponent={this.FlatListItemSeparator}
           renderItem={(item) => this.renderItem(item)}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           extraData={this.state}
         />
         <View style={styles.between}>
