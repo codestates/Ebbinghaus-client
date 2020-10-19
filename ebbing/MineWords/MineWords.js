@@ -165,7 +165,7 @@ export default class MineWords extends Component {
             data={this.state.dataSource}
             ItemSeparatorComponent={this.FlatListItemSeparator}
             renderItem={(item) => this.renderItem(item)}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             extraData={this.state}
           />
         ) : (

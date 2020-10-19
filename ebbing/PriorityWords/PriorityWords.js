@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class PriorityWords extends Component {
   constructor(props) {
@@ -97,7 +98,7 @@ export default class PriorityWords extends Component {
       },
       credentials: 'include',
       body: JSON.stringify({
-        selectedWords: [...result],
+        array: [...result],
       }),
     };
     fetch('http://localhost:4000/word/mine/test-register', options).then(
