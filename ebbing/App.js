@@ -5,7 +5,6 @@ import Menu from './Menu';
 import { LoginStackScreen } from './StackScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-community/async-storage';
-import axios from 'axios';
 import { AuthContext } from './AppContext';
 // require('dotenv').config();
 
@@ -28,28 +27,28 @@ export default function App() {
         case 'RESTORE_TOKEN':
           return {
             ...prevState,
-            userToken: action.token,
-            // userToken: null,
+            accessToken: action.token,
+            // accessToken: null,
             isLoading: false,
           };
         case 'SIGN_IN':
           return {
             ...prevState,
             isSignout: false,
-            userToken: action.token,
+            accessToken: action.token,
           };
         case 'SIGN_OUT':
           return {
             ...prevState,
             isSignout: true,
-            userToken: null,
+            accessToken: null,
           };
       }
     },
     {
       isLoading: true,
       isSignout: false,
-      userToken: null,
+      accessToken: null,
     }
   );
 
@@ -57,11 +56,11 @@ export default function App() {
     // Fetch the token from storage then navigate to our appropriate place
     // 저장소에서 토큰을 가져온 다음 적절한 위치로 이동합니다.
     const bootstrapAsync = async () => {
-      let userToken;
+      let accessToken;
 
       try {
-        userToken = await AsyncStorage.getItem('userToken');
-        console.log('유저 토큰 값은 : ', userToken);
+        accessToken = await AsyncStorage.getItem('accessToken');
+        console.log('유저 토큰 값은 : ', accessToken);
       } catch (e) {
         // Restoring token failed
         // 토큰 복원 실패
@@ -73,7 +72,7 @@ export default function App() {
       // screen will be unmounted and thrown away.
       // 앱 화면 또는 인증 화면으로 전환되며이 로딩
       // 화면이 마운트 해제되고 버려집니다.
-      dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+      dispatch({ type: 'RESTORE_TOKEN', token: accessToken });
     };
 
     bootstrapAsync();
@@ -93,6 +92,7 @@ export default function App() {
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
+            authorization: `Bearer ${state.accessToken}`,
           },
           credentials: 'include',
           body: JSON.stringify({
@@ -108,6 +108,8 @@ export default function App() {
           if (responseOK) {
             let result = await response.json();
             console.log('서버에서 보내온 result ', result);
+            AsyncStorage.setItem('accessToken', result.accessToken);
+            AsyncStorage.setItem('userId', result.id);
             dispatch({ type: 'SIGN_IN', token: result.name + '토큰' });
           } else {
             console.log('요청 실패');
@@ -116,7 +118,34 @@ export default function App() {
           console.error(e);
         }
       },
-      signOut: () => dispatch({ type: 'SIGN_OUT' }),
+      signOut: async (data) => {
+        let options = {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${state.accessToken}`,
+          },
+          credentials: 'include',
+        };
+
+        try {
+          let response = await fetch(`${Address}/user/signin`, options);
+          console.log('response==: ', response);
+          let responseOK = response && response.ok;
+          if (responseOK) {
+            let result = await response.json();
+            console.log('서버에서 보내온 result ', result);
+            AsyncStorage.removeItem('accessToken', result.accessToken);
+            dispatch({ type: 'SIGN_OUT' })
+          } else {
+            console.log('요청 실패');
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      },
       signUp: async (data) => {
         // 프로덕션 앱에서는 사용자 데이터를 서버로 보내고 토큰을 가져와야합니다.
         // 가입이 실패한 경우에도 오류를 처리해야합니다.
@@ -128,6 +157,7 @@ export default function App() {
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
+            authorization: `Bearer ${state.accessToken}`,
           },
           credentials: 'include',
           body: JSON.stringify({
@@ -143,6 +173,8 @@ export default function App() {
             let result = await response.json();
             console.log('서버에서 보내온 result ', result);
             Alert.alert(`${result.name}님 회원가입이 완료되었습니다.`);
+            AsyncStorage.setItem('accessToken', result.accessToken);
+            AsyncStorage.setItem('userId', result.id);
             dispatch({ type: 'SIGN_IN', token: result.name + '토큰' });
           } else {
             console.log('요청 실패');
@@ -162,7 +194,7 @@ export default function App() {
           {state.isLoading ? (
             // We haven't finished checking for the token yet
             <Stack.Screen name="Splash" component={SplashScreen} />
-          ) : state.userToken == null ? (
+          ) : state.accessToken == null ? (
             <Stack.Screen name="Login" component={LoginStackScreen} />
           ) : (
             <Stack.Screen name="Menu" component={Menu} />

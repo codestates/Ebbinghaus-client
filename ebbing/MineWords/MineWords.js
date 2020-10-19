@@ -13,7 +13,7 @@ export default class MineWords extends Component {
     super(props);
 
     this.state = {
-      loading: false,
+      //loading: false,
       dataSource: [],
     };
   }
@@ -23,39 +23,48 @@ export default class MineWords extends Component {
     this.fetchData();
   }
 
+  componentWillUnmount() {
+    this.fetchData();
+  }
+
   // Data를 받아오기 위해 서버에 요청하는 곳
   //데이터를 받아올 때 상태값으로 isSelect과 selectedClass 를 넣어줌
   //isSelect 은 item의 선택여부, selectedClass는 그에 따른 스타일 변경
-  fetchData = () => {
-    this.setState({ loading: true });
+  async fetchData() {
+    //this.setState({ loading: true });
+    let userId = await AsyncStorage.getItem('userId');
 
     let options = {
       method: 'GET',
       mode: 'cors',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8',
+        'Content-Type': 'application/json',
       },
       credentials: 'include',
     };
-
-    fetch('http://localhost:4000/word/mine', options)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        responseJson = responseJson.map((item) => {
-          item.isSelect = false;
-          item.selectedClass = styles.list;
-          return item;
+    try {
+      await fetch(`http://localhost:4000/word/mine/${userId}`, options)
+        .then((response) => response.json())
+        .then((responseJson) => {
+          responseJson = responseJson.map((item) => {
+            item.isSelect = false;
+            item.selectedClass = styles.list;
+            return item;
+          });
+          this.setState({
+            //loading: false,
+            dataSource: responseJson,
+          });
+        })
+        .catch((error) => {
+          //this.setState({ loading: false });
+          console.error(e);
         });
-        this.setState({
-          loading: false,
-          dataSource: responseJson,
-        });
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-      });
-  };
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   //List의 사이사이 빈 공간
   FlatListItemSeparator = () => <View style={styles.line} />;
@@ -79,7 +88,7 @@ export default class MineWords extends Component {
     });
   };
 
-  goToTest = (data) => {
+  async goToTest(data) {
     let result = [];
     data.forEach((element) => {
       if (element.isSelect === true) {
@@ -96,10 +105,10 @@ export default class MineWords extends Component {
       },
       credentials: 'include',
       body: JSON.stringify({
-        array: [...result],
+        selectedWords: [...result],
       }),
     };
-    fetch('http://localhost:4000/word/mine/test-register', options).then(
+    await fetch('http://localhost:4000/word/mine/test-register', options).then(
       this.fetchData()
     );
   };
@@ -118,13 +127,13 @@ export default class MineWords extends Component {
   render() {
     const itemNumber = this.state.dataSource.filter((item) => item.isSelect)
       .length;
-    if (this.state.loading) {
-      return (
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" color="purple" />
-        </View>
-      );
-    }
+    // if (this.state.loading) {
+    //   return (
+    //     <View style={styles.loader}>
+    //       <ActivityIndicator size="large" color="purple" />
+    //     </View>
+    //   );
+    // }
 
     return (
       <View style={styles.container}>
@@ -134,14 +143,20 @@ export default class MineWords extends Component {
             <Text>등록 단어</Text>
           </TouchableOpacity>
         </View>
-        <FlatList
-          style={styles.Words}
-          data={this.state.dataSource}
-          ItemSeparatorComponent={this.FlatListItemSeparator}
-          renderItem={(item) => this.renderItem(item)}
-          keyExtractor={(item) => item.id}
-          extraData={this.state}
-        />
+
+        {this.state.dataSource.length !== 0 ? (
+          <FlatList
+            style={styles.Words}
+            data={this.state.dataSource}
+            ItemSeparatorComponent={this.FlatListItemSeparator}
+            renderItem={(item) => this.renderItem(item)}
+            keyExtractor={(item) => item.id}
+            extraData={this.state}
+          />
+        ) : (
+          <Text style={styles.Words}>현재 등록된 단어가 없습니다.</Text>
+        )}
+
         <View style={styles.between}>
           <View>
             <TouchableOpacity
