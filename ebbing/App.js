@@ -28,7 +28,7 @@ export default function App() {
           return {
             ...prevState,
             accessToken: action.token,
-            // accessToken: null,
+            // accessToken: 'hihi',
             isLoading: false,
           };
         case 'SIGN_IN':
@@ -74,7 +74,6 @@ export default function App() {
       // 화면이 마운트 해제되고 버려집니다.
       dispatch({ type: 'RESTORE_TOKEN', token: accessToken });
     };
-
     bootstrapAsync();
   }, []);
 
@@ -110,7 +109,7 @@ export default function App() {
             console.log('서버에서 보내온 result ', result);
             AsyncStorage.setItem('accessToken', result.accessToken);
             AsyncStorage.setItem('userId', result.id);
-            dispatch({ type: 'SIGN_IN', token: result.name + '토큰' });
+            dispatch({ type: 'SIGN_IN', token: result.accessToken });
           } else {
             console.log('요청 실패');
           }
@@ -138,7 +137,7 @@ export default function App() {
             let result = await response.json();
             console.log('서버에서 보내온 result ', result);
             AsyncStorage.removeItem('accessToken', result.accessToken);
-            dispatch({ type: 'SIGN_OUT' })
+            dispatch({ type: 'SIGN_OUT' });
           } else {
             console.log('요청 실패');
           }

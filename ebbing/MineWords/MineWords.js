@@ -7,6 +7,10 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+
+const Address = 'http://localhost:4000';
+// const Address = 'http://15.164.250.104:4000';
 
 export default class MineWords extends Component {
   constructor(props) {
@@ -16,6 +20,9 @@ export default class MineWords extends Component {
       //loading: false,
       dataSource: [],
     };
+
+    this.fetchData = this.fetchData.bind(this);
+    this.goToTest = this.goToTest.bind(this);
   }
 
   // 랜더링시 데이터를 받아옴
@@ -31,7 +38,7 @@ export default class MineWords extends Component {
   //데이터를 받아올 때 상태값으로 isSelect과 selectedClass 를 넣어줌
   //isSelect 은 item의 선택여부, selectedClass는 그에 따른 스타일 변경
   async fetchData() {
-    //this.setState({ loading: true });
+    this.setState({ loading: true });
     let userId = await AsyncStorage.getItem('userId');
 
     let options = {
@@ -43,8 +50,9 @@ export default class MineWords extends Component {
       },
       credentials: 'include',
     };
+
     try {
-      await fetch(`http://localhost:4000/word/mine/${userId}`, options)
+      await fetch(`${Address}/word/mine/${userId}`, options)
         .then((response) => response.json())
         .then((responseJson) => {
           responseJson = responseJson.map((item) => {
@@ -53,13 +61,12 @@ export default class MineWords extends Component {
             return item;
           });
           this.setState({
-            //loading: false,
+            loading: false,
             dataSource: responseJson,
           });
         })
         .catch((error) => {
-          //this.setState({ loading: false });
-          console.error(e);
+          this.setState({ loading: false });
         });
     } catch (e) {
       console.error(e);
@@ -90,6 +97,8 @@ export default class MineWords extends Component {
 
   async goToTest(data) {
     let result = [];
+    let userId = await AsyncStorage.getItem('userId');
+
     data.forEach((element) => {
       if (element.isSelect === true) {
         result.push(element);
@@ -105,13 +114,19 @@ export default class MineWords extends Component {
       },
       credentials: 'include',
       body: JSON.stringify({
-        selectedWords: [...result],
+        array: [...result],
+        id: userId,
       }),
     };
-    await fetch('http://localhost:4000/word/mine/test-register', options).then(
-      this.fetchData()
-    );
-  };
+
+    try {
+      await fetch(`${Address}/word/mine/test-register`, options).then(() =>
+        this.fetchData()
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   renderItem = (data) => (
     <TouchableOpacity

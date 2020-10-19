@@ -56,7 +56,7 @@ export default class PriorityWords extends Component {
       .catch((error) => {
         this.setState({ loading: false });
       });
-  };
+  }
 
   //List의 사이사이 빈 공간
   FlatListItemSeparator = () => <View style={styles.line} />;
@@ -76,15 +76,15 @@ export default class PriorityWords extends Component {
     this.state.dataSource[index] = data.item;
 
     this.setState({
-    dataSource: this.state.dataSource,
+      dataSource: this.state.dataSource,
     });
   };
 
   goToTest = (data) => {
     let result = [];
-    data.forEach(element => {
+    data.forEach((element) => {
       if (element.isSelect === true) {
-        result.push(element)
+        result.push(element);
       }
     });
 
@@ -97,12 +97,13 @@ export default class PriorityWords extends Component {
       },
       credentials: 'include',
       body: JSON.stringify({
-        selectedWords: [...result]
+        selectedWords: [...result],
       }),
     };
-    fetch('http://localhost:4000/word/mine/test-register', options)
-    .then(this.fetchData())
-  }
+    fetch('http://localhost:4000/word/mine/test-register', options).then(
+      this.fetchData()
+    );
+  };
 
   renderItem = (data) => (
     <TouchableOpacity
@@ -139,11 +140,14 @@ export default class PriorityWords extends Component {
           data={this.state.dataSource}
           ItemSeparatorComponent={this.FlatListItemSeparator}
           renderItem={(item) => this.renderItem(item)}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           extraData={this.state}
         />
         <View style={styles.right}>
-          <TouchableOpacity style={styles.box} onPress={() => this.goToTest(this.state.dataSource)}>
+          <TouchableOpacity
+            style={styles.box}
+            onPress={() => this.goToTest(this.state.dataSource)}
+          >
             <Text>{itemNumber}개 Test 등록</Text>
           </TouchableOpacity>
         </View>
