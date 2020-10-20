@@ -12,7 +12,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 const { height, width } = Dimensions.get('window');
 const Address = 'http://localhost:4000';
-// const Address = 'http://15.164.250.104:4000';
 
 export default class RegisterWords extends React.Component {
   constructor(props) {
@@ -38,23 +37,17 @@ export default class RegisterWords extends React.Component {
   }
 
   clearTextInput() {
-    this.setState({ word_eng: '', word_kor: '' });
+    this.setState({
+      word_eng: '',
+      word_kor: '',
+    });
   }
 
   async getMineWordList() {
     let userId = await AsyncStorage.getItem('userId');
-    const options = {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    };
 
     try {
-      await fetch(`${Address}/word/mine/${userId}`, options)
+      await fetch(`${Address}/word/mine/${userId}`)
         .then((res) => res.json())
         .then((result) => {
           result = result.map((item) => {
@@ -138,7 +131,6 @@ export default class RegisterWords extends React.Component {
 
   async reqRegistWord() {
     let userId = await AsyncStorage.getItem('userId');
-
     const options = {
       method: 'POST',
       mode: 'cors',
@@ -155,10 +147,10 @@ export default class RegisterWords extends React.Component {
     };
 
     try {
-      await fetch(`${Address}/word/mine/register`, options).then(() => {
+      fetch(`${Address}/word/mine/register`, options).then(() => {
         this.clearTextInput();
-        this.getMineWordList();
         this.focusTextInput();
+        this.getMineWordList();
       });
     } catch (e) {
       console.error(e);
@@ -216,7 +208,9 @@ export default class RegisterWords extends React.Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.wordListBtn}
-                onPress={() => navigation.navigate('MineWords')}
+                onPress={() => {
+                  navigation.goBack();
+                }}
               >
                 <Text>완료</Text>
               </TouchableOpacity>

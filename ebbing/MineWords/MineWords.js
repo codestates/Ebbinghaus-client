@@ -24,44 +24,37 @@ export default class MineWords extends Component {
 
   // 랜더링시 데이터를 받아옴
   componentDidMount() {
-    this.fetchData();
+    this.props.navigation.addListener('focus', () => {
+      this.fetchData();
+    });
   }
 
   // Data를 받아오기 위해 서버에 요청하는 곳
   //데이터를 받아올 때 상태값으로 isSelect과 selectedClass 를 넣어줌
   //isSelect 은 item의 선택여부, selectedClass는 그에 따른 스타일 변경
   async fetchData() {
-    this.setState({ loading: true });
+    this.setState({ loading: true }, function () {
+      console.log('this.state : ', this.state);
+    });
     let userId = await AsyncStorage.getItem('userId');
 
-    let options = {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    };
     try {
-      await fetch(`${Address}/word/mine/${userId}`, options)
-        .then((response) => response.json())
-        .then((responseJson) => {
-          responseJson = responseJson.map((item) => {
-            item.isSelect = false;
-            item.selectedClass = styles.list;
-            return item;
-          });
-          this.setState({
-            loading: false,
-            dataSource: responseJson,
-          });
-        })
-        .catch((error) => {
-          this.setState({ loading: false });
-        });
+      const response = await fetch(`${Address}/word/mine/${userId}`);
+      const responseJson = await response.json();
+
+      responseJson.map((item) => {
+        console.log('item : ', item);
+        item.isSelect = false;
+        item.selectedClass = styles.list;
+        return item;
+      });
+      this.setState({
+        loading: false,
+        dataSource: responseJson,
+      });
     } catch (e) {
       console.error(e);
+      this.setState({ loading: false });
     }
   }
 
@@ -91,34 +84,35 @@ export default class MineWords extends Component {
     let result = [];
     let userId = await AsyncStorage.getItem('userId');
 
-    data.forEach((element) => {
-      if (element.isSelect === true) {
-        result.push(element);
-      }
-    });
-
-    let options = {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        selectedWords: [...result],
-        id: userId,
-      }),
-    };
-
     try {
-      await fetch(`${Address}/word/mine/test-register`, options)
-      .then(       
-        // setTimeout(() => {
-        await this.fetchData()
-        // }, 2000)
-      ).then(
-        function(a){console.log(a)})
+      data.forEach((element) => {
+        if (element.isSelect) {
+          result.push(element);
+        }
+      });
+
+      if (result.length > 0) {
+        let options = {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            selectedWords: [...result],
+            id: userId,
+          }),
+        };
+
+        const response = await fetch(
+          `${Address}/word/mine/test-register`,
+          options
+        );
+        // const responseJson = await response.json();
+        this.fetchData();
+      }
     } catch (e) {
       console.error(e);
     }
@@ -161,7 +155,7 @@ export default class MineWords extends Component {
             data={this.state.dataSource}
             ItemSeparatorComponent={this.FlatListItemSeparator}
             renderItem={(item) => this.renderItem(item)}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             extraData={this.state}
             
           />
@@ -181,7 +175,9 @@ export default class MineWords extends Component {
           <View>
             <TouchableOpacity
               style={styles.box}
-              onPress={() => this.goToTest(this.state.dataSource)}
+              onPress={() => {
+                this.goToTest(this.state.dataSource);
+              }}
             >
               <Text>{itemNumber}개 Test 등록</Text>
             </TouchableOpacity>
