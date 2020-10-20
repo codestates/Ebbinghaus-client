@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class PriorityWords extends Component {
   constructor(props) {
@@ -26,9 +27,9 @@ export default class PriorityWords extends Component {
   // Data를 받아오기 위해 서버에 요청하는 곳
   //데이터를 받아올 때 상태값으로 isSelect과 selectedClass 를 넣어줌
   //isSelect 은 item의 선택여부, selectedClass는 그에 따른 스타일 변경
-  async fetchData() {
+  fetchData = () => {
     this.setState({ loading: true });
-    let userId = await AsyncStorage.getItem('userId');
+    let userId = AsyncStorage.getItem('userId');
 
     let options = {
       method: 'GET',
@@ -98,6 +99,7 @@ export default class PriorityWords extends Component {
       credentials: 'include',
       body: JSON.stringify({
         selectedWords: [...result],
+        userId: userId,
       }),
     };
     fetch('http://localhost:4000/word/mine/test-register', options).then(

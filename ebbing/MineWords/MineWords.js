@@ -17,20 +17,13 @@ export default class MineWords extends Component {
     super(props);
 
     this.state = {
-      //loading: false,
+      loading: false,
       dataSource: [],
     };
-
-    this.fetchData = this.fetchData.bind(this);
-    this.goToTest = this.goToTest.bind(this);
   }
 
   // 랜더링시 데이터를 받아옴
   componentDidMount() {
-    this.fetchData();
-  }
-
-  componentWillUnmount() {
     this.fetchData();
   }
 
@@ -50,7 +43,6 @@ export default class MineWords extends Component {
       },
       credentials: 'include',
     };
-
     try {
       await fetch(`${Address}/word/mine/${userId}`, options)
         .then((response) => response.json())
@@ -114,15 +106,19 @@ export default class MineWords extends Component {
       },
       credentials: 'include',
       body: JSON.stringify({
-        array: [...result],
+        selectedWords: [...result],
         id: userId,
       }),
     };
 
     try {
-      await fetch(`${Address}/word/mine/test-register`, options).then(() =>
-        this.fetchData()
-      );
+      await fetch(`${Address}/word/mine/test-register`, options)
+      .then(       
+        // setTimeout(() => {
+        await this.fetchData()
+        // }, 2000)
+      ).then(
+        function(a){console.log(a)})
     } catch (e) {
       console.error(e);
     }
@@ -142,13 +138,13 @@ export default class MineWords extends Component {
   render() {
     const itemNumber = this.state.dataSource.filter((item) => item.isSelect)
       .length;
-    // if (this.state.loading) {
-    //   return (
-    //     <View style={styles.loader}>
-    //       <ActivityIndicator size="large" color="purple" />
-    //     </View>
-    //   );
-    // }
+    if (this.state.loading) {
+      return (
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="purple" />
+        </View>
+      );
+    }
 
     return (
       <View style={styles.container}>
@@ -167,6 +163,7 @@ export default class MineWords extends Component {
             renderItem={(item) => this.renderItem(item)}
             keyExtractor={(item) => item.id}
             extraData={this.state}
+            
           />
         ) : (
           <Text style={styles.Words}>현재 등록된 단어가 없습니다.</Text>
