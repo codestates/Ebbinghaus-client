@@ -9,6 +9,9 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
+const Address = 'http://localhost:4000';
+// const Address = 'http://15.164.250.104:4000';
+
 export default class PriorityWords extends Component {
   constructor(props) {
     super(props);
@@ -41,7 +44,7 @@ export default class PriorityWords extends Component {
       credentials: 'include',
     };
 
-    fetch(`http://localhost:4000/word/mine/${userId}`, options)
+    fetch(`${Address}/word/mine/${userId}`, options)
       .then((response) => response.json())
       .then((responseJson) => {
         responseJson = responseJson.map((item) => {
@@ -101,9 +104,7 @@ export default class PriorityWords extends Component {
         array: [...result],
       }),
     };
-    fetch('http://localhost:4000/word/mine/test-register', options).then(
-      this.fetchData()
-    );
+    fetch('${Address}/word/mine/test-register', options).then(this.fetchData());
   };
 
   renderItem = (data) => (
