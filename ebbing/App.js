@@ -9,7 +9,7 @@ import { AuthContext } from './AppContext';
 // require('dotenv').config();
 
 const Stack = createStackNavigator();
-// const Address = 'http://15.164.250.104:4000';
+//const Address = 'http://3.35.49.222:4000';
 const Address = 'http://localhost:4000';
 
 function SplashScreen() {
@@ -118,38 +118,30 @@ export default function App() {
         }
       },
       signOut: async (data) => {
+        let accessToken = await AsyncStorage.getItem('accessToken');
+
         let options = {
           method: 'POST',
           mode: 'cors',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            authorization: `Bearer ${state.accessToken}`,
+            authorization: `Bearer ${accessToken}`,
           },
           credentials: 'include',
         };
 
-        try {
-          let response = await fetch(`${Address}/user/signin`, options);
-          console.log('response==: ', response);
-          let responseOK = response && response.ok;
-          if (responseOK) {
-            let result = await response.json();
-            console.log('서버에서 보내온 result ', result);
-            AsyncStorage.removeItem('accessToken', result.accessToken);
-            dispatch({ type: 'SIGN_OUT' });
-          } else {
-            console.log('요청 실패');
-          }
-        } catch (e) {
-          console.error(e);
-        }
+        await fetch(`${Address}/user/signout`, options);
+        await AsyncStorage.removeItem('accessToken')
+        dispatch({ type: 'SIGN_OUT' });
       },
       signUp: async (data) => {
         // 프로덕션 앱에서는 사용자 데이터를 서버로 보내고 토큰을 가져와야합니다.
         // 가입이 실패한 경우에도 오류를 처리해야합니다.
         // 토큰을 얻은 후 ʻAsyncStorage`를 사용하여 토큰을 유지해야합니다.
         //이 예에서는 더미 토큰을 사용합니다.
+
+        let accessToken = await AsyncStorage.getItem('accessToken');
         let options = {
           method: 'POST',
           mode: 'cors',
@@ -172,9 +164,13 @@ export default function App() {
             let result = await response.json();
             console.log('서버에서 보내온 result ', result);
             Alert.alert(`${result.name}님 회원가입이 완료되었습니다.`);
-            AsyncStorage.setItem('accessToken', result.accessToken);
+            // AsyncStorage.setItem('accessToken', result.accessToken);
             AsyncStorage.setItem('userId', result.id);
-            dispatch({ type: 'SIGN_IN', token: result.name + '토큰' });
+
+            //this.props.navigation.goBack();
+            //dispatch({type: 'SIGN_IN', token: accessToken })
+            navigation.navigate("Login")
+            //dispatch({ type: 'SIGN_IN', token: result.accessToken });
           } else {
             console.log('요청 실패');
           }
