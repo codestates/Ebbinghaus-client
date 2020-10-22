@@ -19,6 +19,7 @@ export default class MineWords extends Component {
     this.state = {
       loading: false,
       dataSource: [],
+      filter: false,
     };
   }
 
@@ -38,6 +39,29 @@ export default class MineWords extends Component {
 
     try {
       const response = await fetch(`${Address}/word/mine/${userId}`);
+      const responseJson = await response.json();
+
+      responseJson.map((item) => {
+        item.isSelect = false;
+        item.selectedClass = styles.list;
+        return item;
+      });
+      this.setState({
+        loading: false,
+        dataSource: responseJson,
+      });
+    } catch (e) {
+      console.error(e);
+      this.setState({ loading: false });
+    }
+  }
+
+  async registerFetchData() {
+    this.setState({ loading: true });
+    let userId = await AsyncStorage.getItem('userId');
+
+    try {
+      const response = await fetch(`${Address}/word/mine/button/${userId}`);
       const responseJson = await response.json();
 
       responseJson.map((item) => {
@@ -136,12 +160,27 @@ export default class MineWords extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.white}>우선영어단어장</Text>
-          <TouchableOpacity style={styles.box}>
-            <Text>등록 단어</Text>
-          </TouchableOpacity>
+          <Text style={styles.white}>나의 단어장</Text>
+          {this.state.filter ? (
+            <TouchableOpacity
+              style={styles.box}
+              onPress={() => {
+                this.fetchData(), this.setState({ filter: false });
+              }}
+            >
+              <Text>Test 진행 단어</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.box}
+              onPress={() => {
+                this.registerFetchData(), this.setState({ filter: true });
+              }}
+            >
+              <Text>Test 등록전 단어</Text>
+            </TouchableOpacity>
+          )}
         </View>
-
         {this.state.dataSource.length !== 0 ? (
           <FlatList
             style={styles.Words}
@@ -208,7 +247,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   box: {
-    width: 90,
+    width: 110,
     height: 30,
     backgroundColor: '#fff',
     alignItems: 'center',
