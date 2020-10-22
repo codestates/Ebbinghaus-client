@@ -33,9 +33,7 @@ export default class MineWords extends Component {
   //데이터를 받아올 때 상태값으로 isSelect과 selectedClass 를 넣어줌
   //isSelect 은 item의 선택여부, selectedClass는 그에 따른 스타일 변경
   async fetchData() {
-    this.setState({ loading: true }, function () {
-      console.log('this.state : ', this.state);
-    });
+    this.setState({ loading: true });
     let userId = await AsyncStorage.getItem('userId');
 
     try {
@@ -43,7 +41,6 @@ export default class MineWords extends Component {
       const responseJson = await response.json();
 
       responseJson.map((item) => {
-        console.log('item : ', item);
         item.isSelect = false;
         item.selectedClass = styles.list;
         return item;

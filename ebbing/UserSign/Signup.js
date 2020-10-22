@@ -8,16 +8,12 @@ import {
   StyleSheet,
   TouchableHighlight,
 } from 'react-native';
-import { AuthContext } from './AppContext';
+import { AuthContext } from '../AppContext';
+
 export default function Signup({ navigation }) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
-
   const { signUp } = React.useContext(AuthContext);
-
-  // onClickListener = (viewId) => {
-  //   Alert.alert('Alert', 'Button pressed ' + viewId);
-  // };
 
   return (
     <View style={styles.container}>
@@ -52,12 +48,10 @@ export default function Signup({ navigation }) {
 
       <TouchableHighlight
         style={styles.buttonContainer}
-        onPress={() =>
-          signUp({
-            username,
-            password,
-          })
-        }
+        onPress={() => {
+          signUp({ username, password });
+          navigation.navigate('Login');
+        }}
       >
         <Text>회원가입</Text>
       </TouchableHighlight>

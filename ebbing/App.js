@@ -1,10 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import Menu from './Menu';
-import { LoginStackScreen } from './StackScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-community/async-storage';
+
+import Menu from './Main/Menu';
+import { LoginStackScreen } from './StackScreen';
 import { AuthContext } from './AppContext';
 // require('dotenv').config();
 
@@ -132,7 +133,7 @@ export default function App() {
         };
 
         await fetch(`${Address}/user/signout`, options);
-        await AsyncStorage.removeItem('accessToken')
+        await AsyncStorage.removeItem('accessToken');
         dispatch({ type: 'SIGN_OUT' });
       },
       signUp: async (data) => {
@@ -164,16 +165,8 @@ export default function App() {
             let result = await response.json();
             console.log('서버에서 보내온 result ', result);
             Alert.alert(`${result.name}님 회원가입이 완료되었습니다.`);
-            // AsyncStorage.setItem('accessToken', result.accessToken);
-            AsyncStorage.setItem('userId', result.id);
-
-            //this.props.navigation.goBack();
-            //dispatch({type: 'SIGN_IN', token: accessToken })
-            this.props.navigator.push("Login")
-            
-            //dispatch({ type: 'SIGN_IN', token: result.accessToken });
           } else {
-            console.log('요청 실패');
+            Alert.alert(`회원가입에 실패하였습니다.`);
           }
         } catch (e) {
           console.error(e);
@@ -190,7 +183,7 @@ export default function App() {
           {state.isLoading ? (
             // We haven't finished checking for the token yet
             <Stack.Screen name="Splash" component={SplashScreen} />
-          ) : state.accessToken == null ? (
+          ) : state.accessToken === null ? (
             <Stack.Screen name="Login" component={LoginStackScreen} />
           ) : (
             <Stack.Screen name="Menu" component={Menu} />
