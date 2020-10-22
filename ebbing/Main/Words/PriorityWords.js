@@ -19,47 +19,64 @@ export default class PriorityWords extends Component {
     this.state = {
       loading: false,
       dataSource: [],
+      filter: false,
     };
   }
 
   // 랜더링시 데이터를 받아옴
   componentDidMount() {
-    this.fetchData();
+    this.props.navigation.addListener('focus', () => {
+      this.fetchData();
+    });
   }
 
   // Data를 받아오기 위해 서버에 요청하는 곳
   //데이터를 받아올 때 상태값으로 isSelect과 selectedClass 를 넣어줌
   //isSelect 은 item의 선택여부, selectedClass는 그에 따른 스타일 변경
-  fetchData = () => {
+  async fetchData() {
     this.setState({ loading: true });
-    let userId = AsyncStorage.getItem('userId');
+    let userId = await AsyncStorage.getItem('userId');
 
-    let options = {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      credentials: 'include',
-    };
+    try {
+      const response = await fetch(`${Address}/word/priority/${userId}`);
+      const responseJson = await response.json();
 
-    fetch(`${Address}/word/mine/${userId}`, options)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        responseJson = responseJson.map((item) => {
-          item.isSelect = false;
-          item.selectedClass = styles.list;
-          return item;
-        });
-        this.setState({
-          loading: false,
-          dataSource: responseJson,
-        });
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
+      responseJson.map((item) => {
+        item.isSelect = false;
+        item.selectedClass = styles.list;
+        return item;
       });
+      this.setState({
+        loading: false,
+        dataSource: responseJson,
+      });
+    } catch (e) {
+      console.error(e);
+      this.setState({ loading: false });
+    }
+  }
+
+  async registerFetchData() {
+    this.setState({ loading: true });
+    let userId = await AsyncStorage.getItem('userId');
+
+    try {
+      const response = await fetch(`${Address}/word/priority/button/${userId}`);
+      const responseJson = await response.json();
+
+      responseJson.map((item) => {
+        item.isSelect = false;
+        item.selectedClass = styles.list;
+        return item;
+      });
+      this.setState({
+        loading: false,
+        dataSource: responseJson,
+      });
+    } catch (e) {
+      console.error(e);
+      this.setState({ loading: false });
+    }
   }
 
   //List의 사이사이 빈 공간
@@ -84,29 +101,39 @@ export default class PriorityWords extends Component {
     });
   };
 
-  goToTest = (data) => {
+  async goToTest(data) {
     let result = [];
-    data.forEach((element) => {
-      if (element.isSelect === true) {
-        result.push(element);
-      }
-    });
+    let userId = await AsyncStorage.getItem('userId');
 
-    let options = {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        selectedWords: [...result],
-        userId: userId,
-      }),
-    };
-    fetch('${Address}/word/mine/test-register', options).then(this.fetchData());
-  };
+    try {
+      data.forEach((element) => {
+        if (element.isSelect) {
+          result.push(element);
+        }
+      });
+
+      if (result.length > 0) {
+        let options = {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            selectedWords: [...result],
+            id: userId,
+          }),
+        };
+
+        await fetch(`${Address}/word/priority/test-register`, options);
+        this.fetchData();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   renderItem = (data) => (
     <TouchableOpacity
@@ -134,18 +161,38 @@ export default class PriorityWords extends Component {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.white}>우선영어단어장</Text>
-          <TouchableOpacity style={styles.box}>
-            <Text>등록 단어</Text>
-          </TouchableOpacity>
+          {this.state.filter ? (
+            <TouchableOpacity
+              style={styles.box}
+              onPress={() => {
+                this.fetchData(), this.setState({ filter: false });
+              }}
+            >
+              <Text>Test 진행 단어</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.box}
+              onPress={() => {
+                this.registerFetchData(), this.setState({ filter: true });
+              }}
+            >
+              <Text>Test 등록전 단어</Text>
+            </TouchableOpacity>
+          )}
         </View>
-        <FlatList
-          style={styles.Words}
-          data={this.state.dataSource}
-          ItemSeparatorComponent={this.FlatListItemSeparator}
-          renderItem={(item) => this.renderItem(item)}
-          keyExtractor={(item) => item.id.toString()}
-          extraData={this.state}
-        />
+        {this.state.dataSource.length !== 0 ? (
+          <FlatList
+            style={styles.Words}
+            data={this.state.dataSource}
+            ItemSeparatorComponent={this.FlatListItemSeparator}
+            renderItem={(item) => this.renderItem(item)}
+            keyExtractor={(item) => item.id.toString()}
+            extraData={this.state}
+          />
+        ) : (
+          <Text style={styles.Words}>현재 등록된 단어가 없습니다.</Text>
+        )}
         <View style={styles.right}>
           <TouchableOpacity
             style={styles.box}
@@ -187,7 +234,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   box: {
-    width: 90,
+    width: 110,
     height: 30,
     backgroundColor: '#fff',
     alignItems: 'center',
@@ -195,7 +242,7 @@ const styles = StyleSheet.create({
   },
   right: {
     marginTop: 10,
-    marginLeft: 200,
+    marginLeft: 180,
   },
   title: {
     fontSize: 20,

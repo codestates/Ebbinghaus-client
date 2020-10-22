@@ -7,8 +7,12 @@ import {
   TouchableOpacity,
   Modal,
   Button,
+  SafeAreaView,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
+
+//import { Button, ButtonContainer } from '../components/Button';
+//import { Alert } from '../components/Alert';
 
 const { height, width } = Dimensions.get('window');
 
@@ -18,8 +22,48 @@ export default class Test extends React.Component {
 
     this.state = {
       modalVisible: false,
+      correctCount: 0, //아마 정답 맞춘 개수?
+      totalCount: this.props.navigation.getParam('questions', []).length, //문제 총 수
+      activeQuestionIndex: 0, //아마 현재 문제 인덱스 값?
+      answered: false,
+      answerCorrect: false,
     };
   }
+
+  answer = (correct) => {
+    this.setState(
+      (state) => {
+        const nextState = { answered: true };
+
+        if (correct) {
+          nextState.correctCount = state.correctCount + 1;
+          nextState.answerCorrect = true;
+        } else {
+          nextState.answerCorrect = false;
+        }
+
+        return nextState;
+      },
+      () => {
+        setTimeout(() => this.nextQuestion(), 750);
+      }
+    );
+  };
+
+  nextQuestion = () => {
+    this.setState((state) => {
+      const nextIndex = state.activeQuestionIndex + 1;
+
+      if (nextIndex >= state.totalCount) {
+        return this.props.navigation.popToTop(); //루트화면으로 넘어감.
+      }
+
+      return {
+        activeQuestionIndex: nextIndex,
+        answered: false,
+      };
+    });
+  };
 
   _handleButtonPress = () => {
     this.setModalVisible(true);
