@@ -1,10 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import Menu from './Menu';
-import { LoginStackScreen } from './StackScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-community/async-storage';
+
+import Menu from './Main/Menu';
+import { LoginStackScreen } from './StackScreen';
 import { AuthContext } from './AppContext';
 // require('dotenv').config();
 

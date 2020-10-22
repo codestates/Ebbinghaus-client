@@ -8,14 +8,13 @@ import {
   StyleSheet,
   TouchableHighlight,
 } from 'react-native';
+import { AuthContext } from '../AppContext';
 
-import { AuthContext } from './AppContext';
-
-export default function Login({ navigation }) {
+export default function Signup({ navigation }) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const { signUp } = React.useContext(AuthContext);
 
-  const { signIn } = React.useContext(AuthContext);
   return (
     <View style={styles.container}>
       <View>
@@ -38,20 +37,21 @@ export default function Login({ navigation }) {
         />
       </View>
 
-      <Button
-        title={'Login'}
-        style={styles.input}
-        onPress={() =>
-          signIn({
-            username,
-            password,
-          })
-        }
-      />
+      <View>
+        <Text>Password Check</Text>
+        <TextInput
+          placeholder={'Password Check'}
+          secureTextEntry={true}
+          style={styles.input}
+        />
+      </View>
 
       <TouchableHighlight
         style={styles.buttonContainer}
-        onPress={() => navigation.navigate('Signup')}
+        onPress={() => {
+          signUp({ username, password });
+          navigation.navigate('Login');
+        }}
       >
         <Text>회원가입</Text>
       </TouchableHighlight>

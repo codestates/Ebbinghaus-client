@@ -1,13 +1,14 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Login from './Login';
-import Signup from './Signup';
-import Main from './Main';
-import PriorityWords from './PriorityWords/PriorityWords';
-import MineWords from './MineWords/MineWords';
-import RegisterWords from './RegisterWords';
-import Test from './Test';
+import Login from './UserSign/Login';
+import Signup from './UserSign/Signup';
+import Main from './Main/Main';
+import PriorityWords from './Main/Words/PriorityWords';
+import MineWords from './Main/Words/MineWords';
+import RegisterWords from './Main/Words/RegisterWords';
+import TestStart from './WordTest/TestStart';
+import Test from './WordTest/Test';
 import Mypage from './MyPage';
 
 const MainStack = createStackNavigator();
@@ -29,6 +30,7 @@ export function MainStackScreen() {
 export function TestStackScreen() {
   return (
     <TestStack.Navigator>
+      <TestStack.Screen name="TestStart" component={TestStart} />
       <TestStack.Screen name="Test" component={Test} />
       <TestStack.Screen name="Main" component={Main} />
     </TestStack.Navigator>
