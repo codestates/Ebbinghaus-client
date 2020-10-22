@@ -52,12 +52,10 @@ export default function Signup({ navigation }) {
 
       <TouchableHighlight
         style={styles.buttonContainer}
-        onPress={() =>
-          signUp({
-            username,
-            password,
-          })
-        }
+        onPress={() => {
+          signUp({ username, password });
+          navigation.navigate('Login');
+        }}
       >
         <Text>회원가입</Text>
       </TouchableHighlight>
