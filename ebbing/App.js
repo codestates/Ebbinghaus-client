@@ -169,7 +169,8 @@ export default function App() {
 
             //this.props.navigation.goBack();
             //dispatch({type: 'SIGN_IN', token: accessToken })
-            navigation.navigate("Login")
+            this.props.navigator.push("Login")
+            
             //dispatch({ type: 'SIGN_IN', token: result.accessToken });
           } else {
             console.log('요청 실패');
