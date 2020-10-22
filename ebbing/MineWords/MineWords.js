@@ -10,7 +10,7 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 
 const Address = 'http://localhost:4000';
-// const Address = 'http://15.164.250.104:4000';
+//const Address = 'http://3.35.49.222:4000';
 
 export default class MineWords extends Component {
   constructor(props) {
@@ -106,11 +106,7 @@ export default class MineWords extends Component {
           }),
         };
 
-        const response = await fetch(
-          `${Address}/word/mine/test-register`,
-          options
-        );
-        // const responseJson = await response.json();
+        await fetch(`${Address}/word/mine/test-register`, options);
         this.fetchData();
       }
     } catch (e) {

@@ -142,7 +142,7 @@ export default class RegisterWords extends React.Component {
       body: JSON.stringify({
         word_eng: this.state.word_eng,
         word_kor: this.state.word_kor,
-        id: userId,
+        user_id: userId,
       }),
     };
 
