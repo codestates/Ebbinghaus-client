@@ -28,6 +28,7 @@ export default class RegisterWords extends React.Component {
     this.focusTextInput = this.focusTextInput.bind(this);
     this.getMineWordList = this.getMineWordList.bind(this);
     this.reqRegistWord = this.reqRegistWord.bind(this);
+    this.deleteBtn = this.deleteBtn.bind(this);
   }
 
   focusTextInput() {
@@ -87,30 +88,37 @@ export default class RegisterWords extends React.Component {
   };
 
   /* Server에 delete 구현 시 그에 맞춰 작성 */
-  // deleteBtn = (data) => {
-  //   let result = [];
-  //   data.forEach((element) => {
-  //     if (element.isSelect === true) {
-  //       result.push(element);
-  //     }
-  //   });
+  async deleteBtn(data) {
+    let result = [];
+    let userId = await AsyncStorage.getItem('userId');
 
-  //   let options = {
-  //     method: 'POST',
-  //     mode: 'cors',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json;charset=UTF-8',
-  //     },
-  //     credentials: 'include',
-  //     body: JSON.stringify({
-  //       array: [...result],
-  //     }),
-  //   };
-  //   fetch('http://localhost:4000/word/mine/', options).then(
-  //     this.fetchData()
-  //   );
-  // };
+    try {
+      data.forEach((element) => {
+        if (element.isSelect === true) {
+          result.push(element);
+        }
+      });
+
+      let options = {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          selectedWords: [...result],
+          id: userId,
+        }),
+      };
+      fetch(`${Address}/word/mine/delete`, options).then(() => {
+        this.getMineWordList();
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   //List의 사이사이 빈 공간
   FlatListItemSeparator = () => <View style={styles.line} />;
@@ -205,7 +213,10 @@ export default class RegisterWords extends React.Component {
               ItemSeparatorComponent={this.FlatListItemSeparator}
             />
             <View style={styles.wordListBtnView}>
-              <TouchableOpacity style={styles.wordListBtn}>
+              <TouchableOpacity
+                style={styles.wordListBtn}
+                onPress={() => this.deleteBtn(wordList)}
+              >
                 <Text>삭제</Text>
               </TouchableOpacity>
               <TouchableOpacity
