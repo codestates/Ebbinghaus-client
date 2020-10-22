@@ -158,8 +158,10 @@ export default class RegisterWords extends React.Component {
   }
 
   componentDidMount() {
-    this.focusTextInput();
-    this.getMineWordList();
+    this.props.navigation.addListener('focus', () => {
+      this.focusTextInput();
+      this.getMineWordList();
+    });
   }
   render() {
     const { navigation } = this.props;

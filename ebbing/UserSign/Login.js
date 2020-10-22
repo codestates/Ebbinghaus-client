@@ -9,7 +9,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import { AuthContext } from './AppContext';
+import { AuthContext } from '../AppContext';
 
 export default function Login({ navigation }) {
   const [username, setUsername] = React.useState('');
