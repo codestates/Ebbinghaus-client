@@ -7,6 +7,7 @@ import Main from './Main';
 import PriorityWords from './PriorityWords/PriorityWords';
 import MineWords from './MineWords/MineWords';
 import RegisterWords from './RegisterWords';
+import TestStart from './TestStart'
 import Test from './Test';
 import Mypage from './MyPage';
 
@@ -29,6 +30,7 @@ export function MainStackScreen() {
 export function TestStackScreen() {
   return (
     <TestStack.Navigator>
+      <TestStack.Screen name="TestStart" component={TestStart}/>
       <TestStack.Screen name="Test" component={Test} />
       <TestStack.Screen name="Main" component={Main} />
     </TestStack.Navigator>
