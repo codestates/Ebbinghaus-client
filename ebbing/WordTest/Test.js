@@ -6,10 +6,13 @@ import {
   Dimensions,
   TouchableOpacity,
   Modal,
-  Button,
   TextInput,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
+import AsyncStorage from '@react-native-community/async-storage';
+// import questions from '../DummyData/MineWordList';
+const Address = 'http://localhost:4000';
+
 
 const { height, width } = Dimensions.get('window');
 
@@ -20,12 +23,77 @@ export default class Test extends React.Component {
     this.state = {
       modalVisible: false,
       wordAnswer: '',
+      correctCount: 0,
+      totalCount: 0,
+      activeQuestionIndex: 0,
+      answered: false,
+      answerCorrect: false,
+      dataSource: [],
     };
 
     // textInput DOM 엘리먼트를 저장하기 위한 ref를 생성
     this.textInput = React.createRef();
     this.focusTextInput = this.focusTextInput.bind(this);
   }
+
+  componentDidMount() {
+    this.props.navigation.addListener('focus', () => {
+      this.fetchData();
+      this.focusTextInput();
+    });
+  }
+
+  async fetchData() {
+    let userId = await AsyncStorage.getItem('userId');
+
+    try {
+      const response = await fetch(`${Address}/test/${userId}`);
+      const responseJson = await response.json();
+
+      this.setState({
+        dataSource: responseJson,
+        totalCount: responseJson.length
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    console.log("dataSource", this.state.dataSource)
+  }
+
+  answer = (correct) => {
+    this.setState(
+      (state) => {
+        const nextState = { answered: true };
+
+        if (this.state.dataSource[this.state.activeQuestionIndex].word_kor === correct) {
+          nextState.correctCount = state.correctCount + 1;
+          nextState.answerCorrect = true;
+        } else {
+          nextState.answerCorrect = false;
+        }
+
+        return nextState;
+      },
+      () => {
+        setTimeout(() => this.nextQuestion(), 750);
+      }
+    );
+  };
+
+  nextQuestion = () => {
+    this.setState((state) => {
+      const nextIndex = state.activeQuestionIndex + 1;
+
+      if (nextIndex >= state.totalCount) {
+        return this.props.navigation.popToTop();
+      }
+
+      return {
+        activeQuestionIndex: nextIndex,
+        answered: false,
+      };
+    });
+  };
 
   _handleButtonPress = () => {
     this.setModalVisible(true);
@@ -41,14 +109,11 @@ export default class Test extends React.Component {
     this.textInput.current.focus();
   }
 
-  componentDidMount() {
-    this.props.navigation.addListener('focus', () => {
-      this.focusTextInput();
-    });
-  }
-
   render() {
     const { navigation } = this.props;
+    // const questions = this.props.navigation.getParam("questions", []);
+    const question = this.state.dataSource[this.state.activeQuestionIndex];
+    // const question = questions[this.state.activeQuestionIndex]
     return (
       <View style={styles.test}>
         <Modal
@@ -77,9 +142,12 @@ export default class Test extends React.Component {
             </View>
           </TouchableOpacity>
         </Modal>
-
+        <View style={styles.right}>
+        <Text style={styles.white}>{`정답 : ${this.state.correctCount}     남은 문제 : ${this.state.totalCount}, ${this.state.activeQuestionIndex}`}</Text>
+        </View>
+        
         <View style={styles.examQuestions}>
-          <Text>사과</Text>
+          {/* <Text>{this.state.dataSource[0].word_eng}</Text> */}
         </View>
 
         <TextInput
@@ -91,7 +159,7 @@ export default class Test extends React.Component {
         <View style={styles.checkBtnView}>
           <TouchableOpacity
             style={styles.checkBtn}
-            onPress={this._handleButtonPress}
+            onPress={() => this.answer(this.state.wordAnswer)}
           >
             <Text>Check</Text>
           </TouchableOpacity>
@@ -183,5 +251,13 @@ const styles = StyleSheet.create({
   innerContainerTransparentStyle: {
     backgroundColor: '#fff',
     padding: 20,
+  },
+  white: {
+    color: '#fff',
+    fontSize: 15,
+  },
+  right: {
+    marginBottom: 10,
+    marginLeft: 650,
   },
 });
