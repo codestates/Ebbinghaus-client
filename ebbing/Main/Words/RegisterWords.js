@@ -9,9 +9,11 @@ import {
   FlatList,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-
+//require('dotenv').config();
 const { height, width } = Dimensions.get('window');
 const Address = 'http://localhost:4000';
+//const Address = 'http://13.125.184.203:4000';
+//let Address = process.env.ADDRESS
 
 export default class RegisterWords extends React.Component {
   constructor(props) {

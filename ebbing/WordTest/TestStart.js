@@ -22,8 +22,11 @@ export default class TestStart extends React.Component {
     const { navigation } = this.props;
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={styles.goToTestBox} onPress={() => navigation.navigate('Test')}>
-          <AntDesign name="play" size={70}/>
+        <TouchableOpacity
+          style={styles.goToTestBox}
+          onPress={() => navigation.navigate('Test')}
+        >
+          <AntDesign name="play" size={70} />
           <Text>단어 시험</Text>
           <Text>Start</Text>
         </TouchableOpacity>

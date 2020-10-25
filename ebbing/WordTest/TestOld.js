@@ -16,7 +16,7 @@ import Feather from 'react-native-vector-icons/Feather';
 
 const { height, width } = Dimensions.get('window');
 
-export default class Test extends React.Component {
+export default class TestOld extends React.Component {
   constructor(props) {
     super(props);
 

@@ -7,11 +7,15 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Menu from './Main/Menu';
 import { LoginStackScreen } from './StackScreen';
 import { AuthContext } from './AppContext';
+// import { ADDRESS } from 'react-native-dotenv'
 // require('dotenv').config();
+// import { ADDRESS } from '@env'
+// const ADDRESS = process.env.ADDRESS 
 
 const Stack = createStackNavigator();
-//const Address = 'http://3.35.49.222:4000';
+//const Address = 'http://13.125.184.203:4000';
 const Address = 'http://localhost:4000';
+
 
 function SplashScreen() {
   return (
@@ -109,7 +113,7 @@ export default function App() {
             let result = await response.json();
             console.log('서버에서 보내온 result ', result);
             AsyncStorage.setItem('accessToken', result.accessToken);
-            AsyncStorage.setItem('userId', result.id);
+            AsyncStorage.setItem('userId', String(result.id));
             dispatch({ type: 'SIGN_IN', token: result.accessToken });
           } else {
             console.log('요청 실패');
@@ -131,9 +135,8 @@ export default function App() {
           },
           credentials: 'include',
         };
-
-        await fetch(`${Address}/user/signout`, options);
         await AsyncStorage.removeItem('accessToken');
+        await fetch(`${Address}/user/signout`, options);
         dispatch({ type: 'SIGN_OUT' });
       },
       signUp: async (data) => {
@@ -142,7 +145,6 @@ export default function App() {
         // 토큰을 얻은 후 ʻAsyncStorage`를 사용하여 토큰을 유지해야합니다.
         //이 예에서는 더미 토큰을 사용합니다.
 
-        let accessToken = await AsyncStorage.getItem('accessToken');
         let options = {
           method: 'POST',
           mode: 'cors',
@@ -175,7 +177,7 @@ export default function App() {
     }),
     []
   );
-
+  
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
