@@ -13,7 +13,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 // import questions from '../DummyData/MineWordList';
 const Address = 'http://localhost:4000';
 
-
 const { height, width } = Dimensions.get('window');
 
 export default class Test extends React.Component {
@@ -38,8 +37,8 @@ export default class Test extends React.Component {
 
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
-      this.fetchData();
       this.focusTextInput();
+      this.fetchData();
     });
   }
 
@@ -52,12 +51,12 @@ export default class Test extends React.Component {
 
       this.setState({
         dataSource: responseJson,
-        totalCount: responseJson.length
+        totalCount: responseJson.length,
       });
     } catch (e) {
       console.error(e);
     }
-    console.log("dataSource", this.state.dataSource)
+    console.log('dataSource', this.state.dataSource);
   }
 
   answer = (correct) => {
@@ -65,9 +64,17 @@ export default class Test extends React.Component {
       (state) => {
         const nextState = { answered: true };
 
-        if (this.state.dataSource[this.state.activeQuestionIndex].word_kor === correct) {
+        if (
+          this.state.dataSource[this.state.activeQuestionIndex].word_kor ===
+          correct
+        ) {
           nextState.correctCount = state.correctCount + 1;
           nextState.answerCorrect = true;
+          this.requestCheck({
+            word_kor: correct,
+            word_eng: this.state.dataSource[this.state.activeQuestionIndex]
+              .word_eng,
+          });
         } else {
           nextState.answerCorrect = false;
         }
@@ -109,11 +116,47 @@ export default class Test extends React.Component {
     this.textInput.current.focus();
   }
 
+  clearTextInput() {
+    this.setState({
+      wordAnswer: '',
+    });
+  }
+
+  async requestCheck(data) {
+    let userId = await AsyncStorage.getItem('userId');
+    let options = {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        selectedWords: [data],
+        id: userId,
+      }),
+    };
+
+    try {
+      const response = await fetch(`${Address}/test/pass`, options);
+      const responseJson = await response.json();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   render() {
     const { navigation } = this.props;
-    // const questions = this.props.navigation.getParam("questions", []);
-    const question = this.state.dataSource[this.state.activeQuestionIndex];
-    // const question = questions[this.state.activeQuestionIndex]
+    const {
+      dataSource,
+      activeQuestionIndex,
+      correctCount,
+      totalCount,
+      wordAnswer,
+    } = this.state;
+    const question = dataSource[activeQuestionIndex];
+
     return (
       <View style={styles.test}>
         <Modal
@@ -143,23 +186,30 @@ export default class Test extends React.Component {
           </TouchableOpacity>
         </Modal>
         <View style={styles.right}>
-        <Text style={styles.white}>{`정답 : ${this.state.correctCount}     남은 문제 : ${this.state.totalCount}, ${this.state.activeQuestionIndex}`}</Text>
+          <Text style={styles.white}>{`정답 : ${correctCount}     남은 문제 : ${
+            totalCount - activeQuestionIndex
+          }`}</Text>
         </View>
-        
+
         <View style={styles.examQuestions}>
-          {/* <Text>{this.state.dataSource[0].word_eng}</Text> */}
+          <Text>{question !== undefined ? question.word_eng : ''}</Text>
         </View>
 
         <TextInput
           style={styles.inputAnswer}
           ref={this.textInput}
           onChangeText={(wordAnswer) => this.setState({ wordAnswer })}
+          value={wordAnswer}
         ></TextInput>
 
         <View style={styles.checkBtnView}>
           <TouchableOpacity
             style={styles.checkBtn}
-            onPress={() => this.answer(this.state.wordAnswer)}
+            onPress={() => {
+              this.answer(wordAnswer);
+              this.clearTextInput();
+              this.focusTextInput();
+            }}
           >
             <Text>Check</Text>
           </TouchableOpacity>
