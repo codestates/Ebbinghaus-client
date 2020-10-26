@@ -11,7 +11,8 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 // import questions from '../DummyData/MineWordList';
-const Address = 'http://localhost:4000';
+import ADDRESS from '../DummyData/Address';
+const Address = ADDRESS;
 
 const { height, width } = Dimensions.get('window');
 
@@ -33,6 +34,7 @@ export default class Test extends React.Component {
     // textInput DOM 엘리먼트를 저장하기 위한 ref를 생성
     this.textInput = React.createRef();
     this.focusTextInput = this.focusTextInput.bind(this);
+    this.inputEnter = this.inputEnter.bind(this);
   }
 
   componentDidMount() {
@@ -63,11 +65,12 @@ export default class Test extends React.Component {
     this.setState(
       (state) => {
         const nextState = { answered: true };
-
+        // const nextState = {};
         if (
           this.state.dataSource[this.state.activeQuestionIndex].word_kor ===
           correct
         ) {
+          // nextState.answered = true;
           nextState.correctCount = state.correctCount + 1;
           nextState.answerCorrect = true;
           this.requestCheck({
@@ -77,6 +80,7 @@ export default class Test extends React.Component {
           });
         } else {
           nextState.answerCorrect = false;
+          // this.setModalVisible(true);
         }
 
         return nextState;
@@ -88,6 +92,9 @@ export default class Test extends React.Component {
   };
 
   nextQuestion = () => {
+    this.clearTextInput();
+    this.focusTextInput();
+
     this.setState((state) => {
       const nextIndex = state.activeQuestionIndex + 1;
 
@@ -146,6 +153,13 @@ export default class Test extends React.Component {
     }
   }
 
+  //Enter시 정답체크 함수 실행
+  inputEnter = (wordAnswer) => (e) => {
+    if (e.nativeEvent.keyCode === 13) {
+      this.answer(wordAnswer);
+    }
+  };
+
   render() {
     const { navigation } = this.props;
     const {
@@ -176,8 +190,8 @@ export default class Test extends React.Component {
                   color: '#00cc73',
                 }}
               />
-              <Text>한글</Text>
-              <Text>English</Text>
+              <Text>{question !== undefined ? question.word_kor : ''}</Text>
+              <Text>{question !== undefined ? question.word_eng : ''}</Text>
               {/* <Button
                 title="close"
                 onPress={this.setModalVisible.bind(this, false)}
@@ -199,6 +213,7 @@ export default class Test extends React.Component {
           style={styles.inputAnswer}
           ref={this.textInput}
           onChangeText={(wordAnswer) => this.setState({ wordAnswer })}
+          onKeyPress={this.inputEnter(wordAnswer)}
           value={wordAnswer}
         ></TextInput>
 

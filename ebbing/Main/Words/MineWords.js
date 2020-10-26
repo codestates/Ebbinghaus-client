@@ -9,9 +9,8 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 // require('dotenv').config();
-const Address = 'http://localhost:4000';
-//const Address = 'http://13.125.184.203:4000';
-//let Address = process.env.ADDRESS
+import ADDRESS from '../../DummyData/Address';
+const Address = ADDRESS;
 
 export default class MineWords extends Component {
   constructor(props) {

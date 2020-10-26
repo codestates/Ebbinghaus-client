@@ -10,12 +10,12 @@ import { AuthContext } from './AppContext';
 // import { ADDRESS } from 'react-native-dotenv'
 // require('dotenv').config();
 // import { ADDRESS } from '@env'
-// const ADDRESS = process.env.ADDRESS 
+// const ADDRESS = process.env.ADDRESS
 
 const Stack = createStackNavigator();
 //const Address = 'http://13.125.184.203:4000';
-const Address = 'http://localhost:4000';
-
+import ADDRESS from './DummyData/Address';
+const Address = ADDRESS;
 
 function SplashScreen() {
   return (
@@ -177,7 +177,7 @@ export default function App() {
     }),
     []
   );
-  
+
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
