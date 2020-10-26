@@ -10,6 +10,8 @@ import {
 import { createStackNavigator } from '@react-navigation/stack';
 import { AuthContext } from './AppContext';
 import AsyncStorage from '@react-native-community/async-storage';
+import ADDRESS from './DummyData/Address';
+const Address = ADDRESS;
 
 const Stack = createStackNavigator();
 const { height, width } = Dimensions.get('window');
@@ -18,49 +20,56 @@ export default function MyPage() {
   const [today, setToday] = React.useState(0);
   const [doing, setDoing] = React.useState(0);
   const [finish, setFinish] = React.useState(0);
+  const [id, setId] = React.useState(null);
   const { signOut } = React.useContext(AuthContext);
+
+  async function returnOptions() {
+    let accessToken = await AsyncStorage.getItem('accessToken');
+    let options = {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${accessToken}`,
+      },
+      credentials: 'include',
+    };
+    return options;
+  }
 
   React.useEffect(() => {
     const userToday = async () => {
-      let userId = await AsyncStorage.getItem('userId');
-    
       try {
-        const response = await fetch(`${Address}/user/todaytesting/${userId}`);
+        let options = await returnOptions();
+        const response = await fetch(`${Address}/user/todaytesting`, options);
         const responseJson = await response.json();
-    
-        setToday({
-          today: responseJson,
-        });
+        setToday(responseJson[0]);
+        setId(responseJson[1]);
       } catch (e) {
         console.error(e);
       }
     };
 
     const userDoing = async () => {
-      let userId = await AsyncStorage.getItem('userId');
-    
       try {
-        const response = await fetch(`${Address}/user/beingtested/${userId}`);
+        let options = await returnOptions();
+        const response = await fetch(`${Address}/user/beingtested`, options);
         const responseJson = await response.json();
-    
-        setDoing({
-          today: responseJson,
-        });
+
+        setDoing(responseJson[0]);
       } catch (e) {
         console.error(e);
       }
     };
 
     const userFinish = async () => {
-      let userId = await AsyncStorage.getItem('userId');
-    
       try {
-        const response = await fetch(`${Address}/user/donetested/${userId}`);
+        let options = await returnOptions();
+        const response = await fetch(`${Address}/user/donetested`, options);
         const responseJson = await response.json();
-    
-        setFinish({
-          today: responseJson,
-        });
+
+        setFinish(responseJson[0]);
       } catch (e) {
         console.error(e);
       }
@@ -68,8 +77,7 @@ export default function MyPage() {
     userToday();
     userDoing();
     userFinish();
-  });
-
+  }, [today, doing, finish]);
 
   return (
     <View style={styles.myPage}>
@@ -77,7 +85,7 @@ export default function MyPage() {
         <View style={styles.myPageBoxInner}>
           <View style={[styles.idColumn, styles.myPageColumn]}>
             <View>
-              <Text>ID</Text>
+              <Text>ID {id}</Text>
             </View>
             <View>
               <TouchableOpacity onPress={() => signOut()}>
