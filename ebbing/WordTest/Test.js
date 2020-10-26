@@ -217,28 +217,22 @@ export default class Test extends React.Component {
           value={wordAnswer}
         ></TextInput>
 
-        <View style={styles.checkBtnView}>
+        <View style={styles.selectDoView}>
           <TouchableOpacity
-            style={styles.checkBtn}
+            style={styles.selectDoBtn}
+            onPress={() => navigation.navigate('Main')}
+          >
+            <Text style={styles.selectDoText}>그만하기</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.selectDoBtn}
             onPress={() => {
               this.answer(wordAnswer);
               this.clearTextInput();
               this.focusTextInput();
             }}
           >
-            <Text>Check</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.selectDoView}>
-          <TouchableOpacity style={styles.selectDoBtn}>
-            <Text style={styles.selectDoText}>건너뛰기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.selectDoBtn}
-            onPress={() => navigation.navigate('Main')}
-          >
-            <Text style={styles.selectDoText}>그만하기</Text>
+            <Text style={styles.selectDoText}>정답 확인</Text>
           </TouchableOpacity>
         </View>
       </View>
