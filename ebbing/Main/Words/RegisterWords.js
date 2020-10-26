@@ -11,9 +11,8 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 //require('dotenv').config();
 const { height, width } = Dimensions.get('window');
-const Address = 'http://localhost:4000';
-//const Address = 'http://13.125.184.203:4000';
-//let Address = process.env.ADDRESS
+import ADDRESS from '../../DummyData/Address';
+const Address = ADDRESS;
 
 export default class RegisterWords extends React.Component {
   constructor(props) {
@@ -31,6 +30,7 @@ export default class RegisterWords extends React.Component {
     this.getMineWordList = this.getMineWordList.bind(this);
     this.reqRegistWord = this.reqRegistWord.bind(this);
     this.deleteBtn = this.deleteBtn.bind(this);
+    this.inputEnter = this.inputEnter.bind(this);
   }
 
   focusTextInput() {
@@ -167,6 +167,13 @@ export default class RegisterWords extends React.Component {
     }
   }
 
+  //Enter시 단어등록 함수 실행
+  inputEnter = () => (e) => {
+    if (e.nativeEvent.keyCode === 13) {
+      this.reqRegistWord();
+    }
+  };
+
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
       this.focusTextInput();
@@ -184,6 +191,7 @@ export default class RegisterWords extends React.Component {
             style={styles.inputWord}
             placeholder="Input English"
             onChangeText={(word_eng) => this.setState({ word_eng })}
+            onKeyPress={this.inputEnter()}
             value={word_eng}
             ref={this.textInput}
           ></TextInput>
@@ -191,6 +199,7 @@ export default class RegisterWords extends React.Component {
             style={styles.inputWord}
             placeholder="Input Korean"
             onChangeText={(word_kor) => this.setState({ word_kor })}
+            onKeyPress={this.inputEnter()}
             value={word_kor}
           ></TextInput>
         </View>
