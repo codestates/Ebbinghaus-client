@@ -13,8 +13,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Alert } from '../components/Alert';
 import ADDRESS from '../DummyData/Address';
-const Address = ADDRESS;
 
+const Address = ADDRESS;
 const { height, width } = Dimensions.get('window');
 
 export default class Test extends React.Component {
@@ -29,7 +29,7 @@ export default class Test extends React.Component {
       activeQuestionIndex: 0,
       answered: false,
       answerCorrect: false,
-      dataSource: [],
+      testList: [],
     };
 
     // textInput DOM 엘리먼트를 저장하기 위한 ref를 생성
@@ -54,13 +54,12 @@ export default class Test extends React.Component {
       const responseJson = await response.json();
 
       this.setState({
-        dataSource: responseJson,
+        testList: responseJson,
         totalCount: responseJson.length,
       });
     } catch (e) {
       console.error(e);
     }
-    console.log('dataSource', this.state.dataSource);
   }
 
   answer = (correct) => {
@@ -69,7 +68,7 @@ export default class Test extends React.Component {
         // const nextState = { answered: true };
         const nextState = {};
         if (
-          this.state.dataSource[this.state.activeQuestionIndex].word_kor ===
+          this.state.testList[this.state.activeQuestionIndex].word_kor ===
           correct
         ) {
           nextState.answered = true;
@@ -77,7 +76,7 @@ export default class Test extends React.Component {
           nextState.answerCorrect = true;
           this.requestCheck({
             word_kor: correct,
-            word_eng: this.state.dataSource[this.state.activeQuestionIndex]
+            word_eng: this.state.testList[this.state.activeQuestionIndex]
               .word_eng,
           });
         } else {
@@ -173,13 +172,13 @@ export default class Test extends React.Component {
   render() {
     const { navigation } = this.props;
     const {
-      dataSource,
+      testList,
       activeQuestionIndex,
       correctCount,
       totalCount,
       wordAnswer,
     } = this.state;
-    const question = dataSource[activeQuestionIndex];
+    const question = testList[activeQuestionIndex];
 
     return (
       <View style={styles.test}>
@@ -202,10 +201,6 @@ export default class Test extends React.Component {
               />
               <Text>{question !== undefined ? question.word_kor : ''}</Text>
               <Text>{question !== undefined ? question.word_eng : ''}</Text>
-              {/* <Button
-                title="close"
-                onPress={this.setModalVisible.bind(this, false)}
-              /> */}
             </View>
           </TouchableOpacity>
         </Modal>

@@ -7,14 +7,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Menu from './Main/Menu';
 import { LoginStackScreen } from './StackScreen';
 import { AuthContext } from './AppContext';
-// import { ADDRESS } from 'react-native-dotenv'
-// require('dotenv').config();
-// import { ADDRESS } from '@env'
-// const ADDRESS = process.env.ADDRESS
+import ADDRESS from './DummyData/Address';
 
 const Stack = createStackNavigator();
-//const Address = 'http://13.125.184.203:4000';
-import ADDRESS from './DummyData/Address';
 const Address = ADDRESS;
 
 function SplashScreen() {
@@ -58,7 +53,6 @@ export default function App() {
   );
 
   React.useEffect(() => {
-    // Fetch the token from storage then navigate to our appropriate place
     // 저장소에서 토큰을 가져온 다음 적절한 위치로 이동합니다.
     const bootstrapAsync = async () => {
       let accessToken;
@@ -67,14 +61,10 @@ export default function App() {
         accessToken = await AsyncStorage.getItem('accessToken');
         console.log('유저 토큰 값은 : ', accessToken);
       } catch (e) {
-        // Restoring token failed
         // 토큰 복원 실패
       }
-      // After restoring token, we may need to validate it in production apps
       // 토큰을 복원 한 후 프로덕션 앱에서 유효성을 검사해야 할 수 있습니다.
 
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
       // 앱 화면 또는 인증 화면으로 전환되며이 로딩
       // 화면이 마운트 해제되고 버려집니다.
       dispatch({ type: 'RESTORE_TOKEN', token: accessToken });

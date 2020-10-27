@@ -9,9 +9,9 @@ import {
   FlatList,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-//require('dotenv').config();
-const { height, width } = Dimensions.get('window');
 import ADDRESS from '../../DummyData/Address';
+
+const { height, width } = Dimensions.get('window');
 const Address = ADDRESS;
 
 export default class RegisterWords extends React.Component {
