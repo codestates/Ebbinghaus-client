@@ -7,10 +7,11 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  Animated,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
-// import questions from '../DummyData/MineWordList';
+import { Alert } from '../components/Alert';
 import ADDRESS from '../DummyData/Address';
 const Address = ADDRESS;
 
@@ -35,6 +36,7 @@ export default class Test extends React.Component {
     this.textInput = React.createRef();
     this.focusTextInput = this.focusTextInput.bind(this);
     this.inputEnter = this.inputEnter.bind(this);
+    this.setModalVisible = this.setModalVisible.bind(this);
   }
 
   componentDidMount() {
@@ -64,13 +66,13 @@ export default class Test extends React.Component {
   answer = (correct) => {
     this.setState(
       (state) => {
-        const nextState = { answered: true };
-        // const nextState = {};
+        // const nextState = { answered: true };
+        const nextState = {};
         if (
           this.state.dataSource[this.state.activeQuestionIndex].word_kor ===
           correct
         ) {
-          // nextState.answered = true;
+          nextState.answered = true;
           nextState.correctCount = state.correctCount + 1;
           nextState.answerCorrect = true;
           this.requestCheck({
@@ -79,19 +81,24 @@ export default class Test extends React.Component {
               .word_eng,
           });
         } else {
-          nextState.answerCorrect = false;
-          // this.setModalVisible(true);
+          () => {
+            nextState.answerCorrect = false;
+            this.setModalVisible(true);
+          };
         }
 
         return nextState;
       },
       () => {
-        setTimeout(() => this.nextQuestion(), 750);
+        if (this.state.answered) {
+          setTimeout(() => this.nextQuestion(), 750);
+        }
       }
     );
   };
 
   nextQuestion = () => {
+    const { activeQuestionIndex, totalCount } = this.state;
     this.clearTextInput();
     this.focusTextInput();
 
@@ -115,6 +122,9 @@ export default class Test extends React.Component {
 
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
+    if (!visible) {
+      this.nextQuestion();
+    }
   };
 
   focusTextInput() {
@@ -199,6 +209,16 @@ export default class Test extends React.Component {
             </View>
           </TouchableOpacity>
         </Modal>
+
+        <View style={styles.guageBarOut}>
+          <Animated.View
+            style={[
+              styles.guageBarIn,
+              { width: (activeQuestionIndex / totalCount) * 100 + '%' },
+            ]}
+          ></Animated.View>
+        </View>
+
         <View style={styles.right}>
           <Text style={styles.white}>{`정답 : ${correctCount}     남은 문제 : ${
             totalCount - activeQuestionIndex
@@ -241,6 +261,10 @@ export default class Test extends React.Component {
             <Text style={styles.selectDoText}>그만하기</Text>
           </TouchableOpacity>
         </View>
+        <Alert
+          correct={this.state.answerCorrect}
+          visible={this.state.answered}
+        />
       </View>
     );
   }
@@ -324,5 +348,16 @@ const styles = StyleSheet.create({
   right: {
     marginBottom: 10,
     marginLeft: 650,
+  },
+  guageBarOut: {
+    width: standardWidth,
+    height: '5%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+  },
+  guageBarIn: {
+    height: '100%',
+    backgroundColor: 'blue',
+    borderRadius: 10,
   },
 });
