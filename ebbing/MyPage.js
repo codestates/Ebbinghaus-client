@@ -7,13 +7,11 @@ import {
   Dimensions,
 } from 'react-native';
 
-import { createStackNavigator } from '@react-navigation/stack';
 import { AuthContext } from './AppContext';
 import AsyncStorage from '@react-native-community/async-storage';
 import ADDRESS from './DummyData/Address';
-const Address = ADDRESS;
 
-const Stack = createStackNavigator();
+const Address = ADDRESS;
 const { height, width } = Dimensions.get('window');
 
 export default function MyPage() {

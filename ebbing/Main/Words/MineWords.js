@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-// require('dotenv').config();
 import ADDRESS from '../../DummyData/Address';
+
 const Address = ADDRESS;
 
 export default class MineWords extends Component {
@@ -19,7 +19,7 @@ export default class MineWords extends Component {
 
     this.state = {
       loading: false,
-      dataSource: [],
+      wordList: [],
       filter: false,
     };
   }
@@ -27,7 +27,7 @@ export default class MineWords extends Component {
   // 랜더링시 데이터를 받아옴
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
-      this.fetchData();
+      this.getMineWordList();
     });
   }
 
@@ -56,7 +56,7 @@ export default class MineWords extends Component {
         }),
       };
       fetch(`${Address}/word/mine/delete`, options).then(() => {
-        this.fetchData();
+        this.getMineWordList();
       });
     } catch (e) {
       console.error(e);
@@ -66,7 +66,7 @@ export default class MineWords extends Component {
   // Data를 받아오기 위해 서버에 요청하는 곳
   //데이터를 받아올 때 상태값으로 isSelect과 selectedClass 를 넣어줌
   //isSelect 은 item의 선택여부, selectedClass는 그에 따른 스타일 변경
-  async fetchData() {
+  async getMineWordList() {
     this.setState({ loading: true });
     let userId = await AsyncStorage.getItem('userId');
 
@@ -81,7 +81,7 @@ export default class MineWords extends Component {
       });
       this.setState({
         loading: false,
-        dataSource: responseJson,
+        wordList: responseJson,
       });
     } catch (e) {
       console.error(e);
@@ -104,7 +104,7 @@ export default class MineWords extends Component {
       });
       this.setState({
         loading: false,
-        dataSource: responseJson,
+        wordList: responseJson,
       });
     } catch (e) {
       console.error(e);
@@ -123,14 +123,14 @@ export default class MineWords extends Component {
       ? styles.selected
       : styles.list;
 
-    const index = this.state.dataSource.findIndex(
+    const index = this.state.wordList.findIndex(
       (item) => data.item.id === item.id
     );
 
-    this.state.dataSource[index] = data.item;
+    this.state.wordList[index] = data.item;
 
     this.setState({
-      dataSource: this.state.dataSource,
+      wordList: this.state.wordList,
     });
   };
 
@@ -161,7 +161,7 @@ export default class MineWords extends Component {
         };
 
         await fetch(`${Address}/word/mine/test-register`, options);
-        this.fetchData();
+        this.getMineWordList();
       }
     } catch (e) {
       console.error(e);
@@ -180,7 +180,7 @@ export default class MineWords extends Component {
   );
 
   render() {
-    const itemNumber = this.state.dataSource.filter((item) => item.isSelect)
+    const itemNumber = this.state.wordList.filter((item) => item.isSelect)
       .length;
     if (this.state.loading) {
       return (
@@ -195,7 +195,7 @@ export default class MineWords extends Component {
         <View style={styles.header}>
           <View>
             <TouchableOpacity
-              onPress={() => this.deleteBtn(this.state.dataSource)}
+              onPress={() => this.deleteBtn(this.state.wordList)}
             >
               <MaterialCommunityIcons
                 name="trash-can"
@@ -209,7 +209,7 @@ export default class MineWords extends Component {
             <TouchableOpacity
               style={styles.box}
               onPress={() => {
-                this.fetchData(), this.setState({ filter: false });
+                this.getMineWordList(), this.setState({ filter: false });
               }}
             >
               <Text>Test 진행 단어</Text>
@@ -225,10 +225,10 @@ export default class MineWords extends Component {
             </TouchableOpacity>
           )}
         </View>
-        {this.state.dataSource.length !== 0 ? (
+        {this.state.wordList.length !== 0 ? (
           <FlatList
             style={styles.Words}
-            data={this.state.dataSource}
+            data={this.state.wordList}
             ItemSeparatorComponent={this.FlatListItemSeparator}
             renderItem={(item) => this.renderItem(item)}
             keyExtractor={(item) => item.id.toString()}
@@ -251,7 +251,7 @@ export default class MineWords extends Component {
             <TouchableOpacity
               style={styles.box}
               onPress={() => {
-                this.goToTest(this.state.dataSource);
+                this.goToTest(this.state.wordList);
               }}
             >
               <Text>{itemNumber}개 Test 등록</Text>
