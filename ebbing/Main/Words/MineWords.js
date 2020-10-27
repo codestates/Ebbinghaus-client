@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 // require('dotenv').config();
 import ADDRESS from '../../DummyData/Address';
 const Address = ADDRESS;
@@ -28,6 +29,38 @@ export default class MineWords extends Component {
     this.props.navigation.addListener('focus', () => {
       this.fetchData();
     });
+  }
+
+  async deleteBtn(data) {
+    let result = [];
+    let userId = await AsyncStorage.getItem('userId');
+
+    try {
+      data.forEach((element) => {
+        if (element.isSelect === true) {
+          result.push(element);
+        }
+      });
+
+      let options = {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          selectedWords: [...result],
+          id: userId,
+        }),
+      };
+      fetch(`${Address}/word/mine/delete`, options).then(() => {
+        this.fetchData();
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   // Data를 받아오기 위해 서버에 요청하는 곳
@@ -160,6 +193,17 @@ export default class MineWords extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
+          <View>
+            <TouchableOpacity
+              onPress={() => this.deleteBtn(this.state.dataSource)}
+            >
+              <MaterialCommunityIcons
+                name="trash-can"
+                color={'#ff0000'}
+                size={30}
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.white}>나의 단어장</Text>
           {this.state.filter ? (
             <TouchableOpacity
@@ -294,6 +338,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: 280,
-    paddingBottom: 7,
+    paddingTop: 10,
   },
 });
