@@ -8,8 +8,8 @@ import Menu from './Main/Menu';
 import { LoginStackScreen } from './StackScreen';
 import { AuthContext } from './AppContext';
 import ADDRESS from './DummyData/Address';
-import * as Google from 'expo-google-app-auth';
-import ClientID from './DummyData/ClientID';
+//import * as Google from 'expo-google-app-auth';
+//import ClientID from './DummyData/ClientID';
 
 const Stack = createStackNavigator();
 const Address = ADDRESS;
@@ -166,56 +166,56 @@ export default function App() {
           console.error(e);
         }
       },
-      googleSignIn: async () => {
-        try {
-          const googleResult = await Google.logInAsync({
-            androidClientId: ClientID,
-            // iosClientId: YOUR_CLIENT_ID_HERE,
-          });
+      // googleSignIn: async () => {
+      //   try {
+      //     const googleResult = await Google.logInAsync({
+      //       androidClientId: ClientID,
+      //       // iosClientId: YOUR_CLIENT_ID_HERE,
+      //     });
 
-          if (googleResult.type === 'success') {
-            // return result.accessToken;
-            // AsyncStorage.setItem('accessToken', result.accessToken);
-            // AsyncStorage.setItem('userId', String(result.user.name));
-            console.log('result.accessToken == : ', googleResult.accessToken);
-            console.log('result.user.name == : ', googleResult.user.name);
-            console.log('result.user.email == : ', googleResult.user.email);
+      //     if (googleResult.type === 'success') {
+      //       // return result.accessToken;
+      //       // AsyncStorage.setItem('accessToken', result.accessToken);
+      //       // AsyncStorage.setItem('userId', String(result.user.name));
+      //       console.log('result.accessToken == : ', googleResult.accessToken);
+      //       console.log('result.user.name == : ', googleResult.user.name);
+      //       console.log('result.user.email == : ', googleResult.user.email);
 
-            let options = {
-              method: 'POST',
-              mode: 'cors',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                authorization: `Bearer ${state.accessToken}`,
-              },
-              credentials: 'include',
-              body: JSON.stringify({
-                name: googleResult.user.name,
-              }),
-            };
+      //       let options = {
+      //         method: 'POST',
+      //         mode: 'cors',
+      //         headers: {
+      //           Accept: 'application/json',
+      //           'Content-Type': 'application/json',
+      //           authorization: `Bearer ${state.accessToken}`,
+      //         },
+      //         credentials: 'include',
+      //         body: JSON.stringify({
+      //           name: googleResult.user.name,
+      //         }),
+      //       };
 
-            let response = await fetch(`${Address}/user/signin`, options);
-            console.log('response==: ', response);
-            let responseOK = response && response.ok;
-            if (responseOK) {
-              let result = await response.json();
-              console.log('서버에서 보내온 result ', result);
-              AsyncStorage.setItem('accessToken', googleResult.accessToken);
-              AsyncStorage.setItem('userId', String(googleResult.user.name));
-              dispatch({ type: 'SIGN_IN', token: googleResult.accessToken });
-            } else {
-              console.log('요청 실패');
-            }
-          } else {
-            // return { cancelled: true };
-            console.log('cancelled');
-          }
-        } catch (e) {
-          // return { error: true };
-          console.log('error', e);
-        }
-      },
+      //       let response = await fetch(`${Address}/user/signin`, options);
+      //       console.log('response==: ', response);
+      //       let responseOK = response && response.ok;
+      //       if (responseOK) {
+      //         let result = await response.json();
+      //         console.log('서버에서 보내온 result ', result);
+      //         AsyncStorage.setItem('accessToken', googleResult.accessToken);
+      //         AsyncStorage.setItem('userId', String(googleResult.user.name));
+      //         dispatch({ type: 'SIGN_IN', token: googleResult.accessToken });
+      //       } else {
+      //         console.log('요청 실패');
+      //       }
+      //     } else {
+      //       // return { cancelled: true };
+      //       console.log('cancelled');
+      //     }
+      //   } catch (e) {
+      //     // return { error: true };
+      //     console.log('error', e);
+      //   }
+      // },
     }),
     []
   );
@@ -227,7 +227,7 @@ export default function App() {
           {state.isLoading ? (
             // We haven't finished checking for the token yet
             <Stack.Screen name="Splash" component={SplashScreen} />
-          ) : state.accessToken === null ? (
+          ) : state.accessToken !== null ? (
             <Stack.Screen name="Login" component={LoginStackScreen} />
           ) : (
             <Stack.Screen name="Menu" component={Menu} />

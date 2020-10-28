@@ -8,8 +8,6 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-.env
-DummyData/ClientID.js
 
 # macOS
 .DS_Store
