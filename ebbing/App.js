@@ -8,6 +8,8 @@ import Menu from './Main/Menu';
 import { LoginStackScreen } from './StackScreen';
 import { AuthContext } from './AppContext';
 import ADDRESS from './DummyData/Address';
+import * as Google from 'expo-google-app-auth';
+import ClientID from './DummyData/ClientID';
 
 const Stack = createStackNavigator();
 const Address = ADDRESS;
@@ -162,6 +164,29 @@ export default function App() {
           }
         } catch (e) {
           console.error(e);
+        }
+      },
+
+      googleSignIn: async () => {
+        try {
+          console.log('ClientID == : ', ClientID);
+          const result = await Google.logInAsync({
+            androidClientId: ClientID,
+            // iosClientId: YOUR_CLIENT_ID_HERE,
+          });
+
+          if (result.type === 'success') {
+            // return result.accessToken;
+            AsyncStorage.setItem('accessToken', result.accessToken);
+            AsyncStorage.setItem('userId', String(result.user.name));
+            dispatch({ type: 'SIGN_IN', token: result.accessToken });
+          } else {
+            // return { cancelled: true };
+            console.log('cancelled');
+          }
+        } catch (e) {
+          // return { error: true };
+          console.log('error', e);
         }
       },
     }),
