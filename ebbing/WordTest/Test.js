@@ -164,7 +164,7 @@ export default class Test extends React.Component {
 
   //Enter시 정답체크 함수 실행
   inputEnter = (wordAnswer) => (e) => {
-    if (e.nativeEvent.keyCode === 13) {
+    if (e.nativeEvent.key == "Enter") {
       this.answer(wordAnswer);
     }
   };
