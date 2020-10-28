@@ -10,12 +10,11 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+//require('dotenv').config();
 import ADDRESS from '../../DummyData/Address';
-
 const Address = ADDRESS;
 
-export default class MineWords extends Component {
+export default class PriorityWords extends Component {
   constructor(props) {
     super(props);
 
@@ -28,7 +27,7 @@ export default class MineWords extends Component {
   // 랜더링시 데이터를 받아옴
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
-      this.getMineWordList();
+      this.getPriorityWordList();
     });
   }
 
@@ -56,8 +55,8 @@ export default class MineWords extends Component {
           id: userId,
         }),
       };
-      fetch(`${Address}/word/mine/delete`, options).then(() => {
-        this.getMineWordList();
+      fetch(`${Address}/word/priority/test-delete`, options).then(() => {
+        this.getPriorityWordList();
       });
     } catch (e) {
       console.error(e);
@@ -67,12 +66,12 @@ export default class MineWords extends Component {
   // Data를 받아오기 위해 서버에 요청하는 곳
   //데이터를 받아올 때 상태값으로 isSelect과 selectedClass 를 넣어줌
   //isSelect 은 item의 선택여부, selectedClass는 그에 따른 스타일 변경
-  async getMineWordList() {
+  async getPriorityWordList() {
     this.setState({ loading: true });
     let userId = await AsyncStorage.getItem('userId');
 
     try {
-      const response = await fetch(`${Address}/word/mine/${userId}`);
+      const response = await fetch(`${Address}/word/priority/button/${userId}`);
       const responseJson = await response.json();
 
       responseJson.map((item) => {
@@ -112,40 +111,6 @@ export default class MineWords extends Component {
     });
   };
 
-  async goToTest(data) {
-    let result = [];
-    let userId = await AsyncStorage.getItem('userId');
-
-    try {
-      data.forEach((element) => {
-        if (element.isSelect) {
-          result.push(element);
-        }
-      });
-
-      if (result.length > 0) {
-        let options = {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            selectedWords: [...result],
-            id: userId,
-          }),
-        };
-
-        await fetch(`${Address}/word/mine/test-register`, options);
-        this.getMineWordList();
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   renderItem = (data) => (
     <TouchableOpacity
       style={[styles.list, data.item.selectedClass]}
@@ -165,8 +130,6 @@ export default class MineWords extends Component {
   );
 
   render() {
-    const itemNumber = this.state.wordList.filter((item) => item.isSelect)
-      .length;
     if (this.state.loading) {
       return (
         <View style={styles.loader}>
@@ -178,7 +141,7 @@ export default class MineWords extends Component {
     return (
       <View style={styles.container}>
         <View>
-          <Text style={[styles.tilteFont, styles.white]}>나만의 단어장</Text>
+          <Text style={[styles.tilteFont, styles.white]}>우선 순위 영단어</Text>
         </View>
         <View style={styles.header}>
           <View>
@@ -190,13 +153,6 @@ export default class MineWords extends Component {
                 color={'#ff0000'}
                 size={30}
               />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('RegisterWords')}
-            >
-              <AntDesign name="pluscircleo" color={'#fff'} size={30} />
             </TouchableOpacity>
           </View>
         </View>
@@ -217,17 +173,9 @@ export default class MineWords extends Component {
         <View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('MineWordsFilter')}
+            onPress={() => this.props.navigation.navigate('PriorityWords')}
           >
-            <Text style={styles.white}>Test중인 단어 보기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              this.goToTest(this.state.wordList);
-            }}
-          >
-            <Text style={styles.white}>{itemNumber} 개 Test 등록</Text>
+            <Text style={styles.white}>뒤로가기</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -242,18 +190,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     backgroundColor: '#252B39',
   },
+  Words: {
+    backgroundColor: '#ffffff',
+    width: width * 0.8,
+  },
   tilteFont: {
     fontSize: 20,
     color: '#fff',
     margin: 20,
   },
-  Words: {
-    backgroundColor: '#ffffff',
-    width: width * 0.8,
-  },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     width: width * 0.75,
     paddingBottom: 7,
   },
@@ -289,12 +237,8 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
-  selected: { backgroundColor: '#7ABCD3' },
-  between: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 280,
-    paddingTop: 10,
+  selected: {
+    backgroundColor: '#7ABCD3',
   },
   WordRow: {
     flexDirection: 'row',

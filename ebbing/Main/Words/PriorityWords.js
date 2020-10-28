@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   Text,
   View,
+  Dimensions,
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -20,7 +21,6 @@ export default class PriorityWords extends Component {
     this.state = {
       loading: false,
       wordList: [],
-      filter: false,
     };
   }
 
@@ -89,29 +89,6 @@ export default class PriorityWords extends Component {
     }
   }
 
-  async registerFetchData() {
-    this.setState({ loading: true });
-    let userId = await AsyncStorage.getItem('userId');
-
-    try {
-      const response = await fetch(`${Address}/word/priority/button/${userId}`);
-      const responseJson = await response.json();
-
-      responseJson.map((item) => {
-        item.isSelect = false;
-        item.selectedClass = styles.list;
-        return item;
-      });
-      this.setState({
-        loading: false,
-        wordList: responseJson,
-      });
-    } catch (e) {
-      console.error(e);
-      this.setState({ loading: false });
-    }
-  }
-
   //List의 사이사이 빈 공간
   FlatListItemSeparator = () => <View style={styles.line} />;
 
@@ -120,7 +97,7 @@ export default class PriorityWords extends Component {
   selectItem = (data) => {
     data.item.isSelect = !data.item.isSelect;
     data.item.selectedClass = data.item.isSelect
-      ? styles.selected
+      ? [styles.selected, styles.white]
       : styles.list;
 
     const index = this.state.wordList.findIndex(
@@ -173,9 +150,16 @@ export default class PriorityWords extends Component {
       style={[styles.list, data.item.selectedClass]}
       onPress={() => this.selectItem(data)}
     >
-      <Text style={styles.lightText}>
-        {data.item.word_eng} {data.item.word_kor}
-      </Text>
+      <View style={styles.WordRow}>
+        <Text style={[styles.text, data.item.selectedClass]}>
+          {data.item.word_eng}
+        </Text>
+      </View>
+      <View style={styles.WordRow}>
+        <Text style={[styles.text, data.item.selectedClass]}>
+          {data.item.word_kor}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 
@@ -192,6 +176,9 @@ export default class PriorityWords extends Component {
 
     return (
       <View style={styles.container}>
+        <View>
+          <Text style={[styles.tilteFont, styles.white]}>우선 순위 영단어</Text>
+        </View>
         <View style={styles.header}>
           <View>
             <TouchableOpacity
@@ -204,26 +191,6 @@ export default class PriorityWords extends Component {
               />
             </TouchableOpacity>
           </View>
-          <Text style={styles.white}>우선영어단어장</Text>
-          {this.state.filter ? (
-            <TouchableOpacity
-              style={styles.box}
-              onPress={() => {
-                this.getPriorityWordList(), this.setState({ filter: false });
-              }}
-            >
-              <Text>Test 진행 단어</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={styles.box}
-              onPress={() => {
-                this.registerFetchData(), this.setState({ filter: true });
-              }}
-            >
-              <Text>Test 등록전 단어</Text>
-            </TouchableOpacity>
-          )}
         </View>
         {this.state.wordList.length !== 0 ? (
           <FlatList
@@ -235,64 +202,64 @@ export default class PriorityWords extends Component {
             extraData={this.state}
           />
         ) : (
-          <Text style={styles.Words}>현재 등록된 단어가 없습니다.</Text>
+          <View style={styles.box}>
+            <Text>현재 등록된 단어가 없습니다.</Text>
+          </View>
         )}
-        <View style={styles.right}>
+        <View>
           <TouchableOpacity
-            style={styles.box}
+            style={styles.button}
+            onPress={() =>
+              this.props.navigation.navigate('PriorityWordsFilter')
+            }
+          >
+            <Text style={styles.white}>Test중인 단어 보기</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
             onPress={() => this.goToTest(this.state.wordList)}
           >
-            <Text>{itemNumber}개 Test 등록</Text>
+            <Text style={styles.white}>{itemNumber} 개 Test 등록</Text>
           </TouchableOpacity>
         </View>
       </View>
     );
   }
 }
-
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 100,
-    paddingBottom: 100,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#000000',
-  },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 44,
+    justifyContent: 'space-evenly',
+    backgroundColor: '#252B39',
   },
   Words: {
     backgroundColor: '#ffffff',
-    width: 300,
+    width: width * 0.8,
+  },
+  tilteFont: {
+    fontSize: 20,
+    color: '#fff',
+    margin: 20,
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 280,
+    justifyContent: 'flex-start',
+    width: width * 0.75,
     paddingBottom: 7,
   },
   white: {
     color: '#fff',
   },
-  box: {
-    width: 110,
-    height: 30,
-    backgroundColor: '#fff',
+  button: {
+    width: width * 0.8,
+    height: height * 0.07,
+    borderRadius: 15,
+    backgroundColor: '#7ABCD3',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  right: {
-    marginTop: 10,
-    marginLeft: 180,
-  },
-  title: {
-    fontSize: 20,
-    color: '#fff',
-    textAlign: 'center',
-    marginBottom: 10,
+    margin: 10,
   },
   loader: {
     flex: 1,
@@ -304,21 +271,37 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     margin: 2,
     flexDirection: 'row',
-    backgroundColor: '#192338',
-    justifyContent: 'flex-start',
+    backgroundColor: '#fff',
+    justifyContent: 'space-around',
     alignItems: 'center',
     zIndex: -1,
-  },
-  lightText: {
-    color: '#f7f7f7',
-    width: 300,
-    paddingLeft: 15,
-    fontSize: 20,
   },
   line: {
     height: 0.5,
     width: '100%',
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
-  selected: { backgroundColor: '#FA7B5F' },
+  selected: {
+    backgroundColor: '#7ABCD3',
+  },
+  WordRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '50%',
+    padding: 10,
+  },
+  text: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 30,
+    color: '#000',
+  },
+  box: {
+    width: width * 0.8,
+    height: height * 0.5,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

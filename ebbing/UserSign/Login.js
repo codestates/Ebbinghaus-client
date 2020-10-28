@@ -6,14 +6,13 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  TouchableHighlight,
 } from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 // import {
 //   useFonts,
 //   Inter_900Black,
 // } from '@expo-google-fonts/inter';
 
-const { height, width } = Dimensions.get('window');
 import { AuthContext } from '../AppContext';
 
 export default function Login({ navigation }) {
@@ -55,8 +54,12 @@ export default function Login({ navigation }) {
         />
       </View>
 
-      <TouchableOpacity style={[styles.buttonCenterText, styles.button]}>
-        <Text>Google로 계속하기</Text>
+      <TouchableOpacity
+        style={[styles.buttonCenterText, styles.button]}
+        //onPress={() => googleSignIn()}
+      >
+        <AntDesign name="google" color={'#252B39'} size={20} />
+        <Text> Google로 계속하기</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -83,7 +86,7 @@ export default function Login({ navigation }) {
     </View>
   );
 }
-
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -129,6 +132,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   buttonCenterText: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
