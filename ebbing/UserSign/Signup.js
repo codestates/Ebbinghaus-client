@@ -6,14 +6,37 @@ import {
   TextInput,
   View,
   StyleSheet,
-  TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native';
 import { AuthContext } from '../AppContext';
 
 export default function Signup({ navigation }) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [pwCheck, setPwCheck] = React.useState('');
+  const [warningMsg, setWarningMsg] = React.useState('');
+  const [passCheck, setPassCheck] = React.useState(false);
   const { signUp } = React.useContext(AuthContext);
+
+  const changePassword = (e) => {
+    setPassword(e.target.value);
+  };
+  const changePwCheck = (e) => {
+    setPwCheck(e.target.value);
+  };
+
+  React.useEffect(() => {
+    const checkPassword = () => {
+      if (password !== pwCheck) {
+        setWarningMsg('비밀번호가 일치하지 않습니다.');
+        setPassCheck(false);
+      } else if (password !== '') {
+        setWarningMsg('비밀번호가 일치합니다.');
+        setPassCheck(true);
+      }
+    };
+    checkPassword();
+  }, [password, pwCheck, passCheck]);
 
   return (
     <View style={styles.container}>
@@ -30,7 +53,7 @@ export default function Signup({ navigation }) {
         <Text>Password</Text>
         <TextInput
           value={password}
-          onChangeText={setPassword}
+          onChange={changePassword}
           placeholder={'Password'}
           secureTextEntry={true}
           style={styles.input}
@@ -40,21 +63,28 @@ export default function Signup({ navigation }) {
       <View>
         <Text>Password Check</Text>
         <TextInput
+          value={pwCheck}
+          onChange={changePwCheck}
           placeholder={'Password Check'}
           secureTextEntry={true}
           style={styles.input}
         />
+        <Text>{warningMsg}</Text>
       </View>
 
-      <TouchableHighlight
+      <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => {
-          signUp({ username, password });
-          navigation.navigate('Login');
+          if (passCheck) {
+            signUp({ username, password });
+            navigation.navigate('Login');
+          } else {
+            Alert.alert('비밀번호 확인을 다시 해주세요!');
+          }
         }}
       >
         <Text>회원가입</Text>
-      </TouchableHighlight>
+      </TouchableOpacity>
     </View>
   );
 }
