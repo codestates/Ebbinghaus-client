@@ -63,21 +63,20 @@ export default class Test extends React.Component {
   }
 
   answer = (correct) => {
+    const { activeQuestionIndex, testList } = this.state;
     this.setState(
       (state) => {
         // const nextState = { answered: true };
         const nextState = {};
-        if (
-          this.state.testList[this.state.activeQuestionIndex].word_kor ===
-          correct
-        ) {
+        if (testList[activeQuestionIndex].word_kor === correct) {
           nextState.answered = true;
           nextState.correctCount = state.correctCount + 1;
           nextState.answerCorrect = true;
           this.requestCheck({
             word_kor: correct,
-            word_eng: this.state.testList[this.state.activeQuestionIndex]
-              .word_eng,
+            word_eng: testList[activeQuestionIndex].word_eng,
+            word_id: testList[activeQuestionIndex].word_id,
+            word_theme: testList[activeQuestionIndex].word_theme,
           });
         } else {
           () => {
@@ -97,7 +96,6 @@ export default class Test extends React.Component {
   };
 
   nextQuestion = () => {
-    const { activeQuestionIndex, totalCount } = this.state;
     this.clearTextInput();
     this.focusTextInput();
 
@@ -150,7 +148,7 @@ export default class Test extends React.Component {
       credentials: 'include',
       body: JSON.stringify({
         selectedWords: [data],
-        id: userId,
+        user_id: userId,
       }),
     };
 
