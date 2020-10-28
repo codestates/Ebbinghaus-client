@@ -6,6 +6,7 @@ import {
   TextInput,
   View,
   StyleSheet,
+  TouchableOpacity,
   Dimensions,
   TouchableHighlight,
 } from 'react-native';
@@ -15,7 +16,29 @@ export default function Signup({ navigation }) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [passwordCheck, setPasswordCheck] = React.useState('');
+  const [warningMsg, setWarningMsg] = React.useState('');
+  const [passCheck, setPassCheck] = React.useState(false);
   const { signUp } = React.useContext(AuthContext);
+
+  const changePassword = (e) => {
+    setPassword(e.target.value);
+  };
+  const changePasswordCheck = (e) => {
+    setPasswordCheck(e.target.value);
+  };
+
+  React.useEffect(() => {
+    const checkPassword = () => {
+      if (password !== passwordCheck) {
+        setWarningMsg('비밀번호가 일치하지 않습니다.');
+        setPassCheck(false);
+      } else if (password !== '') {
+        setWarningMsg('비밀번호가 일치합니다.');
+        setPassCheck(true);
+      }
+    };
+    checkPassword();
+  }, [password, passwordCheck, passCheck]);
 
   return (
     <View style={styles.container}>
@@ -39,7 +62,7 @@ export default function Signup({ navigation }) {
         </Text>
         <TextInput
           value={password}
-          onChangeText={setPassword}
+          onChange={changePassword}
           placeholder={'Password'}
           secureTextEntry={true}
           style={password ? styles.unInput : styles.input}
@@ -51,18 +74,24 @@ export default function Signup({ navigation }) {
           비밀번호 확인
         </Text>
         <TextInput
-          onChangeText={setPasswordCheck}
+          value={passwordCheck}
+          onChange={changePasswordCheck}
           placeholder={'Password Check'}
           secureTextEntry={true}
           style={passwordCheck ? styles.unInput : styles.input}
         />
+        <Text>{warningMsg}</Text>
       </View>
 
       <TouchableHighlight
         style={styles.button}
         onPress={() => {
-          signUp({ username, password });
-          navigation.navigate('Login');
+          if (passCheck) {
+            signUp({ username, password });
+            navigation.navigate('Login');
+          } else {
+            Alert.alert('비밀번호 확인을 다시 해주세요!');
+          }
         }}
       >
         <Text>회원가입 완료</Text>
