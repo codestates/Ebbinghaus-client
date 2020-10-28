@@ -15,7 +15,7 @@ import ADDRESS from '../../DummyData/Address';
 
 const Address = ADDRESS;
 
-export default class MineWords extends Component {
+export default class MineWordsFilter extends Component {
   constructor(props) {
     super(props);
 
@@ -72,7 +72,7 @@ export default class MineWords extends Component {
     let userId = await AsyncStorage.getItem('userId');
 
     try {
-      const response = await fetch(`${Address}/word/mine/${userId}`);
+      const response = await fetch(`${Address}/word/mine/button/${userId}`);
       const responseJson = await response.json();
 
       responseJson.map((item) => {
@@ -112,40 +112,6 @@ export default class MineWords extends Component {
     });
   };
 
-  async goToTest(data) {
-    let result = [];
-    let userId = await AsyncStorage.getItem('userId');
-
-    try {
-      data.forEach((element) => {
-        if (element.isSelect) {
-          result.push(element);
-        }
-      });
-
-      if (result.length > 0) {
-        let options = {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            selectedWords: [...result],
-            id: userId,
-          }),
-        };
-
-        await fetch(`${Address}/word/mine/test-register`, options);
-        this.getMineWordList();
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   renderItem = (data) => (
     <TouchableOpacity
       style={[styles.list, data.item.selectedClass]}
@@ -165,8 +131,6 @@ export default class MineWords extends Component {
   );
 
   render() {
-    const itemNumber = this.state.wordList.filter((item) => item.isSelect)
-      .length;
     if (this.state.loading) {
       return (
         <View style={styles.loader}>
@@ -192,13 +156,6 @@ export default class MineWords extends Component {
               />
             </TouchableOpacity>
           </View>
-          <View>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('RegisterWords')}
-            >
-              <AntDesign name="pluscircleo" color={'#fff'} size={30} />
-            </TouchableOpacity>
-          </View>
         </View>
         {this.state.wordList.length !== 0 ? (
           <FlatList
@@ -215,21 +172,10 @@ export default class MineWords extends Component {
         <View>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => this.props.navigation.navigate('MineWordsFilter')}
+              onPress={() => this.props.navigation.navigate('MineWords')}
             >
-              <Text style={styles.white}>Test 진행 단어</Text>
+              <Text style={styles.white}>뒤로가기</Text>
             </TouchableOpacity>
-        </View>
-
-        <View>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              this.goToTest(this.state.wordList);
-            }}
-          >
-            <Text style={styles.white}>{itemNumber} 개 Test 등록</Text>
-          </TouchableOpacity>
         </View>
       </View>
     );

@@ -5,7 +5,9 @@ import Login from './UserSign/Login';
 import Signup from './UserSign/Signup';
 import Main from './Main/Main';
 import PriorityWords from './Main/Words/PriorityWords';
+import PriorityWordsFilter from './Main/Words/PriorityWordsFilter';
 import MineWords from './Main/Words/MineWords';
+import MineWordsFilter from './Main/Words/MineWordsFilter';
 import RegisterWords from './Main/Words/RegisterWords';
 import TestStart from './WordTest/TestStart';
 import Test from './WordTest/Test';
@@ -21,7 +23,9 @@ export function MainStackScreen() {
     <MainStack.Navigator>
       <MainStack.Screen name="Main" component={Main} />
       <MainStack.Screen name="PriorityWords" component={PriorityWords} />
+      <MainStack.Screen name="PriorityWordsFilter" component={PriorityWordsFilter} />
       <MainStack.Screen name="MineWords" component={MineWords} />
+      <MainStack.Screen name="MineWordsFilter" component={MineWordsFilter} />
       <MainStack.Screen name="RegisterWords" component={RegisterWords} />
     </MainStack.Navigator>
   );
