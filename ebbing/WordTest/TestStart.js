@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -30,6 +31,15 @@ export default class TestStart extends React.Component {
           <Text>단어 시험</Text>
           <Text>Start</Text>
         </TouchableOpacity>
+        <View>
+          <Image
+            style={{ width: 400, height: 300 }}
+            source={{
+              url:
+                'https://media1.giphy.com/media/M9TbsVzWI8YAEEJJ5u/giphy.gif',
+            }}
+          />
+        </View>
       </View>
     );
   }
@@ -41,7 +51,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#252B39',
   },
   goToTestBox: {
     flexDirection: 'column',
