@@ -6,7 +6,6 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  TouchableHighlight,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 // import {
