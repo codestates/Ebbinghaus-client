@@ -8,12 +8,12 @@ import {
   Dimensions,
   TouchableHighlight,
 } from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 // import {
 //   useFonts,
 //   Inter_900Black,
 // } from '@expo-google-fonts/inter';
 
-const { height, width } = Dimensions.get('window');
 import { AuthContext } from '../AppContext';
 
 export default function Login({ navigation }) {
@@ -25,14 +25,16 @@ export default function Login({ navigation }) {
   // let [fontsLoaded] = useFonts({
   //   Inter_900Black,
   // });
-  
+
   return (
     <View style={styles.container}>
       <View>
         <Text style={styles.tilteFont}>Ebbing Word</Text>
       </View>
       <View>
-        <Text style={username ? styles.unFontColor : styles.fontColor}>아이디</Text>
+        <Text style={username ? styles.unFontColor : styles.fontColor}>
+          아이디
+        </Text>
         <TextInput
           value={username}
           onChangeText={setUsername}
@@ -41,7 +43,9 @@ export default function Login({ navigation }) {
         />
       </View>
       <View>
-        <Text style={password ? styles.unFontColor : styles.fontColor}>비밀번호</Text>
+        <Text style={password ? styles.unFontColor : styles.fontColor}>
+          비밀번호
+        </Text>
         <TextInput
           value={password}
           onChangeText={setPassword}
@@ -51,24 +55,25 @@ export default function Login({ navigation }) {
         />
       </View>
 
-      <TouchableOpacity
-        style={[styles.buttonCenterText,styles.button]}>
-        <Text>Google로 계속하기</Text>
+      <TouchableOpacity style={[styles.buttonCenterText, styles.button]}>
+        <AntDesign name="google" color={'#252B39'} size={20} />
+        <Text> Google로 계속하기</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.buttonCenterText,styles.button]}
+        style={[styles.buttonCenterText, styles.button]}
         onPress={() =>
           signIn({
             username,
             password,
           })
-        }>
+        }
+      >
         <Text>로그인</Text>
       </TouchableOpacity>
 
       <View style={styles.foot}>
-        <Text style={{color: "#fff"}}>계정이 없으신가요?  </Text>
+        <Text style={{ color: '#fff' }}>계정이 없으신가요? </Text>
         <Text
           onPress={() => navigation.navigate('Signup')}
           style={styles.unFontColor}
@@ -79,7 +84,7 @@ export default function Login({ navigation }) {
     </View>
   );
 }
-
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -92,7 +97,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   input: {
-    width: width*0.8,
+    width: width * 0.8,
     height: 44,
     padding: 10,
     borderBottomWidth: 1,
@@ -100,7 +105,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   unInput: {
-    width: width*0.8,
+    width: width * 0.8,
     height: 44,
     padding: 10,
     borderBottomWidth: 1,
@@ -109,9 +114,9 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   button: {
-    height: height*0.07,
-    width: width*0.8,
-    margin: "-3%",
+    height: height * 0.07,
+    width: width * 0.8,
+    margin: '-3%',
     borderRadius: 15,
     backgroundColor: '#fff',
   },
@@ -122,10 +127,11 @@ const styles = StyleSheet.create({
     color: '#B1E2F3',
   },
   foot: {
-    flexDirection:'row',
+    flexDirection: 'row',
   },
   buttonCenterText: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
 });
