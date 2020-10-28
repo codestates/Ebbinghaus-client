@@ -7,13 +7,15 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  Dimensions,
+  TouchableHighlight,
 } from 'react-native';
 import { AuthContext } from '../AppContext';
 
 export default function Signup({ navigation }) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [pwCheck, setPwCheck] = React.useState('');
+  const [passwordCheck, setPasswordCheck] = React.useState('');
   const [warningMsg, setWarningMsg] = React.useState('');
   const [passCheck, setPassCheck] = React.useState(false);
   const { signUp } = React.useContext(AuthContext);
@@ -21,13 +23,13 @@ export default function Signup({ navigation }) {
   const changePassword = (e) => {
     setPassword(e.target.value);
   };
-  const changePwCheck = (e) => {
-    setPwCheck(e.target.value);
+  const changePasswordCheck = (e) => {
+    setPasswordCheck(e.target.value);
   };
 
   React.useEffect(() => {
     const checkPassword = () => {
-      if (password !== pwCheck) {
+      if (password !== passwordCheck) {
         setWarningMsg('비밀번호가 일치하지 않습니다.');
         setPassCheck(false);
       } else if (password !== '') {
@@ -36,44 +38,53 @@ export default function Signup({ navigation }) {
       }
     };
     checkPassword();
-  }, [password, pwCheck, passCheck]);
+  }, [password, passwordCheck, passCheck]);
 
   return (
     <View style={styles.container}>
       <View>
-        <Text>Username</Text>
+        <Text style={styles.tilteFont}>Ebbing Word</Text>
+      </View>
+      <View>
+        <Text style={username ? styles.unFontColor : styles.fontColor}>
+          아이디
+        </Text>
         <TextInput
           value={username}
           onChangeText={setUsername}
-          placeholder={'Username'}
-          style={styles.input}
+          placeholder={'ID'}
+          style={username ? styles.unInput : styles.input}
         />
       </View>
       <View>
-        <Text>Password</Text>
+        <Text style={password ? styles.unFontColor : styles.fontColor}>
+          비밀번호
+        </Text>
         <TextInput
           value={password}
           onChange={changePassword}
           placeholder={'Password'}
           secureTextEntry={true}
-          style={styles.input}
+          style={password ? styles.unInput : styles.input}
         />
       </View>
 
       <View>
-        <Text>Password Check</Text>
+        <Text style={passwordCheck ? styles.unFontColor : styles.fontColor}>
+          비밀번호 확인
+        </Text>
         <TextInput
-          value={pwCheck}
-          onChange={changePwCheck}
+          value={passwordCheck}
+          onChange={changePasswordCheck}
           placeholder={'Password Check'}
           secureTextEntry={true}
-          style={styles.input}
+          style={passwordCheck ? styles.unInput : styles.input}
         />
         <Text>{warningMsg}</Text>
       </View>
 
-      <TouchableOpacity
-        style={styles.buttonContainer}
+      <TouchableHighlight
+        style={styles.button}
         onPress={() => {
           if (passCheck) {
             signUp({ username, password });
@@ -83,34 +94,53 @@ export default function Signup({ navigation }) {
           }
         }}
       >
-        <Text>회원가입</Text>
-      </TouchableOpacity>
+        <Text>회원가입 완료</Text>
+      </TouchableHighlight>
     </View>
   );
 }
-
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#C0D2F1',
+    justifyContent: 'space-evenly',
+    backgroundColor: '#252B39',
+  },
+  tilteFont: {
+    fontSize: 30,
+    color: '#fff',
   },
   input: {
-    width: 200,
+    width: width * 0.8,
     height: 44,
     padding: 10,
-    borderWidth: 1,
-    borderColor: 'black',
+    borderBottomWidth: 1,
+    borderColor: '#fff',
     marginBottom: 10,
   },
-  buttonContainer: {
-    height: 45,
+  unInput: {
+    width: width * 0.8,
+    height: 44,
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: '#B1E2F3',
+    marginBottom: 10,
+    color: '#fff',
+  },
+  button: {
+    height: height * 0.07,
+    width: width * 0.8,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
-    width: 250,
-    borderRadius: 30,
+    borderRadius: 15,
+    backgroundColor: '#fff',
+  },
+  fontColor: {
+    color: '#fff',
+  },
+  unFontColor: {
+    color: '#B1E2F3',
   },
 });
