@@ -166,15 +166,17 @@ export default class PriorityWords extends Component {
             extraData={this.state}
           />
         ) : (
-          <Text style={styles.Words}>현재 등록된 단어가 없습니다.</Text>
+          <View style={styles.box}>
+            <Text>현재 등록된 단어가 없습니다.</Text>
+          </View>
         )}
         <View>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.props.navigation.navigate('PriorityWords')}
-            >
-              <Text style={styles.white}>뒤로가기</Text>
-            </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate('PriorityWords')}
+          >
+            <Text style={styles.white}>뒤로가기</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
     width: width * 0.8,
   },
   tilteFont: {
-    fontSize: 30,
+    fontSize: 20,
     color: '#fff',
     margin: 20,
   },
@@ -213,7 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#7ABCD3',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
+    margin: 10,
   },
   loader: {
     flex: 1,
@@ -250,5 +252,12 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     fontSize: 30,
     color: '#000',
+  },
+  box: {
+    width: width * 0.8,
+    height: height * 0.5,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
