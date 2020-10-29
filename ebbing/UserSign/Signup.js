@@ -38,7 +38,7 @@ export default function Signup({ navigation }) {
       }
     };
     checkPassword();
-  }, [password, passwordCheck, passCheck]);
+  }, [password, passwordCheck, passCheck, warningMsg]);
 
   return (
     <View style={styles.container}>

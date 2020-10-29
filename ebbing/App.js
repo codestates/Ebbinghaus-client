@@ -232,7 +232,11 @@ export default function App() {
           ) : state.accessToken !== null ? (
             <Stack.Screen name="Login" component={LoginStackScreen} />
           ) : (
-            <Stack.Screen name="Menu" component={Menu} />
+            <Stack.Screen
+              name="Menu"
+              component={Menu}
+              options={{ headerShown: false }}
+            />
           )}
         </Stack.Navigator>
       </NavigationContainer>

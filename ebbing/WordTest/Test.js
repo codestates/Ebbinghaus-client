@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column',
     backgroundColor: '#000',
-    paddingTop: 50,
+    // paddingTop: 50,
   },
   examQuestions: {
     width: standardWidth,
@@ -279,7 +279,8 @@ const styles = StyleSheet.create({
   },
   inputAnswer: {
     width: standardWidth,
-    height: 180,
+    // height: 180,
+    height: 80,
     backgroundColor: '#fff',
     textAlign: 'center',
     borderWidth: 1,
