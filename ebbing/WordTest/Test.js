@@ -192,12 +192,12 @@ export default class Test extends React.Component {
             onPress={this.setModalVisible.bind(this, false)}
           >
             <View style={styles.innerContainerTransparentStyle}>
-              {/* <Feather
+              <Feather
                 name="check"
                 style={{
                   color: '#00cc73',
                 }}
-              /> */}
+              />
               <Text>{question !== undefined ? question.word_kor : ''}</Text>
               <Text>{question !== undefined ? question.word_eng : ''}</Text>
             </View>
@@ -316,19 +316,19 @@ const styles = StyleSheet.create({
   selectDoText: {
     fontSize: 20,
   },
-  // container: {
-  //   flex: 1,
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   backgroundColor: '#ecf0f1',
-  // },
-  // modalBackgroundStyle: {
-  //   backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  // },
-  // innerContainerTransparentStyle: {
-  //   backgroundColor: '#fff',
-  //   padding: 20,
-  // },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ecf0f1',
+  },
+  modalBackgroundStyle: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  innerContainerTransparentStyle: {
+    backgroundColor: '#fff',
+    padding: 20,
+  },
   white: {
     color: '#fff',
     fontSize: 15,

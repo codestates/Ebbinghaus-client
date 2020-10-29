@@ -8,6 +8,7 @@ import Menu from './Main/Menu';
 import { LoginStackScreen } from './StackScreen';
 import { AuthContext } from './AppContext';
 import ADDRESS from './DummyData/Address';
+import { acc } from 'react-native-reanimated';
 //import * as Google from 'expo-google-app-auth';
 //import ClientID from './DummyData/ClientID';
 
@@ -127,6 +128,7 @@ export default function App() {
           },
           credentials: 'include',
         };
+
         await AsyncStorage.removeItem('accessToken');
         await fetch(`${Address}/user/signout`, options);
         dispatch({ type: 'SIGN_OUT' });
