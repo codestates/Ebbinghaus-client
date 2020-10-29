@@ -51,32 +51,51 @@ export default class RegisterWords extends React.Component {
     let userId = await AsyncStorage.getItem('userId');
 
     try {
-      await fetch(`${Address}/word/mine/${userId}`)
-        .then((res) => res.json())
-        .then((result) => {
-          result = result.map((item) => {
-            item.isSelect = false;
-            item.selectedClass = styles.list;
-            return item;
-          });
-          this.setState({
-            wordList: result,
-          });
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+      const response = await fetch(`${Address}/word/mine/${userId}`);
+      const responseJson = await response.json();
+
+      responseJson.map((item) => {
+        item.isSelect = false;
+        item.selectedClass = styles.list;
+        return item;
+      });
+      this.setState({
+        wordList: responseJson,
+      });
     } catch (e) {
       console.error(e);
     }
   }
+  // async getMineWordList() {
+  //   let userId = await AsyncStorage.getItem('userId');
+
+  //   try {
+  //     await fetch(`${Address}/word/mine/${userId}`)
+  //       .then((res) => res.json())
+  //       .then((result) => {
+  //         result = result.map((item) => {
+  //           item.isSelect = false;
+  //           item.selectedClass = styles.list;
+  //           return item;
+  //         });
+  //         this.setState({
+  //           wordList: result,
+  //         });
+  //       })
+  //       .catch((e) => {
+  //         console.error(e);
+  //       });
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // }
 
   //item의 선택에 대한 함수
   //선택에 따른 스타일 변경 및
   selectItem = (data) => {
     data.item.isSelect = !data.item.isSelect;
     data.item.selectedClass = data.item.isSelect
-      ? styles.selected
+      ? [styles.selected, styles.white]
       : styles.list;
 
     const index = this.state.wordList.findIndex(
@@ -132,10 +151,14 @@ export default class RegisterWords extends React.Component {
       onPress={() => this.selectItem(data)}
     >
       <View style={styles.mineWordRow}>
-        <Text style={styles.text}>{data.item.word_eng}</Text>
+        <Text style={[styles.text, data.item.selectedClass]}>
+          {data.item.word_eng}
+        </Text>
       </View>
       <View style={styles.mineWordRow}>
-        <Text style={styles.text}>{data.item.word_kor}</Text>
+        <Text style={[styles.text, data.item.selectedClass]}>
+          {data.item.word_kor}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -187,7 +210,7 @@ export default class RegisterWords extends React.Component {
     return (
       <View style={styles.registerWords}>
         <View style={styles.headerTitle}>
-        <Text style={styles.headerTitleText}>나만의 단어장</Text>
+          <Text style={styles.headerTitleText}>나만의 단어장</Text>
         </View>
         <View style={styles.inputWordView}>
           <TextInput
@@ -232,7 +255,7 @@ export default class RegisterWords extends React.Component {
                 onPress={() => this.deleteBtn(wordList)}
               >
                 <AntDesign name="closecircleo" color={'#E42A2A'} size={20} />
-                <Text>  삭제</Text>
+                <Text> 삭제</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.wordListBtn}
@@ -241,22 +264,22 @@ export default class RegisterWords extends React.Component {
                 }}
               >
                 <AntDesign name="checkcircleo" color={'#0DDC6C'} size={20} />
-                <Text>  완료</Text>
+                <Text> 완료</Text>
               </TouchableOpacity>
             </View>
           </View>
         ) : (
           <View style={styles.wordListView}>
-          <Text style={[styles.wordListView, styles.noRegisteredWord]}>
-            현재 등록된 단어가 없습니다.
-          </Text>
-          <View style={styles.wordListBtnView}>
+            <Text style={[styles.wordListView, styles.noRegisteredWord]}>
+              현재 등록된 단어가 없습니다.
+            </Text>
+            <View style={styles.wordListBtnView}>
               <TouchableOpacity
                 style={styles.wordListBtn}
                 onPress={() => this.deleteBtn(wordList)}
               >
                 <AntDesign name="closecircleo" color={'#E42A2A'} size={20} />
-                <Text>  삭제</Text>
+                <Text> 삭제</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.wordListBtn}
@@ -265,7 +288,7 @@ export default class RegisterWords extends React.Component {
                 }}
               >
                 <AntDesign name="checkcircleo" color={'#0DDC6C'} size={20} />
-                <Text>  완료</Text>
+                <Text> 완료</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -275,7 +298,7 @@ export default class RegisterWords extends React.Component {
   }
 }
 
-const standardWidth = width*0.85;
+const standardWidth = width * 0.85;
 
 const styles = StyleSheet.create({
   registerWords: {
@@ -343,13 +366,13 @@ const styles = StyleSheet.create({
   wordListBtnView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20
+    marginTop: 20,
   },
   wordListBtn: {
     flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 10,
-    width: standardWidth/2 - 10,
+    width: standardWidth / 2 - 10,
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
@@ -369,7 +392,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     fontSize: 30,
-    color: '#fff',
+    color: '#000',
   },
   selected: { backgroundColor: '#7ABCD3' },
   list: {
