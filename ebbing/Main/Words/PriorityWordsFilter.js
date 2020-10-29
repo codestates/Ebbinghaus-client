@@ -183,6 +183,7 @@ export default class PriorityWords extends Component {
   }
 }
 const { height, width } = Dimensions.get('window');
+const standardWidth = width*0.85;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
   },
   Words: {
     backgroundColor: '#ffffff',
-    width: width * 0.8,
+    width: standardWidth,
   },
   tilteFont: {
     fontSize: 20,
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   button: {
-    width: width * 0.8,
+    width: standardWidth,
     height: height * 0.07,
     borderRadius: 15,
     backgroundColor: '#7ABCD3',
@@ -250,11 +251,11 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     textAlignVertical: 'center',
-    fontSize: 30,
+    fontSize: 20,
     color: '#000',
   },
   box: {
-    width: width * 0.8,
+    width: standardWidth,
     height: height * 0.5,
     backgroundColor: '#fff',
     justifyContent: 'center',

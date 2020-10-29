@@ -53,27 +53,27 @@ export default function Login({ navigation }) {
           style={password ? styles.unInput : styles.input}
         />
       </View>
+      <View style={styles.buttonSpace}>
+        <TouchableOpacity
+          style={[styles.buttonCenterText, styles.button]}
+          //onPress={() => googleSignIn()}
+        >
+          <AntDesign name="google" color={'#252B39'} size={20} />
+          <Text> Google로 계속하기</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[styles.buttonCenterText, styles.button]}
-        //onPress={() => googleSignIn()}
-      >
-        <AntDesign name="google" color={'#252B39'} size={20} />
-        <Text> Google로 계속하기</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.buttonCenterText, styles.button]}
-        onPress={() =>
-          signIn({
-            username,
-            password,
-          })
-        }
-      >
-        <Text>로그인</Text>
-      </TouchableOpacity>
-
+        <TouchableOpacity
+          style={[styles.buttonCenterText, styles.button]}
+          onPress={() =>
+            signIn({
+              username,
+              password,
+            })
+          }
+        >
+          <Text>로그인</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.foot}>
         <Text style={{ color: '#fff' }}>계정이 없으신가요? </Text>
         <Text
@@ -135,5 +135,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  buttonSpace: {
+    justifyContent: 'space-around',
+    height: height * 0.2,
   },
 });
