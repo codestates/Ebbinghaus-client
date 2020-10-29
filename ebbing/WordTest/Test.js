@@ -9,7 +9,7 @@ import {
   TextInput,
   Animated,
 } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+import { AntDesign } from 'react-native-vector-icons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Alert } from '../components/Alert';
@@ -65,11 +65,11 @@ export default class Test extends React.Component {
 
   answer = (correct) => {
     const { activeQuestionIndex, testList } = this.state;
-    this.setState(
-      (state) => {
-        // const nextState = { answered: true };
-        const nextState = {};
-        if (testList[activeQuestionIndex].word_kor === correct) {
+    if (testList[activeQuestionIndex].word_kor === correct) {
+      this.setState(
+        (state) => {
+          const nextState = {};
+
           nextState.answered = true;
           nextState.correctCount = state.correctCount + 1;
           nextState.answerCorrect = true;
@@ -79,21 +79,15 @@ export default class Test extends React.Component {
             word_id: testList[activeQuestionIndex].word_id,
             word_theme: testList[activeQuestionIndex].word_theme,
           });
-        } else {
-          () => {
-            nextState.answerCorrect = false;
-            this.setModalVisible(true);
-          };
-        }
-
-        return nextState;
-      },
-      () => {
-        if (this.state.answered) {
+          return nextState;
+        },
+        () => {
           setTimeout(() => this.nextQuestion(), 750);
         }
-      }
-    );
+      );
+    } else {
+      this.setModalVisible(true);
+    }
   };
 
   nextQuestion = () => {
@@ -155,7 +149,6 @@ export default class Test extends React.Component {
 
     try {
       const response = await fetch(`${Address}/test/pass`, options);
-      const responseJson = await response.json();
     } catch (e) {
       console.error(e);
     }
@@ -176,6 +169,7 @@ export default class Test extends React.Component {
       correctCount,
       totalCount,
       wordAnswer,
+      modalVisible,
     } = this.state;
     const question = testList[activeQuestionIndex];
 
@@ -184,23 +178,25 @@ export default class Test extends React.Component {
         <Modal
           animationType="fade"
           transparent={true}
-          visible={this.state.modalVisible}
+          visible={modalVisible}
           onRequestClose={() => this.setModalVisible(false)}
-          style={styles.checkModal}
         >
           <TouchableOpacity
             style={[styles.container, styles.modalBackgroundStyle]}
             onPress={this.setModalVisible.bind(this, false)}
           >
             <View style={styles.innerContainerTransparentStyle}>
-              <Feather
-                name="check"
-                style={{
-                  color: '#00cc73',
-                }}
-              />
-              <Text>{question !== undefined ? question.word_kor : ''}</Text>
-              <Text>{question !== undefined ? question.word_eng : ''}</Text>
+              <AntDesign name="close" size={200} color="#fff" />
+
+              <View style={styles.innerContainerTextView}>
+                <Text style={styles.innerContainerHeaderText}>정답</Text>
+                <Text style={styles.innerContainerText} numberOfLines={2}>
+                  {question !== undefined ? question.word_kor : ''}
+                </Text>
+                <Text style={styles.innerContainerText} numberOfLines={2}>
+                  {question !== undefined ? question.word_eng : ''}
+                </Text>
+              </View>
             </View>
           </TouchableOpacity>
         </Modal>
@@ -214,18 +210,18 @@ export default class Test extends React.Component {
             ></Animated.View>
           </View>
         </View>
-        <View style={styles.right}>
+        {/* <View style={styles.right}>
           <Text style={styles.white}>{`정답 : ${correctCount}     남은 문제 : ${
             totalCount - activeQuestionIndex
           }`}</Text>
-        </View>
+        </View> */}
 
         <View style={styles.examQuestions}>
           <Text>{question !== undefined ? question.word_eng : ''}</Text>
         </View>
 
         <TextInput
-          style={[styles.inputAnswer, { bottom: this.state.keyboardOffset }]}
+          style={styles.inputAnswer}
           ref={this.textInput}
           onChangeText={(wordAnswer) => this.setState({ wordAnswer })}
           onKeyPress={this.inputEnter(wordAnswer)}
@@ -249,8 +245,6 @@ export default class Test extends React.Component {
             style={styles.selectDoBtn}
             onPress={() => {
               this.answer(wordAnswer);
-              this.clearTextInput();
-              this.focusTextInput();
             }}
           >
             <MaterialCommunityIcons
@@ -269,7 +263,7 @@ export default class Test extends React.Component {
     );
   }
 }
-const selectDoHeight = 70;
+
 const standardWidth = width;
 
 const styles = StyleSheet.create({
@@ -285,7 +279,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     width: standardWidth,
-    height: '20%',
+    // height: '20%',
+    flex: 1,
     backgroundColor: '#252B39',
   },
   guageBarOut: {
@@ -301,45 +296,42 @@ const styles = StyleSheet.create({
     backgroundColor: '#7ABCD3',
     borderRadius: 7,
   },
-
   //문제
   examQuestions: {
     width: standardWidth,
-    height: '30%',
+    // height: '35%',
+    flex: 2,
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 80,
   },
   //답
   inputAnswer: {
     width: standardWidth,
-    height: '30%',
+    // height: '35%',
+    flex: 2,
     backgroundColor: '#F8F8F8',
     textAlign: 'center',
   },
-
   //버튼
   checkBtnView: {
     flexDirection: 'row-reverse',
     justifyContent: 'flex-start',
     alignItems: 'center',
     width: standardWidth,
-    marginBottom: 50,
   },
   checkBtn: {
     backgroundColor: '#fff',
-    padding: 10,
   },
   selectDoView: {
     width: width,
-    height: selectDoHeight,
     backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
   },
   selectDoBtn: {
+    padding: '4%',
     flexDirection: 'row',
     backgroundColor: '#7ABCD3',
     borderLeftWidth: 0.5,
@@ -347,7 +339,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: width / 2,
-    height: selectDoHeight,
   },
   selectDoText: {
     color: '#fff',
@@ -359,7 +350,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     margin: '5%',
   },
-
   //모달
   container: {
     flex: 1,
@@ -371,8 +361,32 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   innerContainerTransparentStyle: {
-    backgroundColor: '#fff',
+    backgroundColor: '#D76663',
     padding: 20,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '75%',
+    height: '75%',
+  },
+  innerContainerTextView: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '85%',
+    height: '50%',
+    borderWidth: 2,
+    borderColor: '#fff',
+    borderRadius: 10,
+  },
+  innerContainerHeaderText: {
+    fontWeight: '100',
+    fontSize: 15,
+    color: '#fff',
+  },
+  innerContainerText: {
+    fontWeight: '100',
+    fontSize: 30,
+    color: '#fff',
   },
   white: {
     color: '#fff',

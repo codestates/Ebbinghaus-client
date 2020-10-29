@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 30,
-    marginBottom: '5% ',
+    marginBottom: '5%',
   },
   palyBtn: {
     position: 'absolute',
