@@ -23,9 +23,10 @@ export default class Main extends React.Component {
     return (
       <View style={styles.container}>
         <Image
-          style={{ width: width, height: 200, opacity: 0.8 }}
+          style={{ width: width, height: 240, opacity: 1}}
           source={require('../assets/ship.jpg')}
         />
+        <View style={styles.boxSpace}>
         <TouchableOpacity onPress={() => navigation.navigate('PriorityWords')}>
           <View style={styles.categoryView}>
             <Image
@@ -35,7 +36,6 @@ export default class Main extends React.Component {
             <Text style={styles.categoryText}>우선 순위 영단어</Text>
           </View>
         </TouchableOpacity>
-
         <TouchableOpacity onPress={() => navigation.navigate('MineWords')}>
           <View style={styles.categoryView}>
             <Image
@@ -45,6 +45,7 @@ export default class Main extends React.Component {
             <Text style={styles.categoryText}>나만의 영단어</Text>
           </View>
         </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
   },
   categoryView: {
     marginVertical: 20,
-    backgroundColor: '#7ABCD3',
+    backgroundColor: '#99D7ED',
     width: width,
     height: 180,
     justifyContent: 'space-evenly',
@@ -74,5 +75,9 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 20,
     color: '#fff',
+  },
+  boxSpace: {
+    justifyContent: 'space-evenly',
+    height: height * 0.65,
   },
 });
