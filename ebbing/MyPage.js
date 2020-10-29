@@ -82,7 +82,7 @@ export default function MyPage() {
   return (
     <View style={styles.myPage}>
       <View>
-        <Text style={[styles.id]}>ID {id}</Text>
+        <Text style={[styles.id]}>{id}</Text>
       </View>
       <View style={styles.myPageBox}>
         <View style={[styles.myPageBoxInner, styles.todayBox]}>

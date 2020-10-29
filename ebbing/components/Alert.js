@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#83B96B',
   },
   icon: {
-    width: screen.width / 1.5,
+    width: screen.width / 2,
   },
 });
 

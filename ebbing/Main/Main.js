@@ -23,28 +23,30 @@ export default class Main extends React.Component {
     return (
       <View style={styles.container}>
         <Image
-          style={{ width: width, height: 240, opacity: 1}}
-          source={require('../assets/ship.jpg')}
+          style={{ width: width, height: 240, opacity: 1 }}
+          source={require('../assets/main_bg.png')}
         />
         <View style={styles.boxSpace}>
-        <TouchableOpacity onPress={() => navigation.navigate('PriorityWords')}>
-          <View style={styles.categoryView}>
-            <Image
-              style={{ width: 80, height: 80 }}
-              source={require('../assets/ellipse1.png')}
-            />
-            <Text style={styles.categoryText}>우선 순위 영단어</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('MineWords')}>
-          <View style={styles.categoryView}>
-            <Image
-              style={{ width: 80, height: 80 }}
-              source={require('../assets/ellipse2.png')}
-            />
-            <Text style={styles.categoryText}>나만의 영단어</Text>
-          </View>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('PriorityWords')}
+          >
+            <View style={styles.categoryView}>
+              <Image
+                style={{ width: 80, height: 80 }}
+                source={require('../assets/ellipse1.png')}
+              />
+              <Text style={styles.categoryText}>우선 순위 영단어</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('MineWords')}>
+            <View style={styles.categoryView}>
+              <Image
+                style={{ width: 80, height: 80 }}
+                source={require('../assets/ellipse2.png')}
+              />
+              <Text style={styles.categoryText}>나만의 영단어</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     borderWidth: 0.5,
-    borderColor: "#6190E8",
+    borderColor: '#6190E8',
     borderRadius: 15,
   },
   categoryText: {
