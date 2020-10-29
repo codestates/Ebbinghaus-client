@@ -30,9 +30,7 @@ export default class TestStart extends React.Component {
         >
           <Image
             style={[styles.testImg, { width: 300, height: 300 }]}
-            source={{
-              url: 'https://i.ibb.co/DMBftf7/test-stat.png',
-            }}
+            source={require('../assets/test_stat.png')}
           />
           <View style={styles.palyBtn}>
             <AntDesign name="play" size={70} color={'#252B39'} />
@@ -42,10 +40,7 @@ export default class TestStart extends React.Component {
         <View>
           <Image
             style={[styles.waveImg, { width: 400, height: 300 }]}
-            source={{
-              url:
-                'https://media1.giphy.com/media/M9TbsVzWI8YAEEJJ5u/giphy.gif',
-            }}
+            source={require('../assets/wave.gif')}
           />
         </View>
       </View>
