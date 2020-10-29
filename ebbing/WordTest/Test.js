@@ -162,7 +162,7 @@ export default class Test extends React.Component {
 
   //Enter시 정답체크 함수 실행
   inputEnter = (wordAnswer) => (e) => {
-    if (e.nativeEvent.key == "Enter") {
+    if (e.nativeEvent.key == 'Enter') {
       this.answer(wordAnswer);
     }
   };
@@ -185,18 +185,19 @@ export default class Test extends React.Component {
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => this.setModalVisible(false)}
+          style={styles.checkModal}
         >
           <TouchableOpacity
             style={[styles.container, styles.modalBackgroundStyle]}
             onPress={this.setModalVisible.bind(this, false)}
           >
             <View style={styles.innerContainerTransparentStyle}>
-              <Feather
+              {/* <Feather
                 name="check"
                 style={{
                   color: '#00cc73',
                 }}
-              />
+              /> */}
               <Text>{question !== undefined ? question.word_kor : ''}</Text>
               <Text>{question !== undefined ? question.word_eng : ''}</Text>
             </View>
@@ -315,19 +316,19 @@ const styles = StyleSheet.create({
   selectDoText: {
     fontSize: 20,
   },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-  },
-  modalBackgroundStyle: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  innerContainerTransparentStyle: {
-    backgroundColor: '#fff',
-    padding: 20,
-  },
+  // container: {
+  //   flex: 1,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   backgroundColor: '#ecf0f1',
+  // },
+  // modalBackgroundStyle: {
+  //   backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  // },
+  // innerContainerTransparentStyle: {
+  //   backgroundColor: '#fff',
+  //   padding: 20,
+  // },
   white: {
     color: '#fff',
     fontSize: 15,
