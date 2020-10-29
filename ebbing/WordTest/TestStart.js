@@ -28,18 +28,15 @@ export default class TestStart extends React.Component {
           style={styles.goToTestBox}
           onPress={() => navigation.navigate('Test')}
         >
+          <Text style={styles.testText}>TEST START</Text>
           <Image
-            style={[styles.testImg, { width: 300, height: 300 }]}
+            style={[styles.testImg]}
             source={require('../assets/test_stat.png')}
           />
-          <View style={styles.palyBtn}>
-            <AntDesign name="play" size={70} color={'#252B39'} />
-            <Text style={styles.text}>클릭하고 시험보기</Text>
-          </View>
         </TouchableOpacity>
         <View>
           <Image
-            style={[styles.waveImg, { width: 400, height: 300 }]}
+            style={[styles.waveImg, {}]}
             source={require('../assets/wave.gif')}
           />
         </View>
@@ -59,13 +56,19 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   goToTestBox: {
+    paddingTop: '50%',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     width: goToTestBoxWith,
     height: height - 500,
   },
-
+  testText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 30,
+    marginBottom: '5%',
+  },
   palyBtn: {
     position: 'absolute',
     top: '50%',
@@ -85,12 +88,13 @@ const styles = StyleSheet.create({
     },
   },
   testImg: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{ translateX: width / -2.5 }, { translateY: height / -15 }],
+    width: 300,
+    height: 300,
   },
   waveImg: {
-    bottom: -20,
+    minWidth: 300,
+    maxWidth: 450,
+    height: 350,
+    bottom: '-20%',
   },
 });

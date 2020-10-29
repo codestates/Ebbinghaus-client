@@ -10,6 +10,7 @@ import {
   Animated,
 } from 'react-native';
 import { AntDesign } from 'react-native-vector-icons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Alert } from '../components/Alert';
 import ADDRESS from '../DummyData/Address';
@@ -148,7 +149,6 @@ export default class Test extends React.Component {
 
     try {
       const response = await fetch(`${Address}/test/pass`, options);
-      const responseJson = await response.json();
     } catch (e) {
       console.error(e);
     }
@@ -200,21 +200,21 @@ export default class Test extends React.Component {
             </View>
           </TouchableOpacity>
         </Modal>
-
-        <View style={styles.guageBarOut}>
-          <Animated.View
-            style={[
-              styles.guageBarIn,
-              { width: (activeQuestionIndex / totalCount) * 100 + '%' },
-            ]}
-          ></Animated.View>
+        <View style={styles.header}>
+          <View style={styles.guageBarOut}>
+            <Animated.View
+              style={[
+                styles.guageBarIn,
+                { width: (activeQuestionIndex / totalCount) * 100 + '%' },
+              ]}
+            ></Animated.View>
+          </View>
         </View>
-
-        <View style={styles.right}>
+        {/* <View style={styles.right}>
           <Text style={styles.white}>{`정답 : ${correctCount}     남은 문제 : ${
             totalCount - activeQuestionIndex
           }`}</Text>
-        </View>
+        </View> */}
 
         <View style={styles.examQuestions}>
           <Text>{question !== undefined ? question.word_eng : ''}</Text>
@@ -225,6 +225,7 @@ export default class Test extends React.Component {
           ref={this.textInput}
           onChangeText={(wordAnswer) => this.setState({ wordAnswer })}
           onKeyPress={this.inputEnter(wordAnswer)}
+          placeholder="정답을 작성해주세오."
           value={wordAnswer}
         ></TextInput>
 
@@ -233,6 +234,11 @@ export default class Test extends React.Component {
             style={styles.selectDoBtn}
             onPress={() => navigation.navigate('Main')}
           >
+            <MaterialCommunityIcons
+              name="close"
+              style={styles.selectIcon}
+              size={22}
+            ></MaterialCommunityIcons>
             <Text style={styles.selectDoText}>그만하기</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -241,6 +247,11 @@ export default class Test extends React.Component {
               this.answer(wordAnswer);
             }}
           >
+            <MaterialCommunityIcons
+              name="check"
+              style={styles.selectIcon}
+              size={22}
+            ></MaterialCommunityIcons>
             <Text style={styles.selectDoText}>정답 확인</Text>
           </TouchableOpacity>
         </View>
@@ -252,8 +263,8 @@ export default class Test extends React.Component {
     );
   }
 }
-const selectDoHeight = 70;
-const standardWidth = width - width / 2;
+
+const standardWidth = width;
 
 const styles = StyleSheet.create({
   test: {
@@ -261,57 +272,85 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor: '#000',
-    // paddingTop: 50,
+    backgroundColor: '#fff',
   },
+  // 헤더
+  header: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: standardWidth,
+    // height: '20%',
+    flex: 1,
+    backgroundColor: '#252B39',
+  },
+  guageBarOut: {
+    width: standardWidth / 1.5,
+    height: '10%',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: '5%',
+  },
+  guageBarIn: {
+    height: '100%',
+    backgroundColor: '#7ABCD3',
+    borderRadius: 7,
+  },
+  //문제
   examQuestions: {
     width: standardWidth,
-    height: 180,
+    // height: '35%',
+    flex: 2,
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 80,
   },
+  //답
   inputAnswer: {
     width: standardWidth,
-    // height: 180,
-    height: 80,
-    backgroundColor: '#fff',
+    // height: '35%',
+    flex: 2,
+    backgroundColor: '#F8F8F8',
     textAlign: 'center',
-    borderWidth: 1,
-    borderStyle: 'solid',
   },
+  //버튼
   checkBtnView: {
     flexDirection: 'row-reverse',
     justifyContent: 'flex-start',
     alignItems: 'center',
     width: standardWidth,
-    marginBottom: 80,
-    marginTop: 10,
   },
   checkBtn: {
     backgroundColor: '#fff',
-    padding: 10,
   },
   selectDoView: {
     width: width,
-    height: selectDoHeight,
     backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
   },
   selectDoBtn: {
-    borderColor: '#000',
-    borderWidth: 0.5,
-    justifyContent: 'space-around',
+    padding: '4%',
+    flexDirection: 'row',
+    backgroundColor: '#7ABCD3',
+    borderLeftWidth: 0.5,
+    borderColor: '#fff',
+    justifyContent: 'center',
     alignItems: 'center',
     width: width / 2,
-    height: selectDoHeight,
   },
   selectDoText: {
+    color: '#fff',
     fontSize: 20,
+    fontWeight: 'bold',
   },
+  selectIcon: {
+    justifyContent: 'flex-end',
+    color: '#fff',
+    margin: '5%',
+  },
+  //모달
   container: {
     flex: 1,
     alignItems: 'center',
@@ -356,16 +395,5 @@ const styles = StyleSheet.create({
   right: {
     marginBottom: 10,
     marginLeft: 650,
-  },
-  guageBarOut: {
-    width: standardWidth,
-    height: '5%',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-  },
-  guageBarIn: {
-    height: '100%',
-    backgroundColor: 'blue',
-    borderRadius: 10,
   },
 });
