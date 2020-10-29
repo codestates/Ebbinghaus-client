@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import {
   Alert,
-  Button,
   Text,
   TextInput,
   View,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  TouchableHighlight,
 } from 'react-native';
 import { AuthContext } from '../AppContext';
 
@@ -19,13 +17,6 @@ export default function Signup({ navigation }) {
   const [warningMsg, setWarningMsg] = React.useState('');
   const [passCheck, setPassCheck] = React.useState(false);
   const { signUp } = React.useContext(AuthContext);
-
-  const changePassword = (e) => {
-    setPassword(e.target.value);
-  };
-  const changePasswordCheck = (e) => {
-    setPasswordCheck(e.target.value);
-  };
 
   React.useEffect(() => {
     const checkPassword = () => {
@@ -62,7 +53,7 @@ export default function Signup({ navigation }) {
         </Text>
         <TextInput
           value={password}
-          onChange={changePassword}
+          onChangeText={setPassword}
           placeholder={'Password'}
           secureTextEntry={true}
           style={password ? styles.unInput : styles.input}
@@ -75,7 +66,7 @@ export default function Signup({ navigation }) {
         </Text>
         <TextInput
           value={passwordCheck}
-          onChange={changePasswordCheck}
+          onChangeText={setPasswordCheck}
           placeholder={'Password Check'}
           secureTextEntry={true}
           style={passwordCheck ? styles.unInput : styles.input}
@@ -83,7 +74,7 @@ export default function Signup({ navigation }) {
         <Text>{warningMsg}</Text>
       </View>
 
-      <TouchableHighlight
+      <TouchableOpacity
         style={styles.button}
         onPress={() => {
           if (passCheck) {
@@ -95,7 +86,7 @@ export default function Signup({ navigation }) {
         }}
       >
         <Text>회원가입 완료</Text>
-      </TouchableHighlight>
+      </TouchableOpacity>
     </View>
   );
 }
