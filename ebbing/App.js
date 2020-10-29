@@ -3,14 +3,10 @@ import { StyleSheet, Text, View, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-community/async-storage';
-
 import Menu from './Main/Menu';
 import { LoginStackScreen } from './StackScreen';
 import { AuthContext } from './AppContext';
 import ADDRESS from './DummyData/Address';
-import { acc } from 'react-native-reanimated';
-//import * as Google from 'expo-google-app-auth';
-//import ClientID from './DummyData/ClientID';
 
 const Stack = createStackNavigator();
 const Address = ADDRESS;
@@ -100,11 +96,9 @@ export default function App() {
 
         try {
           let response = await fetch(`${Address}/user/signin`, options);
-          console.log('response==: ', response);
           let responseOK = response && response.ok;
           if (responseOK) {
             let result = await response.json();
-            console.log('서버에서 보내온 result ', result);
             AsyncStorage.setItem('accessToken', result.accessToken);
             AsyncStorage.setItem('userId', String(result.id));
             dispatch({ type: 'SIGN_IN', token: result.accessToken });
@@ -229,7 +223,7 @@ export default function App() {
           {state.isLoading ? (
             // We haven't finished checking for the token yet
             <Stack.Screen name="Splash" component={SplashScreen} />
-          ) : state.accessToken !== null ? (
+          ) : state.accessToken === null ? (
             <Stack.Screen name="Login" component={LoginStackScreen} />
           ) : (
             <Stack.Screen
