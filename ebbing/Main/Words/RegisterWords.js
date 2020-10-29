@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import ADDRESS from '../../DummyData/Address';
 
 const { height, width } = Dimensions.get('window');
@@ -185,7 +186,9 @@ export default class RegisterWords extends React.Component {
     const { wordList, word_eng, word_kor } = this.state;
     return (
       <View style={styles.registerWords}>
+        <View style={styles.headerTitle}>
         <Text style={styles.headerTitleText}>나만의 단어장</Text>
+        </View>
         <View style={styles.inputWordView}>
           <TextInput
             style={styles.inputWord}
@@ -208,7 +211,7 @@ export default class RegisterWords extends React.Component {
             style={styles.registButton}
             onPress={() => this.reqRegistWord()}
           >
-            <Text>등록</Text>
+            <Text style={styles.white}>등록</Text>
           </TouchableOpacity>
         </View>
 
@@ -228,7 +231,8 @@ export default class RegisterWords extends React.Component {
                 style={styles.wordListBtn}
                 onPress={() => this.deleteBtn(wordList)}
               >
-                <Text>삭제</Text>
+                <AntDesign name="closecircleo" color={'#E42A2A'} size={20} />
+                <Text>  삭제</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.wordListBtn}
@@ -236,35 +240,60 @@ export default class RegisterWords extends React.Component {
                   navigation.goBack();
                 }}
               >
-                <Text>완료</Text>
+                <AntDesign name="checkcircleo" color={'#0DDC6C'} size={20} />
+                <Text>  완료</Text>
               </TouchableOpacity>
             </View>
           </View>
         ) : (
+          <View style={styles.wordListView}>
           <Text style={[styles.wordListView, styles.noRegisteredWord]}>
             현재 등록된 단어가 없습니다.
           </Text>
+          <View style={styles.wordListBtnView}>
+              <TouchableOpacity
+                style={styles.wordListBtn}
+                onPress={() => this.deleteBtn(wordList)}
+              >
+                <AntDesign name="closecircleo" color={'#E42A2A'} size={20} />
+                <Text>  삭제</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.wordListBtn}
+                onPress={() => {
+                  navigation.goBack();
+                }}
+              >
+                <AntDesign name="checkcircleo" color={'#0DDC6C'} size={20} />
+                <Text>  완료</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         )}
       </View>
     );
   }
 }
 
-const standardWidth = width - width / 8;
+const standardWidth = width*0.85;
 
 const styles = StyleSheet.create({
   registerWords: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#252B39',
+    justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
     paddingTop: 40,
   },
+  headerTitle: {
+    marginBottom: 10,
+    // flexDirection: 'row',
+    // justifyContent: 'flex-end',
+    // alignItems: 'flex-end',
+  },
   headerTitleText: {
     color: '#fff',
-    marginBottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
     width: standardWidth,
   },
   inputWordView: {
@@ -280,21 +309,22 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
   },
   registButtonView: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'center',
     width: standardWidth,
     marginTop: 15,
   },
   registButton: {
     backgroundColor: '#fff',
-    width: 70,
-    height: 40,
+    width: standardWidth,
+    height: height * 0.07,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: 15,
+    backgroundColor: '#7ABCD3',
   },
   wordListView: {
-    marginTop: 30,
+    marginTop: 15,
     height: '50%',
     width: standardWidth,
   },
@@ -313,12 +343,13 @@ const styles = StyleSheet.create({
   wordListBtnView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 15,
+    marginTop: 20
   },
   wordListBtn: {
+    flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 10,
-    width: 70,
+    width: standardWidth/2 - 10,
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
@@ -340,12 +371,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: '#fff',
   },
-  selected: { backgroundColor: '#FA7B5F' },
+  selected: { backgroundColor: '#7ABCD3' },
   list: {
     paddingVertical: 5,
     margin: 2,
     flexDirection: 'row',
-    backgroundColor: '#192338',
+    backgroundColor: '#fff',
     justifyContent: 'flex-start',
     alignItems: 'center',
     zIndex: -1,
@@ -354,5 +385,8 @@ const styles = StyleSheet.create({
     height: 0.5,
     width: '100%',
     backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  white: {
+    color: '#fff',
   },
 });
