@@ -162,7 +162,7 @@ export default class Test extends React.Component {
 
   //Enter시 정답체크 함수 실행
   inputEnter = (wordAnswer) => (e) => {
-    if (e.nativeEvent.key == "Enter") {
+    if (e.nativeEvent.key == 'Enter') {
       this.answer(wordAnswer);
     }
   };
@@ -185,6 +185,7 @@ export default class Test extends React.Component {
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => this.setModalVisible(false)}
+          style={styles.checkModal}
         >
           <TouchableOpacity
             style={[styles.container, styles.modalBackgroundStyle]}
