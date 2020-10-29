@@ -95,7 +95,7 @@ export default class RegisterWords extends React.Component {
   selectItem = (data) => {
     data.item.isSelect = !data.item.isSelect;
     data.item.selectedClass = data.item.isSelect
-      ? styles.selected
+      ? [styles.selected, styles.white]
       : styles.list;
 
     const index = this.state.wordList.findIndex(
@@ -151,10 +151,14 @@ export default class RegisterWords extends React.Component {
       onPress={() => this.selectItem(data)}
     >
       <View style={styles.mineWordRow}>
-        <Text style={styles.text}>{data.item.word_eng}</Text>
+        <Text style={[styles.text, data.item.selectedClass]}>
+          {data.item.word_eng}
+        </Text>
       </View>
       <View style={styles.mineWordRow}>
-        <Text style={styles.text}>{data.item.word_kor}</Text>
+        <Text style={[styles.text, data.item.selectedClass]}>
+          {data.item.word_kor}
+        </Text>
       </View>
     </TouchableOpacity>
   );
