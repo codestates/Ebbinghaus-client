@@ -47,6 +47,7 @@ export default class TestStart extends React.Component {
     );
   }
 }
+
 const goToTestBoxWith = width - 100;
 const styles = StyleSheet.create({
   container: {
