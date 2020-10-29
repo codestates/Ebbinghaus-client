@@ -4,6 +4,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  TouchableHighlight,
   Dimensions,
   Image,
 } from 'react-native';
@@ -27,13 +28,20 @@ export default class TestStart extends React.Component {
           style={styles.goToTestBox}
           onPress={() => navigation.navigate('Test')}
         >
-          <AntDesign name="play" size={70} />
-          <Text>단어 시험</Text>
-          <Text>Start</Text>
+          <Image
+            style={[styles.testImg, { width: 300, height: 300 }]}
+            source={{
+              url: 'https://i.ibb.co/DMBftf7/test-stat.png',
+            }}
+          />
+          <View style={styles.palyBtn}>
+            <AntDesign name="play" size={70} color={'#252B39'} />
+            <Text style={styles.text}>클릭하고 시험보기</Text>
+          </View>
         </TouchableOpacity>
         <View>
           <Image
-            style={{ width: 400, height: 300 }}
+            style={[styles.waveImg, { width: 400, height: 300 }]}
             source={{
               url:
                 'https://media1.giphy.com/media/M9TbsVzWI8YAEEJJ5u/giphy.gif',
@@ -52,13 +60,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#252B39',
+    position: 'relative',
   },
   goToTestBox: {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
     width: goToTestBoxWith,
     height: height - 500,
+  },
+
+  palyBtn: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: width * -0.1 }, { translateY: height * 0.08 }],
+  },
+  text: {
+    marginTop: '5%',
+    left: '-50%',
+    transform: [{ translateX: width * 0.1 }],
+    color: '#fff',
+    textShadowColor: 'black',
+    textShadowRadius: 1,
+    textShadowOffset: {
+      width: 1,
+      height: 1,
+    },
+  },
+  testImg: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: width / -2.5 }, { translateY: height / -15 }],
+  },
+  waveImg: {
+    bottom: -20,
   },
 });
