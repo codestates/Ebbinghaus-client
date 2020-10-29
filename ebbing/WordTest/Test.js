@@ -9,7 +9,7 @@ import {
   TextInput,
   Animated,
 } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+import { AntDesign } from 'react-native-vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Alert } from '../components/Alert';
 import ADDRESS from '../DummyData/Address';
@@ -64,11 +64,11 @@ export default class Test extends React.Component {
 
   answer = (correct) => {
     const { activeQuestionIndex, testList } = this.state;
-    this.setState(
-      (state) => {
-        // const nextState = { answered: true };
-        const nextState = {};
-        if (testList[activeQuestionIndex].word_kor === correct) {
+    if (testList[activeQuestionIndex].word_kor === correct) {
+      this.setState(
+        (state) => {
+          const nextState = {};
+
           nextState.answered = true;
           nextState.correctCount = state.correctCount + 1;
           nextState.answerCorrect = true;
@@ -78,21 +78,15 @@ export default class Test extends React.Component {
             word_id: testList[activeQuestionIndex].word_id,
             word_theme: testList[activeQuestionIndex].word_theme,
           });
-        } else {
-          () => {
-            nextState.answerCorrect = false;
-            this.setModalVisible(true);
-          };
-        }
-
-        return nextState;
-      },
-      () => {
-        if (this.state.answered) {
+          return nextState;
+        },
+        () => {
           setTimeout(() => this.nextQuestion(), 750);
         }
-      }
-    );
+      );
+    } else {
+      this.setModalVisible(true);
+    }
   };
 
   nextQuestion = () => {
@@ -175,6 +169,7 @@ export default class Test extends React.Component {
       correctCount,
       totalCount,
       wordAnswer,
+      modalVisible,
     } = this.state;
     const question = testList[activeQuestionIndex];
 
@@ -183,23 +178,25 @@ export default class Test extends React.Component {
         <Modal
           animationType="fade"
           transparent={true}
-          visible={this.state.modalVisible}
+          visible={modalVisible}
           onRequestClose={() => this.setModalVisible(false)}
-          style={styles.checkModal}
         >
           <TouchableOpacity
             style={[styles.container, styles.modalBackgroundStyle]}
             onPress={this.setModalVisible.bind(this, false)}
           >
             <View style={styles.innerContainerTransparentStyle}>
-              <Feather
-                name="check"
-                style={{
-                  color: '#00cc73',
-                }}
-              />
-              <Text>{question !== undefined ? question.word_kor : ''}</Text>
-              <Text>{question !== undefined ? question.word_eng : ''}</Text>
+              <AntDesign name="close" size={200} color="#fff" />
+
+              <View style={styles.innerContainerTextView}>
+                <Text style={styles.innerContainerHeaderText}>정답</Text>
+                <Text style={styles.innerContainerText} numberOfLines={2}>
+                  {question !== undefined ? question.word_kor : ''}
+                </Text>
+                <Text style={styles.innerContainerText} numberOfLines={2}>
+                  {question !== undefined ? question.word_eng : ''}
+                </Text>
+              </View>
             </View>
           </TouchableOpacity>
         </Modal>
@@ -242,8 +239,6 @@ export default class Test extends React.Component {
             style={styles.selectDoBtn}
             onPress={() => {
               this.answer(wordAnswer);
-              this.clearTextInput();
-              this.focusTextInput();
             }}
           >
             <Text style={styles.selectDoText}>정답 확인</Text>
@@ -327,8 +322,32 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   innerContainerTransparentStyle: {
-    backgroundColor: '#fff',
+    backgroundColor: '#D76663',
     padding: 20,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '75%',
+    height: '75%',
+  },
+  innerContainerTextView: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '85%',
+    height: '50%',
+    borderWidth: 2,
+    borderColor: '#fff',
+    borderRadius: 10,
+  },
+  innerContainerHeaderText: {
+    fontWeight: '100',
+    fontSize: 15,
+    color: '#fff',
+  },
+  innerContainerText: {
+    fontWeight: '100',
+    fontSize: 30,
+    color: '#fff',
   },
   white: {
     color: '#fff',
