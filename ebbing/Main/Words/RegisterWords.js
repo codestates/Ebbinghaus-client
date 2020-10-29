@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 15,
-    backgroundColor: '#7ABCD3',
+    backgroundColor: '#99D7ED',
   },
   wordListView: {
     marginTop: 15,
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: '#000',
   },
-  selected: { backgroundColor: '#7ABCD3' },
+  selected: { backgroundColor: '#99D7ED' },
   list: {
     paddingVertical: 5,
     margin: 2,

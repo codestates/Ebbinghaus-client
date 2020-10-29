@@ -242,6 +242,7 @@ const styles = StyleSheet.create({
   tilteFont: {
     fontSize: 20,
     color: '#fff',
+    marginTop: 40,    
     margin: 20,
   },
   header: {
@@ -257,7 +258,7 @@ const styles = StyleSheet.create({
     width: standardWidth,
     height: height * 0.07,
     borderRadius: 15,
-    backgroundColor: '#7ABCD3',
+    backgroundColor: '#99D7ED',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -282,7 +283,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   selected: {
-    backgroundColor: '#7ABCD3',
+    backgroundColor: '#99D7ED',
   },
   WordRow: {
     flexDirection: 'row',
