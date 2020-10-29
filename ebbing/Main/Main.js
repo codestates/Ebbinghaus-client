@@ -3,8 +3,11 @@ import {
   StyleSheet,
   Text,
   View,
+  Dimensions,
   TouchableOpacity,
   ScrollView,
+  Image,
+  TouchableHighlight,
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -18,55 +21,58 @@ export default class Main extends React.Component {
   render() {
     const { navigation } = this.props;
     return (
-      <ScrollView style={styles.main}>
-        <View style={styles.wordColumn}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('PriorityWords')}
-          >
-            <View style={styles.categoryView}>
-              <Text style={styles.categoryText}>우선순위 영단어</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('MineWords')}>
-            <View style={styles.categoryView}>
-              <Text style={styles.categoryText}>나만의 영단어</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.container}>
+        <Image
+          style={{ width: width, height: 200, opacity: 0.8 }}
+          source={require('../assets/ship.jpg')}
+        />
+        <TouchableOpacity onPress={() => navigation.navigate('PriorityWords')}>
+          <View style={styles.categoryView}>
+            <Image
+              style={{ width: 80, height: 80 }}
+              source={require('../assets/ellipse1.png')}
+            />
+            <Text style={styles.categoryText}>우선 순위 영단어</Text>
+          </View>
+        </TouchableOpacity>
 
-        <View style={styles.wordColumn}>
+        <TouchableOpacity onPress={() => navigation.navigate('MineWords')}>
           <View style={styles.categoryView}>
-            <Text style={styles.categoryText}>토익</Text>
+            <Image
+              style={{ width: 80, height: 80 }}
+              source={require('../assets/ellipse2.png')}
+            />
+            <Text style={styles.categoryText}>나만의 영단어</Text>
           </View>
-          <View style={styles.categoryView}>
-            <Text style={styles.categoryText}>여행</Text>
-          </View>
-        </View>
-      </ScrollView>
+        </TouchableOpacity>
+      </View>
     );
   }
 }
-
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
-  main: {
+  container: {
     flex: 1,
-    backgroundColor: '#000000',
-  },
-  wordColumn: {
-    backgroundColor: '#000000',
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#252B39',
+    position: 'relative',
   },
   categoryView: {
     marginVertical: 20,
-    backgroundColor: '#ffffff',
-    width: 180,
+    backgroundColor: '#7ABCD3',
+    width: width,
     height: 180,
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    borderWidth: 0.5,
+    borderColor: "#6190E8",
+    borderRadius: 15,
   },
   categoryText: {
     fontSize: 20,
+    color: '#fff',
   },
 });
