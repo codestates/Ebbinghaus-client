@@ -304,6 +304,7 @@ const styles = StyleSheet.create({
   headerText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontSize: 25,
     marginBottom: 10,
   },
   guageBarOut: {

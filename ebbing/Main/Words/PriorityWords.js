@@ -179,19 +179,6 @@ export default class PriorityWords extends Component {
         <View>
           <Text style={[styles.tilteFont, styles.white]}>우선 순위 영단어</Text>
         </View>
-        <View style={styles.header}>
-          <View>
-            <TouchableOpacity
-              onPress={() => this.deleteBtn(this.state.wordList)}
-            >
-              <MaterialCommunityIcons
-                name="trash-can"
-                color={'#ff0000'}
-                size={30}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
         {this.state.wordList.length !== 0 ? (
           <FlatList
             style={styles.Words}
@@ -243,7 +230,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff',
     marginTop: 40,    
-    margin: 20,
+    margin: 30,
   },
   header: {
     flexDirection: 'row',
