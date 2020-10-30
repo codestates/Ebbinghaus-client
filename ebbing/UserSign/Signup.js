@@ -15,25 +15,48 @@ export default function Signup({ navigation }) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [passwordCheck, setPasswordCheck] = React.useState('');
-  const [warningMsg, setWarningMsg] = React.useState('');
+  const [warningMsgPW, setWarningMsgPW] = React.useState(
+    '비밀번호가 일치하지 않습니다.'
+  );
+  const [warningMsgName, setWarningMsgName] = React.useState(
+    '아이디를 입력해주세요'
+  );
   const [passCheck, setPassCheck] = React.useState(false);
+  const [nameCheck, setNameCheck] = React.useState(false);
   const { signUp } = React.useContext(AuthContext);
-  const [fontsLoaded] = useFonts({
-    Inter_900Black,
-  });
+  // const [fontsLoaded] = useFonts({
+  //   Inter_900Black,
+  // });
 
   React.useEffect(() => {
-    const checkPassword = () => {
+    const check = () => {
+      if (username === '') {
+        setWarningMsgName('아이디를 입력해주세요');
+        setNameCheck(false);
+      } else if (username !== '') {
+        setWarningMsgName('');
+        setNameCheck(true);
+      }
+
       if (password !== passwordCheck) {
-        setWarningMsg('비밀번호가 일치하지 않습니다.');
+        setWarningMsgPW('비밀번호가 일치하지 않습니다.');
         setPassCheck(false);
       } else if (password !== '') {
-        setWarningMsg('비밀번호가 일치합니다.');
+        setWarningMsgPW('비밀번호가 일치합니다.');
         setPassCheck(true);
       }
     };
-    checkPassword();
-  }, [password, passwordCheck, passCheck, warningMsg]);
+
+    check();
+  }, [
+    username,
+    password,
+    passwordCheck,
+    passCheck,
+    warningMsgPW,
+    nameCheck,
+    warningMsgName,
+  ]);
 
   return (
     <View style={styles.container}>
@@ -50,6 +73,7 @@ export default function Signup({ navigation }) {
           placeholder={'ID'}
           style={username ? styles.unInput : styles.input}
         />
+        <Text>{warningMsgName}</Text>
       </View>
       <View>
         <Text style={password ? styles.unFontColor : styles.fontColor}>
@@ -75,16 +99,18 @@ export default function Signup({ navigation }) {
           secureTextEntry={true}
           style={passwordCheck ? styles.unInput : styles.input}
         />
-        <Text>{warningMsg}</Text>
+        <Text>{warningMsgPW}</Text>
       </View>
 
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          if (passCheck) {
+          if (passCheck && nameCheck) {
             signUp({ username, password });
             navigation.navigate('Login');
-          } else {
+          } else if (!nameCheck) {
+            Alert.alert('아이디를 입력해주세요!');
+          } else if (!passCheck) {
             Alert.alert('비밀번호 확인을 다시 해주세요!');
           }
         }}
