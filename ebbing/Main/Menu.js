@@ -12,12 +12,18 @@ const Tab = createBottomTabNavigator();
 export default class Menu extends React.Component {
   render() {
     return (
-      <Tab.Navigator>
+      <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: '#99D7ED',
+        activeBackgroundColor: '#3A3C3D',
+        inactiveBackgroundColor: '#3A3C3D',
+        keyboardHidesTabBar: true,
+      }}>
         <Tab.Screen
           name="Home"
           component={MainStackScreen}
           options={{
-            tabBarLabel: 'Home',
+            tabBarLabel: '홈',
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="home" color={color} size={size} />
             ),
@@ -37,7 +43,7 @@ export default class Menu extends React.Component {
           name="내정보"
           component={MyPageStackScreen}
           options={{
-            tabBarLabel: 'Profile',
+            tabBarLabel: '내정보',
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons
                 name="account"

@@ -15,7 +15,7 @@ import ADDRESS from '../../DummyData/Address';
 
 const Address = ADDRESS;
 
-export default class MineWords extends Component {
+export default class MineWordsFilter extends Component {
   constructor(props) {
     super(props);
 
@@ -72,7 +72,7 @@ export default class MineWords extends Component {
     let userId = await AsyncStorage.getItem('userId');
 
     try {
-      const response = await fetch(`${Address}/word/mine/${userId}`);
+      const response = await fetch(`${Address}/word/mine/button/${userId}`);
       const responseJson = await response.json();
 
       responseJson.map((item) => {
@@ -112,40 +112,6 @@ export default class MineWords extends Component {
     });
   };
 
-  async goToTest(data) {
-    let result = [];
-    let userId = await AsyncStorage.getItem('userId');
-
-    try {
-      data.forEach((element) => {
-        if (element.isSelect) {
-          result.push(element);
-        }
-      });
-
-      if (result.length > 0) {
-        let options = {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            selectedWords: [...result],
-            id: userId,
-          }),
-        };
-
-        await fetch(`${Address}/word/mine/test-register`, options);
-        this.getMineWordList();
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   renderItem = (data) => (
     <TouchableOpacity
       style={[styles.list, data.item.selectedClass]}
@@ -165,8 +131,6 @@ export default class MineWords extends Component {
   );
 
   render() {
-    const itemNumber = this.state.wordList.filter((item) => item.isSelect)
-      .length;
     if (this.state.loading) {
       return (
         <View style={styles.loader}>
@@ -192,13 +156,6 @@ export default class MineWords extends Component {
               />
             </TouchableOpacity>
           </View>
-          <View>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('RegisterWords')}
-            >
-              <AntDesign name="pluscircleo" color={'#fff'} size={30} />
-            </TouchableOpacity>
-          </View>
         </View>
         {this.state.wordList.length !== 0 ? (
           <FlatList
@@ -212,24 +169,14 @@ export default class MineWords extends Component {
         ) : (
           <View style={styles.box}>
             <Text>현재 등록된 단어가 없습니다.</Text>
-            <Text><AntDesign name="pluscircleo" color={'#000'} size={15} /> 버튼을 눌러서 단어를 등록해 주세요.</Text>
-            <Text></Text>
           </View>
         )}
-        <View style={styles.buttonSpace}>
+        <View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('MineWordsFilter')}
+            onPress={() => this.props.navigation.navigate('MineWords')}
           >
-            <Text style={styles.white}>Test중인 단어 보기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              this.goToTest(this.state.wordList);
-            }}
-          >
-            <Text style={styles.white}>{itemNumber} 개 Test 등록</Text>
+            <Text style={styles.white}>뒤로가기</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -237,7 +184,7 @@ export default class MineWords extends Component {
   }
 }
 const { height, width } = Dimensions.get('window');
-const standardWidth = width * 0.85;
+const standardWidth = width*0.85;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -248,7 +195,7 @@ const styles = StyleSheet.create({
   tilteFont: {
     fontSize: 20,
     color: '#fff',
-    marginTop: 40,
+    marginTop: 40,    
     margin: 20,
   },
   Words: {
@@ -271,6 +218,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#99D7ED',
     alignItems: 'center',
     justifyContent: 'center',
+    margin: 10,
   },
   loader: {
     flex: 1,
@@ -318,9 +266,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  buttonSpace: {
-    justifyContent: 'space-evenly',
-    height: height * 0.2,
   },
 });

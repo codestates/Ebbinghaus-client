@@ -9,11 +9,11 @@ import {
   FlatList,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-//require('dotenv').config();
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import ADDRESS from '../../DummyData/Address';
+
 const { height, width } = Dimensions.get('window');
-const Address = 'http://localhost:4000';
-//const Address = 'http://13.125.184.203:4000';
-//let Address = process.env.ADDRESS
+const Address = ADDRESS;
 
 export default class RegisterWords extends React.Component {
   constructor(props) {
@@ -31,6 +31,7 @@ export default class RegisterWords extends React.Component {
     this.getMineWordList = this.getMineWordList.bind(this);
     this.reqRegistWord = this.reqRegistWord.bind(this);
     this.deleteBtn = this.deleteBtn.bind(this);
+    this.inputEnter = this.inputEnter.bind(this);
   }
 
   focusTextInput() {
@@ -50,32 +51,51 @@ export default class RegisterWords extends React.Component {
     let userId = await AsyncStorage.getItem('userId');
 
     try {
-      await fetch(`${Address}/word/mine/${userId}`)
-        .then((res) => res.json())
-        .then((result) => {
-          result = result.map((item) => {
-            item.isSelect = false;
-            item.selectedClass = styles.list;
-            return item;
-          });
-          this.setState({
-            wordList: result,
-          });
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+      const response = await fetch(`${Address}/word/mine/${userId}`);
+      const responseJson = await response.json();
+
+      responseJson.map((item) => {
+        item.isSelect = false;
+        item.selectedClass = styles.list;
+        return item;
+      });
+      this.setState({
+        wordList: responseJson,
+      });
     } catch (e) {
       console.error(e);
     }
   }
+  // async getMineWordList() {
+  //   let userId = await AsyncStorage.getItem('userId');
+
+  //   try {
+  //     await fetch(`${Address}/word/mine/${userId}`)
+  //       .then((res) => res.json())
+  //       .then((result) => {
+  //         result = result.map((item) => {
+  //           item.isSelect = false;
+  //           item.selectedClass = styles.list;
+  //           return item;
+  //         });
+  //         this.setState({
+  //           wordList: result,
+  //         });
+  //       })
+  //       .catch((e) => {
+  //         console.error(e);
+  //       });
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // }
 
   //item의 선택에 대한 함수
   //선택에 따른 스타일 변경 및
   selectItem = (data) => {
     data.item.isSelect = !data.item.isSelect;
     data.item.selectedClass = data.item.isSelect
-      ? styles.selected
+      ? [styles.selected, styles.white]
       : styles.list;
 
     const index = this.state.wordList.findIndex(
@@ -131,10 +151,14 @@ export default class RegisterWords extends React.Component {
       onPress={() => this.selectItem(data)}
     >
       <View style={styles.mineWordRow}>
-        <Text style={styles.text}>{data.item.word_eng}</Text>
+        <Text style={[styles.text, data.item.selectedClass]}>
+          {data.item.word_eng}
+        </Text>
       </View>
       <View style={styles.mineWordRow}>
-        <Text style={styles.text}>{data.item.word_kor}</Text>
+        <Text style={[styles.text, data.item.selectedClass]}>
+          {data.item.word_kor}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -167,6 +191,13 @@ export default class RegisterWords extends React.Component {
     }
   }
 
+  //Enter시 단어등록 함수 실행
+  inputEnter = () => (e) => {
+    if (e.nativeEvent.keyCode === 13) {
+      this.reqRegistWord();
+    }
+  };
+
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
       this.focusTextInput();
@@ -178,12 +209,15 @@ export default class RegisterWords extends React.Component {
     const { wordList, word_eng, word_kor } = this.state;
     return (
       <View style={styles.registerWords}>
-        <Text style={styles.headerTitleText}>나만의 단어장</Text>
+        <View style={styles.headerTitle}>
+          <Text style={styles.headerTitleText}>나만의 단어장</Text>
+        </View>
         <View style={styles.inputWordView}>
           <TextInput
             style={styles.inputWord}
             placeholder="Input English"
             onChangeText={(word_eng) => this.setState({ word_eng })}
+            onKeyPress={this.inputEnter()}
             value={word_eng}
             ref={this.textInput}
           ></TextInput>
@@ -191,6 +225,7 @@ export default class RegisterWords extends React.Component {
             style={styles.inputWord}
             placeholder="Input Korean"
             onChangeText={(word_kor) => this.setState({ word_kor })}
+            onKeyPress={this.inputEnter()}
             value={word_kor}
           ></TextInput>
         </View>
@@ -199,7 +234,7 @@ export default class RegisterWords extends React.Component {
             style={styles.registButton}
             onPress={() => this.reqRegistWord()}
           >
-            <Text>등록</Text>
+            <Text style={styles.white}>등록</Text>
           </TouchableOpacity>
         </View>
 
@@ -219,7 +254,8 @@ export default class RegisterWords extends React.Component {
                 style={styles.wordListBtn}
                 onPress={() => this.deleteBtn(wordList)}
               >
-                <Text>삭제</Text>
+                <AntDesign name="closecircleo" color={'#E42A2A'} size={20} />
+                <Text> 삭제</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.wordListBtn}
@@ -227,36 +263,63 @@ export default class RegisterWords extends React.Component {
                   navigation.goBack();
                 }}
               >
-                <Text>완료</Text>
+                <AntDesign name="checkcircleo" color={'#0DDC6C'} size={20} />
+                <Text> 완료</Text>
               </TouchableOpacity>
             </View>
           </View>
         ) : (
-          <Text style={[styles.wordListView, styles.noRegisteredWord]}>
-            현재 등록된 단어가 없습니다.
-          </Text>
+          <View style={styles.wordListView}>
+            <Text style={[styles.wordListView, styles.noRegisteredWord]}>
+              현재 등록된 단어가 없습니다.
+            </Text>
+            <View style={styles.wordListBtnView}>
+              <TouchableOpacity
+                style={styles.wordListBtn}
+                onPress={() => this.deleteBtn(wordList)}
+              >
+                <AntDesign name="closecircleo" color={'#E42A2A'} size={20} />
+                <Text> 삭제</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.wordListBtn}
+                onPress={() => {
+                  navigation.goBack();
+                }}
+              >
+                <AntDesign name="checkcircleo" color={'#0DDC6C'} size={20} />
+                <Text> 완료</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         )}
       </View>
     );
   }
 }
 
-const standardWidth = width - width / 8;
+const standardWidth = width * 0.85;
 
 const styles = StyleSheet.create({
   registerWords: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#252B39',
+    justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
     paddingTop: 40,
   },
+  headerTitle: {
+    marginBottom: 10,
+    // flexDirection: 'row',
+    // justifyContent: 'flex-end',
+    // alignItems: 'flex-end',
+  },
   headerTitleText: {
     color: '#fff',
-    marginBottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
     width: standardWidth,
+    textAlign: "center",
+    fontSize: 20,
   },
   inputWordView: {
     width: standardWidth,
@@ -271,21 +334,22 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
   },
   registButtonView: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'center',
     width: standardWidth,
     marginTop: 15,
   },
   registButton: {
     backgroundColor: '#fff',
-    width: 70,
-    height: 40,
+    width: standardWidth,
+    height: height * 0.07,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: 15,
+    backgroundColor: '#99D7ED',
   },
   wordListView: {
-    marginTop: 30,
+    marginTop: 15,
     height: '50%',
     width: standardWidth,
   },
@@ -304,12 +368,13 @@ const styles = StyleSheet.create({
   wordListBtnView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 15,
+    marginTop: 20,
   },
   wordListBtn: {
+    flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 10,
-    width: 70,
+    width: standardWidth / 2 - 10,
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
@@ -328,15 +393,15 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     textAlignVertical: 'center',
-    fontSize: 30,
-    color: '#fff',
+    fontSize: 20,
+    color: '#000',
   },
-  selected: { backgroundColor: '#FA7B5F' },
+  selected: { backgroundColor: '#99D7ED' },
   list: {
     paddingVertical: 5,
     margin: 2,
     flexDirection: 'row',
-    backgroundColor: '#192338',
+    backgroundColor: '#fff',
     justifyContent: 'flex-start',
     alignItems: 'center',
     zIndex: -1,
@@ -345,5 +410,8 @@ const styles = StyleSheet.create({
     height: 0.5,
     width: '100%',
     backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  white: {
+    color: '#fff',
   },
 });

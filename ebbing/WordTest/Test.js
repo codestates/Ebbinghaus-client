@@ -7,12 +7,15 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  Animated,
 } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+import { AntDesign } from 'react-native-vector-icons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
-// import questions from '../DummyData/MineWordList';
-const Address = 'http://localhost:4000';
+import { Alert } from '../components/Alert';
+import ADDRESS from '../DummyData/Address';
 
+const Address = ADDRESS;
 const { height, width } = Dimensions.get('window');
 
 export default class Test extends React.Component {
@@ -27,12 +30,14 @@ export default class Test extends React.Component {
       activeQuestionIndex: 0,
       answered: false,
       answerCorrect: false,
-      dataSource: [],
+      testList: [],
     };
 
     // textInput DOM 엘리먼트를 저장하기 위한 ref를 생성
     this.textInput = React.createRef();
     this.focusTextInput = this.focusTextInput.bind(this);
+    this.inputEnter = this.inputEnter.bind(this);
+    this.setModalVisible = this.setModalVisible.bind(this);
   }
 
   componentDidMount() {
@@ -50,44 +55,45 @@ export default class Test extends React.Component {
       const responseJson = await response.json();
 
       this.setState({
-        dataSource: responseJson,
+        testList: responseJson,
         totalCount: responseJson.length,
       });
     } catch (e) {
       console.error(e);
     }
-    console.log('dataSource', this.state.dataSource);
   }
 
   answer = (correct) => {
-    this.setState(
-      (state) => {
-        const nextState = { answered: true };
+    const { activeQuestionIndex, testList } = this.state;
+    if (testList[activeQuestionIndex].word_kor === correct) {
+      this.setState(
+        (state) => {
+          const nextState = {};
 
-        if (
-          this.state.dataSource[this.state.activeQuestionIndex].word_kor ===
-          correct
-        ) {
+          nextState.answered = true;
           nextState.correctCount = state.correctCount + 1;
           nextState.answerCorrect = true;
           this.requestCheck({
             word_kor: correct,
-            word_eng: this.state.dataSource[this.state.activeQuestionIndex]
-              .word_eng,
+            word_eng: testList[activeQuestionIndex].word_eng,
+            word_id: testList[activeQuestionIndex].word_id,
+            word_theme: testList[activeQuestionIndex].word_theme,
           });
-        } else {
-          nextState.answerCorrect = false;
+          return nextState;
+        },
+        () => {
+          setTimeout(() => this.nextQuestion(), 750);
         }
-
-        return nextState;
-      },
-      () => {
-        setTimeout(() => this.nextQuestion(), 750);
-      }
-    );
+      );
+    } else {
+      this.setModalVisible(true);
+    }
   };
 
   nextQuestion = () => {
+    this.clearTextInput();
+    this.focusTextInput();
+
     this.setState((state) => {
       const nextIndex = state.activeQuestionIndex + 1;
 
@@ -108,6 +114,9 @@ export default class Test extends React.Component {
 
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
+    if (!visible) {
+      this.nextQuestion();
+    }
   };
 
   focusTextInput() {
@@ -134,35 +143,42 @@ export default class Test extends React.Component {
       credentials: 'include',
       body: JSON.stringify({
         selectedWords: [data],
-        id: userId,
+        user_id: userId,
       }),
     };
 
     try {
       const response = await fetch(`${Address}/test/pass`, options);
-      const responseJson = await response.json();
     } catch (e) {
       console.error(e);
     }
   }
 
+  //Enter시 정답체크 함수 실행
+  inputEnter = (wordAnswer) => (e) => {
+    if (e.nativeEvent.key == 'Enter') {
+      this.answer(wordAnswer);
+    }
+  };
+
   render() {
     const { navigation } = this.props;
     const {
-      dataSource,
+      testList,
       activeQuestionIndex,
       correctCount,
       totalCount,
       wordAnswer,
+      modalVisible,
     } = this.state;
-    const question = dataSource[activeQuestionIndex];
+    const question = testList[activeQuestionIndex];
 
     return (
       <View style={styles.test}>
         <Modal
           animationType="fade"
           transparent={true}
-          visible={this.state.modalVisible}
+          visible={modalVisible}
           onRequestClose={() => this.setModalVisible(false)}
         >
           <TouchableOpacity
@@ -170,26 +186,36 @@ export default class Test extends React.Component {
             onPress={this.setModalVisible.bind(this, false)}
           >
             <View style={styles.innerContainerTransparentStyle}>
-              <Feather
-                name="check"
-                style={{
-                  color: '#00cc73',
-                }}
-              />
-              <Text>한글</Text>
-              <Text>English</Text>
-              {/* <Button
-                title="close"
-                onPress={this.setModalVisible.bind(this, false)}
-              /> */}
+              <AntDesign name="close" size={200} color="#fff" />
+
+              <View style={styles.innerContainerTextView}>
+                <Text style={styles.innerContainerHeaderText}>정답</Text>
+                <Text style={styles.innerContainerText} numberOfLines={2}>
+                  {question !== undefined ? question.word_kor : ''}
+                </Text>
+                <Text style={styles.innerContainerText} numberOfLines={2}>
+                  {question !== undefined ? question.word_eng : ''}
+                </Text>
+              </View>
             </View>
           </TouchableOpacity>
         </Modal>
-        <View style={styles.right}>
+        <View style={styles.header}>
+          <Text>Today Test</Text>
+          <View style={styles.guageBarOut}>
+            <Animated.View
+              style={[
+                styles.guageBarIn,
+                { width: (activeQuestionIndex / totalCount) * 100 + '%' },
+              ]}
+            ></Animated.View>
+          </View>
+        </View>
+        {/* <View style={styles.right}>
           <Text style={styles.white}>{`정답 : ${correctCount}     남은 문제 : ${
             totalCount - activeQuestionIndex
           }`}</Text>
-        </View>
+        </View> */}
 
         <View style={styles.examQuestions}>
           <Text>{question !== undefined ? question.word_eng : ''}</Text>
@@ -199,39 +225,47 @@ export default class Test extends React.Component {
           style={styles.inputAnswer}
           ref={this.textInput}
           onChangeText={(wordAnswer) => this.setState({ wordAnswer })}
+          onKeyPress={this.inputEnter(wordAnswer)}
+          placeholder="정답을 작성해주세오."
           value={wordAnswer}
         ></TextInput>
 
-        <View style={styles.checkBtnView}>
-          <TouchableOpacity
-            style={styles.checkBtn}
-            onPress={() => {
-              this.answer(wordAnswer);
-              this.clearTextInput();
-              this.focusTextInput();
-            }}
-          >
-            <Text>Check</Text>
-          </TouchableOpacity>
-        </View>
-
         <View style={styles.selectDoView}>
-          <TouchableOpacity style={styles.selectDoBtn}>
-            <Text style={styles.selectDoText}>건너뛰기</Text>
-          </TouchableOpacity>
           <TouchableOpacity
             style={styles.selectDoBtn}
             onPress={() => navigation.navigate('Main')}
           >
+            <MaterialCommunityIcons
+              name="close"
+              style={styles.selectIcon}
+              size={22}
+            ></MaterialCommunityIcons>
             <Text style={styles.selectDoText}>그만하기</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.selectDoBtn}
+            onPress={() => {
+              this.answer(wordAnswer);
+            }}
+          >
+            <MaterialCommunityIcons
+              name="check"
+              style={styles.selectIcon}
+              size={22}
+            ></MaterialCommunityIcons>
+            <Text style={styles.selectDoText}>정답 확인</Text>
+          </TouchableOpacity>
         </View>
+        <Alert
+          correct={this.state.answerCorrect}
+          visible={this.state.answered}
+        />
       </View>
     );
   }
 }
-const selectDoHeight = 70;
-const standardWidth = width - width / 2;
+
+const standardWidth = width;
 
 const styles = StyleSheet.create({
   test: {
@@ -239,56 +273,85 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor: '#000',
-    paddingTop: 50,
+    backgroundColor: '#fff',
   },
+  // 헤더
+  header: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: standardWidth,
+    // height: '20%',
+    flex: 1,
+    backgroundColor: '#252B39',
+  },
+  guageBarOut: {
+    width: standardWidth / 1.5,
+    height: '10%',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: '5%',
+  },
+  guageBarIn: {
+    height: '100%',
+    backgroundColor: '#7ABCD3',
+    borderRadius: 7,
+  },
+  //문제
   examQuestions: {
     width: standardWidth,
-    height: 180,
+    // height: '35%',
+    flex: 2,
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 80,
   },
+  //답
   inputAnswer: {
     width: standardWidth,
-    height: 180,
-    backgroundColor: '#fff',
+    // height: '35%',
+    flex: 2,
+    backgroundColor: '#F8F8F8',
     textAlign: 'center',
-    borderWidth: 1,
-    borderStyle: 'solid',
   },
+  //버튼
   checkBtnView: {
     flexDirection: 'row-reverse',
     justifyContent: 'flex-start',
     alignItems: 'center',
     width: standardWidth,
-    marginBottom: 80,
-    marginTop: 10,
   },
   checkBtn: {
     backgroundColor: '#fff',
-    padding: 10,
   },
   selectDoView: {
     width: width,
-    height: selectDoHeight,
     backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
   },
   selectDoBtn: {
-    borderColor: '#000',
-    borderWidth: 0.5,
-    justifyContent: 'space-around',
+    padding: '4%',
+    flexDirection: 'row',
+    backgroundColor: '#7ABCD3',
+    borderLeftWidth: 0.5,
+    borderColor: '#fff',
+    justifyContent: 'center',
     alignItems: 'center',
     width: width / 2,
-    height: selectDoHeight,
   },
   selectDoText: {
+    color: '#fff',
     fontSize: 20,
+    fontWeight: 'bold',
   },
+  selectIcon: {
+    justifyContent: 'flex-end',
+    color: '#fff',
+    margin: '5%',
+  },
+  //모달
   container: {
     flex: 1,
     alignItems: 'center',
@@ -299,8 +362,32 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   innerContainerTransparentStyle: {
-    backgroundColor: '#fff',
+    backgroundColor: '#D76663',
     padding: 20,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '75%',
+    height: '75%',
+  },
+  innerContainerTextView: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '85%',
+    height: '50%',
+    borderWidth: 2,
+    borderColor: '#fff',
+    borderRadius: 10,
+  },
+  innerContainerHeaderText: {
+    fontWeight: '100',
+    fontSize: 15,
+    color: '#fff',
+  },
+  innerContainerText: {
+    fontWeight: '100',
+    fontSize: 30,
+    color: '#fff',
   },
   white: {
     color: '#fff',

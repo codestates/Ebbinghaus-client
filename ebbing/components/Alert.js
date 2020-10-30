@@ -1,14 +1,40 @@
-import React from "react";
-import { View, StyleSheet, Dimensions, Image } from "react-native";
+import React from 'react';
+import { View, StyleSheet, Dimensions, Image } from 'react-native';
 
-const screen = Dimensions.get("window");
+const screen = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  circle: {
+    backgroundColor: '#71AE55',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  circleCorrect: {
+    backgroundColor: '#83B96B',
+  },
+  icon: {
+    width: screen.width / 2,
+  },
+});
 
 export const Alert = ({ correct, visible }) => {
   if (!visible) return null;
 
   const icon = correct
-    ? require("../assets/check.png")
-    : require("../assets/close.png");
+    ? require('../assets/testCheck.png')
+    : require('../assets/close.png');
 
   const circleStyles = [styles.circle];
 
@@ -24,30 +50,3 @@ export const Alert = ({ correct, visible }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  circle: {
-    backgroundColor: "#ff4136",
-    width: screen.width / 2,
-    height: screen.width / 2,
-    borderRadius: screen.width / 2,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  circleCorrect: {
-    backgroundColor: "#28A125",
-  },
-  icon: {
-    width: screen.width / 3,
-  },
-});

@@ -4,7 +4,9 @@ import {
   Text,
   View,
   TouchableOpacity,
+  TouchableHighlight,
   Dimensions,
+  Image,
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -26,14 +28,23 @@ export default class TestStart extends React.Component {
           style={styles.goToTestBox}
           onPress={() => navigation.navigate('Test')}
         >
-          <AntDesign name="play" size={70} />
-          <Text>단어 시험</Text>
-          <Text>Start</Text>
+          <Text style={styles.testText}>TEST START</Text>
+          <Image
+            style={[styles.testImg]}
+            source={require('../assets/test_stat.png')}
+          />
         </TouchableOpacity>
+        <View>
+          <Image
+            style={[styles.waveImg, {}]}
+            source={require('../assets/wave.gif')}
+          />
+        </View>
       </View>
     );
   }
 }
+
 const goToTestBoxWith = width - 100;
 const styles = StyleSheet.create({
   container: {
@@ -41,14 +52,49 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#252B39',
+    position: 'relative',
   },
   goToTestBox: {
+    paddingTop: '50%',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
     width: goToTestBoxWith,
     height: height - 500,
+  },
+  testText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 30,
+    marginBottom: '5%',
+  },
+  palyBtn: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: width * -0.1 }, { translateY: height * 0.08 }],
+  },
+  text: {
+    marginTop: '5%',
+    left: '-50%',
+    transform: [{ translateX: width * 0.1 }],
+    color: '#fff',
+    textShadowColor: 'black',
+    textShadowRadius: 1,
+    textShadowOffset: {
+      width: 1,
+      height: 1,
+    },
+  },
+  testImg: {
+    width: 300,
+    height: 300,
+  },
+  waveImg: {
+    minWidth: 300,
+    maxWidth: 450,
+    height: 350,
+    bottom: '-20%',
   },
 });

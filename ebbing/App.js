@@ -3,19 +3,14 @@ import { StyleSheet, Text, View, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-community/async-storage';
-
 import Menu from './Main/Menu';
 import { LoginStackScreen } from './StackScreen';
 import { AuthContext } from './AppContext';
-// import { ADDRESS } from 'react-native-dotenv'
-// require('dotenv').config();
-// import { ADDRESS } from '@env'
-// const ADDRESS = process.env.ADDRESS 
+import ADDRESS from './DummyData/Address';
+import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 
 const Stack = createStackNavigator();
-//const Address = 'http://13.125.184.203:4000';
-const Address = 'http://localhost:4000';
-
+const Address = ADDRESS;
 
 function SplashScreen() {
   return (
@@ -58,7 +53,6 @@ export default function App() {
   );
 
   React.useEffect(() => {
-    // Fetch the token from storage then navigate to our appropriate place
     // 저장소에서 토큰을 가져온 다음 적절한 위치로 이동합니다.
     const bootstrapAsync = async () => {
       let accessToken;
@@ -67,14 +61,10 @@ export default function App() {
         accessToken = await AsyncStorage.getItem('accessToken');
         console.log('유저 토큰 값은 : ', accessToken);
       } catch (e) {
-        // Restoring token failed
         // 토큰 복원 실패
       }
-      // After restoring token, we may need to validate it in production apps
       // 토큰을 복원 한 후 프로덕션 앱에서 유효성을 검사해야 할 수 있습니다.
 
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
       // 앱 화면 또는 인증 화면으로 전환되며이 로딩
       // 화면이 마운트 해제되고 버려집니다.
       dispatch({ type: 'RESTORE_TOKEN', token: accessToken });
@@ -107,11 +97,9 @@ export default function App() {
 
         try {
           let response = await fetch(`${Address}/user/signin`, options);
-          console.log('response==: ', response);
           let responseOK = response && response.ok;
           if (responseOK) {
             let result = await response.json();
-            console.log('서버에서 보내온 result ', result);
             AsyncStorage.setItem('accessToken', result.accessToken);
             AsyncStorage.setItem('userId', String(result.id));
             dispatch({ type: 'SIGN_IN', token: result.accessToken });
@@ -135,6 +123,7 @@ export default function App() {
           },
           credentials: 'include',
         };
+
         await AsyncStorage.removeItem('accessToken');
         await fetch(`${Address}/user/signout`, options);
         dispatch({ type: 'SIGN_OUT' });
@@ -174,10 +163,64 @@ export default function App() {
           console.error(e);
         }
       },
+      // googleSignIn: async () => {
+      //   try {
+      //     const googleResult = await Google.logInAsync({
+      //       androidClientId: ClientID,
+      //       // iosClientId: YOUR_CLIENT_ID_HERE,
+      //     });
+
+      //     if (googleResult.type === 'success') {
+      //       // return result.accessToken;
+      //       // AsyncStorage.setItem('accessToken', result.accessToken);
+      //       // AsyncStorage.setItem('userId', String(result.user.name));
+      //       console.log('result.accessToken == : ', googleResult.accessToken);
+      //       console.log('result.user.name == : ', googleResult.user.name);
+      //       console.log('result.user.email == : ', googleResult.user.email);
+
+      //       let options = {
+      //         method: 'POST',
+      //         mode: 'cors',
+      //         headers: {
+      //           Accept: 'application/json',
+      //           'Content-Type': 'application/json',
+      //           authorization: `Bearer ${state.accessToken}`,
+      //         },
+      //         credentials: 'include',
+      //         body: JSON.stringify({
+      //           name: googleResult.user.name,
+      //         }),
+      //       };
+
+      //       let response = await fetch(`${Address}/user/signin`, options);
+      //       console.log('response==: ', response);
+      //       let responseOK = response && response.ok;
+      //       if (responseOK) {
+      //         let result = await response.json();
+      //         console.log('서버에서 보내온 result ', result);
+      //         AsyncStorage.setItem('accessToken', googleResult.accessToken);
+      //         AsyncStorage.setItem('userId', String(googleResult.user.name));
+      //         dispatch({ type: 'SIGN_IN', token: googleResult.accessToken });
+      //       } else {
+      //         console.log('요청 실패');
+      //       }
+      //     } else {
+      //       // return { cancelled: true };
+      //       console.log('cancelled');
+      //     }
+      //   } catch (e) {
+      //     // return { error: true };
+      //     console.log('error', e);
+      //   }
+      // },
     }),
     []
   );
-  
+
+  const [fontsLoaded] = useFonts({
+    Inter_900Black,
+  });
+
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
@@ -186,9 +229,17 @@ export default function App() {
             // We haven't finished checking for the token yet
             <Stack.Screen name="Splash" component={SplashScreen} />
           ) : state.accessToken === null ? (
-            <Stack.Screen name="Login" component={LoginStackScreen} />
+            <Stack.Screen
+              name="Login"
+              component={LoginStackScreen}
+              options={{ headerShown: false }}
+            />
           ) : (
-            <Stack.Screen name="Menu" component={Menu} />
+            <Stack.Screen
+              name="Menu"
+              component={Menu}
+              options={{ headerShown: false }}
+            />
           )}
         </Stack.Navigator>
       </NavigationContainer>
