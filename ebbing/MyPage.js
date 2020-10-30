@@ -16,7 +16,7 @@ import { color } from 'react-native-reanimated';
 const Address = ADDRESS;
 const { height, width } = Dimensions.get('window');
 
-export default function MyPage() {
+export default function MyPage({ navigation }) {
   const [today, setToday] = React.useState(0);
   const [doing, setDoing] = React.useState(0);
   const [finish, setFinish] = React.useState(0);
@@ -74,9 +74,11 @@ export default function MyPage() {
         console.error(e);
       }
     };
-    userToday();
-    userDoing();
-    userFinish();
+    navigation.addListener('focus', () => {
+      userToday();
+      userDoing();
+      userFinish();
+    });
   }, [today, doing, finish]);
 
   return (
