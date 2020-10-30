@@ -8,11 +8,12 @@ import {
   Modal,
   TextInput,
   Animated,
+  Alert,
 } from 'react-native';
 import { AntDesign } from 'react-native-vector-icons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Alert } from '../components/Alert';
+import { Alerts } from '../components/Alert';
 import ADDRESS from '../DummyData/Address';
 
 const Address = ADDRESS;
@@ -201,7 +202,7 @@ export default class Test extends React.Component {
           </TouchableOpacity>
         </Modal>
         <View style={styles.header}>
-          <Text>Today Test</Text>
+          <Text style={styles.headerText}>Today Test</Text>
           <View style={styles.guageBarOut}>
             <Animated.View
               style={[
@@ -242,21 +243,37 @@ export default class Test extends React.Component {
             ></MaterialCommunityIcons>
             <Text style={styles.selectDoText}>그만하기</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.selectDoBtn}
-            onPress={() => {
-              this.answer(wordAnswer);
-            }}
-          >
-            <MaterialCommunityIcons
-              name="check"
-              style={styles.selectIcon}
-              size={22}
-            ></MaterialCommunityIcons>
-            <Text style={styles.selectDoText}>정답 확인</Text>
-          </TouchableOpacity>
+          {question !== undefined ? (
+            <TouchableOpacity
+              style={styles.selectDoBtn}
+              onPress={() => {
+                this.answer(wordAnswer);
+              }}
+            >
+              <MaterialCommunityIcons
+                name="check"
+                style={styles.selectIcon}
+                size={22}
+              ></MaterialCommunityIcons>
+              <Text style={styles.selectDoText}>정답 확인</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.selectDoBtn}
+              onPress={() => {
+                Alert.alert(`오늘은 테스트할 단어가 없네요!`);
+              }}
+            >
+              <MaterialCommunityIcons
+                name="check"
+                style={styles.selectIcon}
+                size={22}
+              ></MaterialCommunityIcons>
+              <Text style={styles.selectDoText}>정답 확인</Text>
+            </TouchableOpacity>
+          )}
         </View>
-        <Alert
+        <Alerts
           correct={this.state.answerCorrect}
           visible={this.state.answered}
         />
@@ -283,6 +300,11 @@ const styles = StyleSheet.create({
     // height: '20%',
     flex: 1,
     backgroundColor: '#252B39',
+  },
+  headerText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   guageBarOut: {
     width: standardWidth / 1.5,

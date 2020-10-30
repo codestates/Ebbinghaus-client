@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Alert = ({ correct, visible }) => {
+export const Alerts = ({ correct, visible }) => {
   if (!visible) return null;
 
   const icon = correct
