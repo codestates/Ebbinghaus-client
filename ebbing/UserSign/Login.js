@@ -8,7 +8,6 @@ import {
   Dimensions,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 
 import { AuthContext } from '../AppContext';
 
@@ -17,10 +16,6 @@ export default function Login({ navigation }) {
   const [password, setPassword] = React.useState('');
 
   const { signIn } = React.useContext(AuthContext);
-
-  const [fontsLoaded] = useFonts({
-    Inter_900Black,
-  });
 
   return (
     <View style={styles.container}>
