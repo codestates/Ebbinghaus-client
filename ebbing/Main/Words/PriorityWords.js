@@ -200,7 +200,7 @@ export default class PriorityWords extends Component {
               this.props.navigation.navigate('PriorityWordsFilter')
             }
           >
-            <Text style={styles.white}>Test중인 단어 보기</Text>
+            <Text style={styles.white}>Test 중인 단어 보기</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
