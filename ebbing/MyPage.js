@@ -44,7 +44,7 @@ export default function MyPage() {
         const responseJson = await response.json();
     
         setDoing({
-          today: responseJson,
+          doing: responseJson,
         });
       } catch (e) {
         console.error(e);
@@ -59,7 +59,7 @@ export default function MyPage() {
         const responseJson = await response.json();
     
         setFinish({
-          today: responseJson,
+          finish: responseJson,
         });
       } catch (e) {
         console.error(e);
