@@ -102,6 +102,8 @@ export default function App() {
             AsyncStorage.setItem('accessToken', result.accessToken);
             AsyncStorage.setItem('userId', String(result.id));
             dispatch({ type: 'SIGN_IN', token: result.accessToken });
+          } else if (response.status === 404) {
+            Alert.alert(`존재하지 않는 계정입니다.`);
           } else {
             console.log('요청 실패');
           }
@@ -151,10 +153,12 @@ export default function App() {
         try {
           let response = await fetch(`${Address}/user/signup`, options);
           let responseOK = response && response.ok;
-          if (responseOK) {
-            let result = await response.json();
+          let result = await response.json();
+          if (response.status === 201) {
             console.log('서버에서 보내온 result ', result);
             Alert.alert(`${result.name}님 회원가입이 완료되었습니다.`);
+          } else if (response.status === 409) {
+            Alert.alert(`이미 존재하는 아이디입니다.`);
           } else {
             Alert.alert(`회원가입에 실패하였습니다.`);
           }
