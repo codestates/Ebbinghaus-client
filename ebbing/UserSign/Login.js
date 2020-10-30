@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   tilteFont: {
     fontSize: 30,
     color: '#fff',
-    fontFamily: 'Inter_900Black',
+    fontWeight: 'bold',
   },
   input: {
     width: width * 0.8,
