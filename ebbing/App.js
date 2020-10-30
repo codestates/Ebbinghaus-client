@@ -7,7 +7,6 @@ import Menu from './Main/Menu';
 import { LoginStackScreen } from './StackScreen';
 import { AuthContext } from './AppContext';
 import ADDRESS from './DummyData/Address';
-import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 
 const Stack = createStackNavigator();
 const Address = ADDRESS;
@@ -216,10 +215,6 @@ export default function App() {
     }),
     []
   );
-
-  const [fontsLoaded] = useFonts({
-    Inter_900Black,
-  });
 
   return (
     <AuthContext.Provider value={authContext}>
