@@ -318,6 +318,8 @@ const styles = StyleSheet.create({
   headerTitleText: {
     color: '#fff',
     width: standardWidth,
+    textAlign: "center",
+    fontSize: 20,
   },
   inputWordView: {
     width: standardWidth,
@@ -391,7 +393,7 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     textAlignVertical: 'center',
-    fontSize: 30,
+    fontSize: 20,
     color: '#000',
   },
   selected: { backgroundColor: '#99D7ED' },

@@ -8,10 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-// import {
-//   useFonts,
-//   Inter_900Black,
-// } from '@expo-google-fonts/inter';
+import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 
 import { AuthContext } from '../AppContext';
 
@@ -21,9 +18,9 @@ export default function Login({ navigation }) {
 
   const { signIn } = React.useContext(AuthContext);
 
-  // let [fontsLoaded] = useFonts({
-  //   Inter_900Black,
-  // });
+  const [fontsLoaded] = useFonts({
+    Inter_900Black,
+  });
 
   return (
     <View style={styles.container}>
@@ -97,6 +94,7 @@ const styles = StyleSheet.create({
   tilteFont: {
     fontSize: 30,
     color: '#fff',
+    fontFamily: 'Inter_900Black',
   },
   input: {
     width: width * 0.8,

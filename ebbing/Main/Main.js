@@ -5,9 +5,7 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
-  ScrollView,
   Image,
-  TouchableHighlight,
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
