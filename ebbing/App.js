@@ -224,7 +224,11 @@ export default function App() {
             // We haven't finished checking for the token yet
             <Stack.Screen name="Splash" component={SplashScreen} />
           ) : state.accessToken === null ? (
-            <Stack.Screen name="Login" component={LoginStackScreen} />
+            <Stack.Screen
+              name="Login"
+              component={LoginStackScreen}
+              options={{ headerShown: false }}
+            />
           ) : (
             <Stack.Screen
               name="Menu"
