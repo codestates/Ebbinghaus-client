@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { AuthContext } from '../AppContext';
+import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 
 export default function Signup({ navigation }) {
   const [username, setUsername] = React.useState('');
@@ -17,6 +18,9 @@ export default function Signup({ navigation }) {
   const [warningMsg, setWarningMsg] = React.useState('');
   const [passCheck, setPassCheck] = React.useState(false);
   const { signUp } = React.useContext(AuthContext);
+  const [fontsLoaded] = useFonts({
+    Inter_900Black,
+  });
 
   React.useEffect(() => {
     const checkPassword = () => {
@@ -101,6 +105,7 @@ const styles = StyleSheet.create({
   tilteFont: {
     fontSize: 30,
     color: '#fff',
+    fontFamily: 'Inter_900Black',
   },
   input: {
     width: width * 0.8,

@@ -212,6 +212,8 @@ export default class MineWords extends Component {
         ) : (
           <View style={styles.box}>
             <Text>현재 등록된 단어가 없습니다.</Text>
+            <Text><AntDesign name="pluscircleo" color={'#000'} size={15} /> 버튼을 눌러서 단어를 등록해 주세요.</Text>
+            <Text></Text>
           </View>
         )}
         <View style={styles.buttonSpace}>
