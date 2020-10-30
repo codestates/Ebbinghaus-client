@@ -201,6 +201,7 @@ export default class Test extends React.Component {
           </TouchableOpacity>
         </Modal>
         <View style={styles.header}>
+          <Text>Today Test</Text>
           <View style={styles.guageBarOut}>
             <Animated.View
               style={[
