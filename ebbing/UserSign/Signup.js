@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { AuthContext } from '../AppContext';
-import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
+
 
 export default function Signup({ navigation }) {
   const [username, setUsername] = React.useState('');
@@ -24,9 +24,6 @@ export default function Signup({ navigation }) {
   const [passCheck, setPassCheck] = React.useState(false);
   const [nameCheck, setNameCheck] = React.useState(false);
   const { signUp } = React.useContext(AuthContext);
-  // const [fontsLoaded] = useFonts({
-  //   Inter_900Black,
-  // });
 
   React.useEffect(() => {
     const check = () => {
