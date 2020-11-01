@@ -214,7 +214,7 @@ export default class RegisterWords extends React.Component {
         </View>
         <View style={styles.inputWordView}>
           <TextInput
-            style={styles.inputWord}
+            style={[styles.inputWord, styles.inputWordEng]}
             placeholder="Input English"
             onChangeText={(word_eng) => this.setState({ word_eng })}
             onKeyPress={this.inputEnter()}
@@ -222,7 +222,7 @@ export default class RegisterWords extends React.Component {
             ref={this.textInput}
           ></TextInput>
           <TextInput
-            style={styles.inputWord}
+            style={[styles.inputWord, styles.inputWordkor]}
             placeholder="Input Korean"
             onChangeText={(word_kor) => this.setState({ word_kor })}
             onKeyPress={this.inputEnter()}
@@ -269,7 +269,7 @@ export default class RegisterWords extends React.Component {
             </View>
           </View>
         ) : (
-          <View style={styles.wordListView}>
+          <View style={[styles.wordListView, styles.listBox]}>
             <Text style={[styles.wordListView, styles.noRegisteredWord]}>
               현재 등록된 단어가 없습니다.
             </Text>
@@ -318,8 +318,9 @@ const styles = StyleSheet.create({
   headerTitleText: {
     color: '#fff',
     width: standardWidth,
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 20,
+    fontWeight: 'bold',
   },
   inputWordView: {
     width: standardWidth,
@@ -333,11 +334,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'solid',
   },
+  inputWordEng: {
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  inputWordkor: {
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+  },
   registButtonView: {
     flexDirection: 'row',
     justifyContent: 'center',
     width: standardWidth,
     marginTop: 15,
+    borderRadius: 10,
   },
   registButton: {
     backgroundColor: '#fff',
@@ -345,7 +355,7 @@ const styles = StyleSheet.create({
     height: height * 0.07,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 15,
+    borderRadius: 10,
     backgroundColor: '#99D7ED',
   },
   wordListView: {
@@ -355,11 +365,10 @@ const styles = StyleSheet.create({
   },
   noRegisteredWord: {
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: 30,
+    color: '#333',
+    fontSize: 20,
     textAlign: 'center',
-    textAlignVertical: 'center',
+    paddingTop: '5%',
   },
   wordListFlat: {
     backgroundColor: '#fff',
@@ -373,7 +382,7 @@ const styles = StyleSheet.create({
   wordListBtn: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 5,
     width: standardWidth / 2 - 10,
     height: 40,
     alignItems: 'center',

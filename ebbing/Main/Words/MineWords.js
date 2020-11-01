@@ -212,7 +212,10 @@ export default class MineWords extends Component {
         ) : (
           <View style={styles.box}>
             <Text>현재 등록된 단어가 없습니다.</Text>
-            <Text><AntDesign name="pluscircleo" color={'#000'} size={15} /> 버튼을 눌러서 단어를 등록해 주세요.</Text>
+            <Text>
+              <AntDesign name="pluscircleo" color={'#000'} size={15} /> 버튼을
+              눌러서 단어를 등록해 주세요.
+            </Text>
             <Text></Text>
           </View>
         )}
@@ -250,10 +253,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginTop: 40,
     margin: 20,
+    fontWeight: 'bold',
   },
   Words: {
     backgroundColor: '#ffffff',
     width: standardWidth,
+    borderRadius: 10,
+    padding: '5%',
   },
   header: {
     flexDirection: 'row',
@@ -318,6 +324,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 10,
+    padding: '5%',
   },
   buttonSpace: {
     justifyContent: 'space-evenly',
