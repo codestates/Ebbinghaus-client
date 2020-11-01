@@ -22,13 +22,13 @@ export default class Main extends React.Component {
       <View style={styles.container}>
         <Image
           style={{ width: width, height: 240, opacity: 1 }}
-          source={require('../assets/main_bg.png')}
+          source={require('../assets/main_bg2.png')}
         />
         <View style={styles.boxSpace}>
           <TouchableOpacity
             onPress={() => navigation.navigate('PriorityWords')}
           >
-            <View style={styles.categoryView}>
+            <View style={[styles.categoryView, { backgroundColor: '#8bcdcd' }]}>
               <Image
                 style={{ width: 80, height: 80 }}
                 source={require('../assets/ellipse1.png')}
@@ -37,7 +37,7 @@ export default class Main extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('MineWords')}>
-            <View style={styles.categoryView}>
+            <View style={[styles.categoryView, { backgroundColor: '#a3d2ca' }]}>
               <Image
                 style={{ width: 80, height: 80 }}
                 source={require('../assets/ellipse2.png')}
@@ -64,20 +64,19 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: '#99D7ED',
     width: width,
-    height: 180,
-    justifyContent: 'space-evenly',
+    height: 160,
+    justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    borderWidth: 0.5,
-    borderColor: '#6190E8',
     borderRadius: 15,
   },
   categoryText: {
+    marginLeft: '5%',
     fontSize: 20,
     color: '#fff',
   },
   boxSpace: {
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     height: height * 0.65,
   },
 });
