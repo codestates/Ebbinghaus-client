@@ -15,7 +15,7 @@ export default function Login({ navigation }) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  const { signIn } = React.useContext(AuthContext);
+  const { signIn, googleSignIn } = React.useContext(AuthContext);
 
   return (
     <View style={styles.container}>
@@ -48,7 +48,7 @@ export default function Login({ navigation }) {
       <View style={styles.buttonSpace}>
         <TouchableOpacity
           style={[styles.buttonCenterText, styles.button]}
-          //onPress={() => googleSignIn()}
+          onPress={() => googleSignIn()}
         >
           <AntDesign name="google" color={'#252B39'} size={20} />
           <Text> Google로 계속하기</Text>
