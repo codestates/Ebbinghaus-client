@@ -184,7 +184,7 @@ export default class MineWordsFilter extends Component {
   }
 }
 const { height, width } = Dimensions.get('window');
-const standardWidth = width*0.85;
+const standardWidth = width * 0.85;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -195,12 +195,15 @@ const styles = StyleSheet.create({
   tilteFont: {
     fontSize: 20,
     color: '#fff',
-    marginTop: 40,    
+    marginTop: 40,
     margin: 20,
+    fontWeight: 'bold',
   },
   Words: {
     backgroundColor: '#ffffff',
     width: standardWidth,
+    borderRadius: 10,
+    padding: '5%',
   },
   header: {
     flexDirection: 'row',
@@ -266,5 +269,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 10,
+    padding: '5%',
   },
 });

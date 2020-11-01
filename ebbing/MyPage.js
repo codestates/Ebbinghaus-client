@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   },
   myPageBoxInner: {
     width: myPageBoxWith - 40,
-    height: height - 700,
+    height: height - 650,
     width: width - 250,
     flexBasis: '40%',
     alignItems: 'center',
