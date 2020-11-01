@@ -29,7 +29,6 @@ export default function App() {
           return {
             ...prevState,
             accessToken: action.token,
-            // accessToken: 'hihi',
             isLoading: false,
           };
         case 'SIGN_IN':
@@ -154,7 +153,7 @@ export default function App() {
 
         try {
           let response = await fetch(`${Address}/user/signup`, options);
-          let responseOK = response && response.ok;
+
           let result = await response.json();
           if (response.status === 201) {
             console.log('서버에서 보내온 result ', result);
@@ -177,10 +176,6 @@ export default function App() {
           });
 
           if (googleResult.type === 'success') {
-            console.log('result.accessToken == : ', googleResult.accessToken);
-            console.log('result.user.name == : ', googleResult.user.name);
-            console.log('result.user.email == : ', googleResult.user.email);
-
             let options = {
               method: 'POST',
               mode: 'cors',
