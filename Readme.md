@@ -1,4 +1,4 @@
-Ebbinghaus Client <br />
+# Ebbinghaus Project<br />
 ![logo_ver1 (1) (1)](https://user-images.githubusercontent.com/66255124/97845956-a3486b00-1d30-11eb-83dc-a79220a6efdd.png)
 <br />
 소개 내용
@@ -19,5 +19,7 @@ Ebbinghaus Client <br />
 | [김현인](https://github.com/hn8423) | Back |
 | [이삭](https://github.com/dltkr12311) | Back |
 <br />
+
 # For project details <br />
+
 [checkout WIKI](https://github.com/codestates/Ebbinghaus-client/wiki)
